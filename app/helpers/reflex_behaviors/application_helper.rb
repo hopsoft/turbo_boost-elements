@@ -32,7 +32,11 @@ module ReflexBehaviors::ApplicationHelper
   end
 
   def respond_to_missing?(name, ...)
-    return toggle_tag_builder.respond_to_missing?(name.to_s.delete_prefix("toggle_"), ...) if name.start_with?("toggle_")
+    prefixes = %w[toggle_]
+    prefixes.each do |prefix|
+      next unless name.start_with?(prefix)
+      return send("#{prefix}tag_builder").respond_to_missing?(name.to_s.delete_prefix(prefix), ...)
+    end
     super
   end
 
