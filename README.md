@@ -7,7 +7,7 @@
       <img alt="Lines of Code" src="https://img.shields.io/badge/loc-222-47d299.svg" />
     </a>
     <a href="https://codeclimate.com/github/hopsoft/reflex_behaviors/maintainability">
-      <img src="https://api.codeclimate.com/v1/badges/a69b6f73abc3ccd49261/maintainability" />
+      <img src="https://api.codeclimate.com/v1/badges/7aac6daed3e4032e292e/maintainability" />
     </a>
     <a href="https://rubygems.org/gems/reflex_behaviors">
       <img alt="GEM Version" src="https://img.shields.io/gem/v/reflex_behaviors?color=168AFE&include_prereleases&logo=ruby&logoColor=FE1616">
@@ -43,6 +43,18 @@ Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.
 
 <!-- Tocer[start]: Auto-generated, don't remove. -->
 
+## Table of Contents
+
+  - [Sponsors](#sponsors)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Setup](#setup)
+  - [Behaviors](#behaviors)
+    - [Toggle](#toggle)
+      - [Tag Helpers](#tag-helpers)
+  - [Releasing](#releasing)
+  - [License](#license)
+
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
 
 ## Sponsors
@@ -63,8 +75,8 @@ Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.
 - [turbo-rails](https://rubygems.org/gems/turbo-rails) `>=1.1`
 - [@hotwired/turbo](https://yarnpkg.com/package/@hotwired/turbo) `>=7.2.0`
 - [@hotwired/turbo-rails](https://yarnpkg.com/package/@hotwired/turbo-rails) `>=7.2.0`
-- [turbo_ready](https://github.com/hopsoft/turbo_ready)
-- [turbo_reflex](https://github.com/hopsoft/turbo_reflex)
+- [turbo_ready](https://github.com/hopsoft/turbo_ready) `>=0.1.2`
+- [turbo_reflex](https://github.com/hopsoft/turbo_reflex) `>=0.0.28`
 
 ## Installation
 
