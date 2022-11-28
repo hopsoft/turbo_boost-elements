@@ -1,6 +1,6 @@
 {
   "name": "reflex_behaviors",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.",
   "main": "app/javascript/index.js",
   "repository": "https://github.com/hopsoft/reflex_behaviors",
