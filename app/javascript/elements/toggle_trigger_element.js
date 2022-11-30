@@ -44,8 +44,10 @@ addEventListener(
   event => (event.target.active = false)
 )
 
-addEventListener('mousedown', () => {
-  const selector =
-    'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'
-  document.querySelectorAll(selector).forEach(trigger => trigger.collapse())
+addEventListener('click', event => {
+  setTimeout(() => {
+    const selector =
+      'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'
+    document.querySelectorAll(selector).forEach(trigger => trigger.collapse())
+  })
 })
