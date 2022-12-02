@@ -17,4 +17,19 @@ export default class ReflexElement extends HTMLElement {
       ).toString(16)
     )
   }
+
+  get viewStack () {
+    if (!this.dataset.viewStack) return []
+    return JSON.parse(this.dataset.viewStack)
+  }
+
+  get coordinates () {
+    const rect = this.getBoundingClientRect()
+    return {
+      left: rect.left + window.scrollX,
+      top: rect.top + window.scrollY,
+      width: this.offsetWidth,
+      height: this.offsetHeight
+    }
+  }
 }

@@ -1,0 +1,61 @@
+/* trigger */
+
+body.debug-toggles .reflex-behavior-tooltip.trigger {
+  background-color: salmon;
+  border-bottom-left-radius: 0;
+  color: white;
+}
+
+body.debug-toggles .reflex-behavior-tooltip.trigger .shared,
+body.debug-toggles .reflex-behavior-tooltip.trigger strong{
+  color: darkred;
+}
+
+body.debug-toggles .reflex-behavior-tooltip.trigger::after {
+  border-color: salmon transparent transparent transparent;
+  border-style: solid;
+  border-width: 5px;
+  content: "";
+  left: 5px;
+  margin-left: -5px;
+  position: absolute;
+  top: 100%;
+}
+
+body.debug-toggles toggle-trigger {
+  box-sizing: border-box;
+  display: inline-block;
+  outline-offset: -2px;
+  outline: solid 1px salmon;
+}
+
+/* target */
+
+body.debug-toggles .reflex-behavior-tooltip.target {
+  background-color: lightskyblue;
+  border-top-left-radius: 0;
+  color: white;
+}
+
+body.debug-toggles .reflex-behavior-tooltip.target .shared,
+body.debug-toggles .reflex-behavior-tooltip.target strong {
+  color: blue;
+}
+
+body.debug-toggles .reflex-behavior-tooltip.target::after {
+  border-color: transparent transparent lightskyblue transparent;
+  border-style: solid;
+  border-width: 5px;
+  bottom: 100%;
+  content: "";
+  left: 5px;
+  margin-left: -5px;
+  position: absolute;
+}
+
+body.debug-toggles toggle-target.debug {
+  box-sizing: border-box;
+  display: inline-block;
+  outline-offset: -2px;
+  outline: solid 1px lightskyblue;
+}

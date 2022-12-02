@@ -5,22 +5,39 @@ require_relative "base_tag_builder"
 module ReflexBehaviors::TagBuilders
   class ToggleTagsBuilder < BaseTagBuilder
     def target_tag(id, expanded: false, **kwargs, &block)
-      return unless expanded || target_expanded?(id)
-
       kwargs = kwargs.with_indifferent_access
       kwargs[:id] = id
       kwargs[:role] = "region"
-      kwargs[:aria] ||= {}
-      kwargs[:aria] = target_aria(**kwargs[:aria])
 
-      content_tag("toggle-target", nil, kwargs, &block)
+      kwargs[:aria] ||= {}
+      kwargs[:aria][:label] ||= "Dynamic Content Region"
+      kwargs[:aria][:live] ||= "polite"
+
+      kwargs[:data] ||= {}
+      kwargs[:data][:view_stack] = view_stack.to_json if Rails.env.development?
+
+      if expanded || target_expanded?(id)
+        content_tag("toggle-target", nil, kwargs, &block)
+      else
+        content_tag("toggle-target", nil, kwargs)
+      end
     end
 
-    def trigger_tag(target:, render:, disabled: false, aria: {}, data: {remember: false, auto_collapse: false}, **kwargs, &block)
+    def trigger_tag(target:, render:, action: :toggle, disabled: false, **kwargs, &block)
       kwargs = kwargs.with_indifferent_access
       kwargs[:id] ||= "#{target}-toggle-trigger"
-      kwargs[:aria] = trigger_aria(controls: target, expanded: target_expanded?(target), **aria)
-      kwargs[:data] = trigger_data(render: render, disabled: disabled, **data)
+
+      kwargs[:aria] ||= {}
+      kwargs[:aria][:atomic] ||= true
+      kwargs[:aria][:relevant] ||= "all"
+      kwargs[:aria].merge!(controls: target, expanded: target_expanded?(target))
+
+      kwargs[:data] ||= {}
+      kwargs[:data][:auto_collapse] = !!kwargs[:data][:auto_collapse]
+      kwargs[:data][:view_stack] = view_stack.to_json if Rails.env.development?
+      kwargs[:data][:remember] = !!kwargs[:data][:remember]
+      kwargs[:data][:render] = render
+      kwargs[:data][:turbo_reflex] = "ReflexBehaviors::ToggleReflex##{action}" unless disabled
 
       content_tag("toggle-trigger", nil, kwargs, &block)
     end
@@ -31,32 +48,6 @@ module ReflexBehaviors::TagBuilders
 
     def target_collapsed?(target)
       !target_expanded?(target)
-    end
-
-    private
-
-    def trigger_aria(controls:, expanded:, **kwargs)
-      kwargs = kwargs.with_indifferent_access
-      kwargs[:atomic] ||= true
-      kwargs[:relevant] ||= "all"
-      kwargs.merge(controls: controls, expanded: !!expanded)
-    end
-
-    def trigger_data(render:, disabled: false, remember: false, auto_collapse: false, **kwargs)
-      kwargs = kwargs.with_indifferent_access
-      kwargs.merge(
-        turbo_reflex: disabled ? nil : "ReflexBehaviors::ToggleReflex#toggle",
-        render: render,
-        remember: !!remember,
-        auto_collapse: !!auto_collapse
-      )
-    end
-
-    def target_aria(**kwargs)
-      kwargs = kwargs.with_indifferent_access
-      kwargs[:label] ||= "Dynamic Content Region"
-      kwargs[:live] ||= "polite"
-      kwargs
     end
   end
 end
