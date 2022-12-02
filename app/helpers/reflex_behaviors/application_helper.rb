@@ -3,18 +3,25 @@
 require ReflexBehaviors::Engine.root.join("lib/reflex_behaviors/tag_builders")
 
 module ReflexBehaviors::ApplicationHelper
-  def friendly_partial_path(partial_path = nil, start: 1)
-    prefix = "app/views/"
-    partial_path ||= caller_locations(start, 1).first.path
-    partial_path = partial_path.split(prefix).last if partial_path.include?(prefix)
-    partial_path[0, partial_path.index(".") || partial_path.length].gsub(/\/_/, "/")
+  def idomatic_partial_path(partial_path)
+    partial_path.to_s.gsub("/_", "/").split(".").first
   end
 
   def current_partial_path
-    friendly_partial_path start: 2
+    path = nil
+    prefix = "app/views/"
+    start = 1
+    while path.nil? && start < 100
+      location = caller_locations(start, 1).first
+      path = location.path if location.path.include?(prefix)
+      start += 1
+    end
+    return "unknown" if path.nil?
+    path[(path.index(prefix) + prefix.length), path.rindex("/")]
   end
 
   def reflex_render(**kwargs)
+    kwargs[:partial] = idomatic_partial_path(kwargs[:partial])
     kwargs[:assigns] ||= {}
     kwargs[:assigns].each { |key, val| kwargs[:assigns][key] = transportable_value(val) }
     kwargs[:locals] ||= {}

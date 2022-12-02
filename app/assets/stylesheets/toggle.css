@@ -1,0 +1,56 @@
+body[data-devtools~='toggle'] toggle-trigger {
+  box-sizing: border-box;
+  outline-offset: -2px;
+  outline: solid 1px salmon;
+}
+
+.reflex-behaviors-tooltip.trigger {
+  background-color: salmon;
+  border-bottom-left-radius: 0;
+  color: white;
+}
+
+.reflex-behaviors-tooltip.trigger .shared,
+.reflex-behaviors-tooltip.trigger strong{
+  color: darkred;
+}
+
+.reflex-behaviors-tooltip.trigger::after {
+  border-color: salmon transparent transparent transparent;
+  border-style: solid;
+  border-width: 5px;
+  content: "";
+  left: 5px;
+  margin-left: -5px;
+  position: absolute;
+  top: 100%;
+}
+
+body[data-devtools~='toggle'] toggle-target.debug {
+  box-sizing: border-box;
+  /*display: inline-block;*/
+  outline-offset: -2px;
+  outline: solid 1px lightskyblue;
+}
+
+.reflex-behaviors-tooltip.target {
+  background-color: lightskyblue;
+  border-top-left-radius: 0;
+  color: white;
+}
+
+.reflex-behaviors-tooltip.target .shared,
+.reflex-behaviors-tooltip.target strong {
+  color: blue;
+}
+
+.reflex-behaviors-tooltip.target::after {
+  border-color: transparent transparent lightskyblue transparent;
+  border-style: solid;
+  border-width: 5px;
+  bottom: 100%;
+  content: "";
+  left: 5px;
+  margin-left: -5px;
+  position: absolute;
+}
