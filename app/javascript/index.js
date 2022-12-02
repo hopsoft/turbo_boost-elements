@@ -7,6 +7,6 @@ import devtools from './devtools'
 
 const { enable, disable, start, stop } = devtools
 
-self.ReflexBehavors = {
+self.ReflexBehaviors = {
   devtools: { enable, disable, start, stop }
 }
