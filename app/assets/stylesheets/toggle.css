@@ -1,17 +1,21 @@
-/* trigger */
+body[data-devtools~='toggle'] toggle-trigger {
+  box-sizing: border-box;
+  outline-offset: -2px;
+  outline: solid 1px salmon;
+}
 
-body.debug-toggles .reflex-behavior-tooltip.trigger {
+.reflex-behaviors-tooltip.trigger {
   background-color: salmon;
   border-bottom-left-radius: 0;
   color: white;
 }
 
-body.debug-toggles .reflex-behavior-tooltip.trigger .shared,
-body.debug-toggles .reflex-behavior-tooltip.trigger strong{
+.reflex-behaviors-tooltip.trigger .shared,
+.reflex-behaviors-tooltip.trigger strong{
   color: darkred;
 }
 
-body.debug-toggles .reflex-behavior-tooltip.trigger::after {
+.reflex-behaviors-tooltip.trigger::after {
   border-color: salmon transparent transparent transparent;
   border-style: solid;
   border-width: 5px;
@@ -22,27 +26,25 @@ body.debug-toggles .reflex-behavior-tooltip.trigger::after {
   top: 100%;
 }
 
-body.debug-toggles toggle-trigger {
+body[data-devtools~='toggle'] toggle-target.debug {
   box-sizing: border-box;
-  display: inline-block;
+  /*display: inline-block;*/
   outline-offset: -2px;
-  outline: solid 1px salmon;
+  outline: solid 1px lightskyblue;
 }
 
-/* target */
-
-body.debug-toggles .reflex-behavior-tooltip.target {
+.reflex-behaviors-tooltip.target {
   background-color: lightskyblue;
   border-top-left-radius: 0;
   color: white;
 }
 
-body.debug-toggles .reflex-behavior-tooltip.target .shared,
-body.debug-toggles .reflex-behavior-tooltip.target strong {
+.reflex-behaviors-tooltip.target .shared,
+.reflex-behaviors-tooltip.target strong {
   color: blue;
 }
 
-body.debug-toggles .reflex-behavior-tooltip.target::after {
+.reflex-behaviors-tooltip.target::after {
   border-color: transparent transparent lightskyblue transparent;
   border-style: solid;
   border-width: 5px;
@@ -51,11 +53,4 @@ body.debug-toggles .reflex-behavior-tooltip.target::after {
   left: 5px;
   margin-left: -5px;
   position: absolute;
-}
-
-body.debug-toggles toggle-target.debug {
-  box-sizing: border-box;
-  display: inline-block;
-  outline-offset: -2px;
-  outline: solid 1px lightskyblue;
 }

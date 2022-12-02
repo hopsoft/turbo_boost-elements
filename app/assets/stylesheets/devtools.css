@@ -1,0 +1,51 @@
+#reflex-behaviors-devtools {
+  background-color: ghostwhite;
+  border-radius: 10px;
+  border: solid 1px gainsboro;
+  bottom: 20px;
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,.07));
+  left: 50%;
+  padding: 5px 10px;
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 10000;
+}
+
+#reflex-behaviors-devtools * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#reflex-behaviors-devtools strong {
+  color: silver;
+  font-weight: 600;
+}
+
+#reflex-behaviors-devtools button[data-action='close'] {
+  background-color: gainsboro;
+  border-radius: 50%;
+  color: white;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  margin: 0 -5px 0 10px;
+  padding: 0 3px;
+  width: 18px;
+}
+
+#reflex-behaviors-devtools .devtool {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+#reflex-behaviors-devtools .devtool input[type='checkbox'] {
+  margin-bottom: 2px;
+}
+
+#reflex-behaviors-devtools .devtool input,
+#reflex-behaviors-devtools .devtool label {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
