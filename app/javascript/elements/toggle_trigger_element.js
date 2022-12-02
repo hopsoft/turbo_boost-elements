@@ -95,10 +95,8 @@ addEventListener(
 
 addEventListener('click', event => {
   setTimeout(() => {
-    document
-      .querySelectorAll(
-        'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'
-      )
-      .forEach(trigger => trigger.collapse())
+    const selector =
+      'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'
+    document.querySelectorAll(selector).forEach(trigger => trigger.collapse())
   })
 })
