@@ -31,6 +31,13 @@ function start () {
   supervisorElement.dispatchEvent(startEvent)
 }
 
+// TODO: retain state
+// TODO: make debounced
+function restart () {
+  stop()
+  start()
+}
+
 function register (name, label) {
   if (!supervisorElement) return
   return appendHTML(
@@ -45,12 +52,13 @@ function register (name, label) {
 
 function isEnabled (name) {
   if (!supervisorElement) return false
-  return supervisorElement.enabledNames.includes(name)
+  return supervisorElement.enabledNames[name]
 }
 
 export default {
   isEnabled,
   register,
+  restart,
   start,
   stop
 }

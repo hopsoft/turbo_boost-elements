@@ -3,7 +3,7 @@ import { appendHTML } from '../../html'
 export default class SupervisorElement extends HTMLElement {
   constructor () {
     super()
-    this.enabledNames = []
+    this.enabledNames = {}
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.innerHTML = this.html
     this.shadowRoot
@@ -17,15 +17,25 @@ export default class SupervisorElement extends HTMLElement {
   }
 
   enableDevtool (name) {
-    if (this.enabledNames.includes(name)) return
-    this.enabledNames.push(name)
+    if (this.enabledNames[name]) return
+    this.enabledNames[name] = true
+    this.dispatchEvent(
+      new CustomEvent('reflex-behaviors:devtool-enable', {
+        bubbles: true,
+        detail: { name: name }
+      })
+    )
   }
 
   disableDevtool (name) {
-    if (!this.enabledNames.includes(name)) return
-    const index = this.enabledNames.indexOf(name)
-    if (index < 0) return
-    this.enabledNames.splice(index, 1)
+    if (!this.enabledNames[name]) return
+    delete this.enabledNames[name]
+    this.dispatchEvent(
+      new CustomEvent('reflex-behaviors:devtool-disable', {
+        bubbles: true,
+        detail: { name: name }
+      })
+    )
   }
 
   close () {

@@ -1,5 +1,5 @@
-import supervisor from '../supervisor'
-import { appendHTML } from '../../html'
+import supervisor from './supervisor'
+import { appendHTML } from '../html'
 
 document.addEventListener('reflex-behaviors:devtools-start', () =>
   supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
@@ -36,6 +36,21 @@ export default class ToggleDevtool {
   constructor (trigger) {
     this.name = 'toggle'
     this.trigger = trigger
+    this.target = trigger.target
+
+    document.addEventListener('reflex-behaviors:devtool-enable', event => {
+      const { name } = event.detail
+      if (name === this.name) this.addHighlight(this.trigger, 'salmon')
+    })
+
+    document.addEventListener('reflex-behaviors:devtool-disable', event => {
+      const { name } = event.detail
+      if (name === this.name) this.removeHighlight(this.trigger)
+    })
+  }
+
+  get isEnabled () {
+    return supervisor.isEnabled(this.name)
   }
 
   show () {
@@ -43,6 +58,7 @@ export default class ToggleDevtool {
     this.hide()
     this.createTriggerTooltip()
     this.createTargetTooltip()
+    this.addHighlight(this.target, 'lightskyblue')
   }
 
   hide () {
@@ -54,6 +70,7 @@ export default class ToggleDevtool {
       this.targetTooltip.remove()
       delete this.targetTooltip
     }
+    this.removeHighlight(this.target)
   }
 
   createTriggerTooltip () {
@@ -79,10 +96,10 @@ export default class ToggleDevtool {
   }
 
   createTargetTooltip () {
-    if (!this.trigger.target) return
+    if (!this.target) return
 
-    const title = `TARGET (id: ${this.trigger.target.id})`
-    const content = this.trigger.target.viewStack
+    const title = `TARGET (id: ${this.target.id})`
+    const content = this.target.viewStack
       .map(view => {
         return this.trigger.sharedViews.includes(view)
           ? `<div slot="emphasis">${view}</div>`
@@ -96,22 +113,29 @@ export default class ToggleDevtool {
       position: 'bottom'
     })
 
-    const coords = this.trigger.target.coordinates
+    const coords = this.target.coordinates
     const top = Math.ceil(coords.top + coords.height + 4)
     const left = Math.ceil(coords.left)
     this.targetTooltip.style.top = `${top}px`
     this.targetTooltip.style.left = `${left}px`
   }
 
-  //highlightTrigger () {
-  //this.trigger.style.outline = 'solid 1px darkred'
-  //}
+  addTriggerHightlight () {}
 
-  //hightlightTarget () {
-  //this.trigger.style.outline = 'solid 1px blue'
-  //}
+  addHighlight (element, color) {
+    if (!element || element.originalStyles) return
+    const { outline, outlineOffset } = element
+    element.originalStyles = { outline, outlineOffset }
+    element.style.outline = `solid 3px ${color}`
+    element.style.outlineOffset = '-3px'
+  }
 
-  get isEnabled () {
-    return supervisor.isEnabled(this.name)
+  removeHighlight (element) {
+    if (element && element.originalStyles) {
+      for (const [key, value] of Object.entries(element.originalStyles)) {
+        value ? (element.style[key] = value) : (element.style[key] = '')
+      }
+      delete element.originalStyles
+    }
   }
 }

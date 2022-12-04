@@ -1,5 +1,5 @@
 import supervisor from './supervisor'
 
-const { start, stop } = supervisor
+const { restart, start, stop } = supervisor
 
-export default { start, stop }
+export default { restart, start, stop }

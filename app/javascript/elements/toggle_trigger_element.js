@@ -28,6 +28,8 @@ export default class ToggleTriggerElement extends ReflexElement {
       this.removeEventListener('mouseleave', mouseleave)
       delete this.devtool
     })
+
+    // TODO: restart supervisor (debounced)
   }
 
   collapse () {
