@@ -1,8 +1,7 @@
-import ReflexElement from './reflex_element'
-
-export default class ReflexTooltipElement extends ReflexElement {
+export default class TooltipElement extends HTMLElement {
   constructor () {
     super()
+    this.attachShadow({ mode: 'open' })
     this.shadowRoot.innerHTML = this.html
   }
 
@@ -45,8 +44,6 @@ export default class ReflexTooltipElement extends ReflexElement {
 
   get stylesheet () {
     return `
-      @import https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css;
-
       :host {
         display: block;
         position: absolute;

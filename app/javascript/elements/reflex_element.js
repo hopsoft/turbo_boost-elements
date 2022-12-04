@@ -26,17 +26,6 @@ export default class ReflexElement extends HTMLElement {
     )
   }
 
-  template (html) {
-    let template = document.createElement('template')
-    template.innerHTML = html
-    return template
-  }
-
-  appendHTML (html, parent) {
-    parent = parent || document.body
-    return parent.appendChild(this.template(html).content.cloneNode(true))
-  }
-
   get viewStack () {
     if (!this.dataset.viewStack) return []
     return JSON.parse(this.dataset.viewStack)

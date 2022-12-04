@@ -1,26 +1,34 @@
 import ReflexElement from './reflex_element'
-import ToggleDevtool from '../devtools/toggle_devtool'
+import ToggleDevtool from '../devtools/toggle'
+
+//highlightRenderTarget () {
+//  const { id, partial } = this.renderPayload
+//  if (!id) return
+//  const element = document.getElementById(id)
+//  if (!element) return
+//  element.dataset.partial = partial
+//  element.classList.add('debug', 'toggle')
+//}
 
 export default class ToggleTriggerElement extends ReflexElement {
-  constructor () {
-    super()
-    this.devtool = new ToggleDevtool(this)
-  }
-
   connectedCallback () {
     super.connectedCallback()
-    this.addEventListener('mouseenter', () => this.devtool.show())
-    this.addEventListener('mouseleave', () => this.devtool.hide())
-  }
 
-  //highlightRenderTarget () {
-  //  const { id, partial } = this.renderPayload
-  //  if (!id) return
-  //  const element = document.getElementById(id)
-  //  if (!element) return
-  //  element.dataset.partial = partial
-  //  element.classList.add('debug', 'toggle')
-  //}
+    const mouseenter = () => this.devtool.show()
+    const mouseleave = () => this.devtool.hide()
+
+    document.addEventListener('reflex-behaviors:devtools-start', () => {
+      this.devtool = new ToggleDevtool(this)
+      this.addEventListener('mouseenter', mouseenter)
+      this.addEventListener('mouseleave', mouseleave)
+    })
+
+    document.addEventListener('reflex-behaviors:devtools-stop', () => {
+      this.removeEventListener('mouseenter', mouseenter)
+      this.removeEventListener('mouseleave', mouseleave)
+      delete this.devtool
+    })
+  }
 
   collapse () {
     try {
