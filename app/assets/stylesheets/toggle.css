@@ -54,3 +54,17 @@ body[data-devtools~='toggle'] toggle-target.debug {
   margin-left: -5px;
   position: absolute;
 }
+
+.debug.toggle {
+  outline-offset: -4px;
+  outline: solid 4px limegreen;
+}
+
+.debug.toggle::before {
+  background-color: limegreen;
+  color: white;
+  content: attr(data-partial);
+  font-size: 12px;
+  padding: 4px 6px 6px 4px;
+  z-index: 10000;
+}

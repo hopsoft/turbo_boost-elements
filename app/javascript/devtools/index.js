@@ -1,46 +1,4 @@
-// Tasks
-// - [ ] audit css class names and refine
-// - [ ] extract stylesheet and host on cdn
-// - [ ] ensure tooltips don't overlap or run off screen
-// - [ ] add ability to remember start/stop in local storage
-// - [ ] isolate individual tools and register them (i.e. plugin framework)
-//       will probably have behaviors register any devtools they support
-//
-//       Tool markup example
-//
-//         <div name="TOOL_NAME" class="devtool">
-//           <input name="TOOL_NAME-checkbox" value="TOOL_NAME" type="checkbox">
-//           <label for="TOOL_NAME-checkbox">TOOL_LABEL</label>
-//         </div>
-
 let tray
-
-addEventListener('click', () => {
-  setTimeout(() => {
-    document
-      .querySelectorAll('.reflex-behaviors-tooltip')
-      .forEach(tooltip => tooltip.remove())
-  }, 300)
-})
-
-function tooltip (reflexElement, title, body, cssClass, position = 'top') {
-  const el = document.createElement('div')
-  el.classList.add('reflex-behaviors-tooltip', cssClass)
-  el.innerHTML = `<strong>${title}</strong><hr>${body}`
-  document.body.appendChild(el)
-
-  const coords = reflexElement.coordinates
-
-  if (position === 'top') {
-    el.style.top = `${Math.ceil(coords.top - el.offsetHeight - 5)}px`
-    el.style.left = `${Math.ceil(coords.left + 4)}px`
-  }
-
-  if (position === 'bottom') {
-    el.style.top = `${Math.ceil(coords.top + coords.height + 5)}px`
-    el.style.left = `${Math.ceil(coords.left + 4)}px`
-  }
-}
 
 function enabled () {
   const tools = document.body.dataset.devtools || ''
@@ -112,6 +70,5 @@ export default {
   enable,
   isEnabled,
   start,
-  stop,
-  tooltip
+  stop
 }

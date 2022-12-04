@@ -1,6 +1,14 @@
 export default class ReflexElement extends HTMLElement {
+  constructor () {
+    super()
+    this.devtool = 'unknown'
+    this.attachShadow({ mode: 'open' })
+    this.shadowRoot.innerHTML = '<slot></slot>'
+  }
+
   connectedCallback () {
     this.ensureId()
+    this.dataset.elementOrigin = 'hopsoft/reflex_behaviors'
   }
 
   ensureId () {
@@ -16,6 +24,17 @@ export default class ReflexElement extends HTMLElement {
         (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
       ).toString(16)
     )
+  }
+
+  template (html) {
+    let template = document.createElement('template')
+    template.innerHTML = html
+    return template
+  }
+
+  appendHTML (html, parent) {
+    parent = parent || document.body
+    return parent.appendChild(this.template(html).content.cloneNode(true))
   }
 
   get viewStack () {
