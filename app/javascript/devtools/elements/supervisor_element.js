@@ -1,9 +1,9 @@
-import { appendHTML } from '../../html'
+import { appendHTML } from '../../dom'
 
 export default class SupervisorElement extends HTMLElement {
   constructor () {
     super()
-    this.enabledNames = {}
+    this.enabledDevtools = {}
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.innerHTML = this.html
     this.shadowRoot
@@ -11,14 +11,15 @@ export default class SupervisorElement extends HTMLElement {
       .addEventListener('click', () => this.close())
 
     this.addEventListener('change', event => {
-      const { checked, name } = event.target
+      const devtoolElement = event.target
+      const { checked, name } = devtoolElement
       checked ? this.enableDevtool(name) : this.disableDevtool(name)
     })
   }
 
   enableDevtool (name) {
-    if (this.enabledNames[name]) return
-    this.enabledNames[name] = true
+    if (this.enabledDevtools[name]) return
+    this.enabledDevtools[name] = true
     this.dispatchEvent(
       new CustomEvent('reflex-behaviors:devtool-enable', {
         bubbles: true,
@@ -28,8 +29,8 @@ export default class SupervisorElement extends HTMLElement {
   }
 
   disableDevtool (name) {
-    if (!this.enabledNames[name]) return
-    delete this.enabledNames[name]
+    if (!this.enabledDevtools[name]) return
+    delete this.enabledDevtools[name]
     this.dispatchEvent(
       new CustomEvent('reflex-behaviors:devtool-disable', {
         bubbles: true,
@@ -39,10 +40,9 @@ export default class SupervisorElement extends HTMLElement {
   }
 
   close () {
-    this.devtoolElements.forEach(
-      el =>
-        (el.shadowRoot.querySelector('input[type="checkbox"]').checked = false)
-    )
+    this.devtoolElements.forEach(el => {
+      if (el.checked) el.click()
+    })
     this.remove()
   }
 

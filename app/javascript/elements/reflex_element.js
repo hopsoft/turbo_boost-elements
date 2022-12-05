@@ -31,6 +31,10 @@ export default class ReflexElement extends HTMLElement {
     return JSON.parse(this.dataset.viewStack)
   }
 
+  get partial () {
+    return this.viewStack[0]
+  }
+
   get coordinates () {
     const rect = this.getBoundingClientRect()
     return {

@@ -1,4 +1,4 @@
-import { appendHTML } from '../html'
+import { appendHTML } from '../dom'
 import DevtoolElement from './elements/devtool_element'
 import SupervisorElement from './elements/supervisor_element'
 import TooltipElement from './elements/tooltip_element'
@@ -12,10 +12,12 @@ let supervisorElement
 function stop () {
   if (!supervisorElement) return
   supervisorElement.close()
-  const stopEvent = new CustomEvent('reflex-behaviors:devtools-stop', {
-    bubbles: true
-  })
-  supervisorElement.dispatchEvent(stopEvent)
+  supervisorElement.dispatchEvent(
+    new CustomEvent('reflex-behaviors:devtools-stop', {
+      bubbles: true
+    })
+  )
+  supervisorElement = null
 }
 
 function start () {
@@ -25,18 +27,35 @@ function start () {
   supervisorElement = document.body.querySelector(
     'reflex-behaviors-devtool-supervisor'
   )
-  const startEvent = new CustomEvent('reflex-behaviors:devtools-start', {
-    bubbles: true
-  })
-  supervisorElement.dispatchEvent(startEvent)
+  supervisorElement.dispatchEvent(
+    new CustomEvent('reflex-behaviors:devtools-start', {
+      bubbles: true
+    })
+  )
 }
 
-// TODO: retain state
-// TODO: make debounced
 function restart () {
+  const enabledList = supervisorElement
+    ? Object.keys(supervisorElement.enabledDevtools)
+    : []
+
   stop()
   start()
+
+  supervisorElement.devtoolElements.forEach(el => {
+    if (enabledList.includes(el.name)) el.check()
+  })
 }
+
+let restartTimeout
+function debouncedRestart () {
+  clearTimeout(restartTimeout)
+  restartTimeout = setTimeout(restart, 25)
+}
+addEventListener('turbo:load', debouncedRestart)
+addEventListener('turbo-frame:load', debouncedRestart)
+addEventListener('turbo-reflex:success', debouncedRestart)
+addEventListener('turbo-reflex:finish', debouncedRestart)
 
 function register (name, label) {
   if (!supervisorElement) return
@@ -50,15 +69,15 @@ function register (name, label) {
   )
 }
 
-function isEnabled (name) {
+function enabled (name) {
   if (!supervisorElement) return false
-  return supervisorElement.enabledNames[name]
+  return supervisorElement.enabledDevtools[name]
 }
 
 export default {
-  isEnabled,
+  enabled,
   register,
-  restart,
+  restart: debouncedRestart,
   start,
   stop
 }

@@ -1,14 +1,6 @@
 import ReflexElement from './reflex_element'
+import DevtoolSupervisor from '../devtools/supervisor'
 import ToggleDevtool from '../devtools/toggle'
-
-//highlightRenderTarget () {
-//  const { id, partial } = this.renderPayload
-//  if (!id) return
-//  const element = document.getElementById(id)
-//  if (!element) return
-//  element.dataset.partial = partial
-//  element.classList.add('debug', 'toggle')
-//}
 
 export default class ToggleTriggerElement extends ReflexElement {
   connectedCallback () {
@@ -29,7 +21,7 @@ export default class ToggleTriggerElement extends ReflexElement {
       delete this.devtool
     })
 
-    // TODO: restart supervisor (debounced)
+    DevtoolSupervisor.restart()
   }
 
   collapse () {
@@ -50,9 +42,19 @@ export default class ToggleTriggerElement extends ReflexElement {
     return this.viewStack.reduce(reducer.bind(this), [])
   }
 
-  get renderPayload () {
+  get renderingInfo () {
     if (!this.dataset.render) return {}
     return JSON.parse(this.dataset.render)
+  }
+
+  get renderingPartial () {
+    return this.renderingInfo.partial
+  }
+
+  get renderingElement () {
+    const { id } = this.renderingInfo
+    if (!id) return null
+    return document.getElementById(id)
   }
 
   get expanded () {
@@ -90,6 +92,7 @@ addEventListener(
 )
 
 addEventListener('click', event => {
+  if (event.target.tagName.match(/reflex-behaviors-devtool/i)) return
   setTimeout(() => {
     const selector =
       'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'

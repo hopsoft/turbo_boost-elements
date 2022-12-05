@@ -1,5 +1,5 @@
+import { appendHTML, addHighlight, removeHighlight } from '../dom'
 import supervisor from './supervisor'
-import { appendHTML } from '../html'
 
 document.addEventListener('reflex-behaviors:devtools-start', () =>
   supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
@@ -35,42 +35,57 @@ function appendTooltip (id, title, content, options = {}) {
 export default class ToggleDevtool {
   constructor (trigger) {
     this.name = 'toggle'
+    this.reflex = trigger.dataset.turboReflex
     this.trigger = trigger
     this.target = trigger.target
+    this.renderingPartial = trigger.renderingPartial
+    this.renderingElement = trigger.renderingElement
+    this.renderingElementId = this.renderingElement
+      ? this.renderingElement.id
+      : null
 
     document.addEventListener('reflex-behaviors:devtool-enable', event => {
       const { name } = event.detail
-      if (name === this.name) this.addHighlight(this.trigger, 'salmon')
+      if (name === this.name)
+        addHighlight(this.trigger, { color: 'salmon', offset: '2px' })
     })
 
     document.addEventListener('reflex-behaviors:devtool-disable', event => {
       const { name } = event.detail
-      if (name === this.name) this.removeHighlight(this.trigger)
+      if (name === this.name) removeHighlight(this.trigger)
     })
   }
 
-  get isEnabled () {
-    return supervisor.isEnabled(this.name)
+  get enabled () {
+    return supervisor.enabled(this.name)
   }
 
   show () {
-    if (!this.isEnabled) return
+    if (!this.enabled) return
     this.hide()
     this.createTriggerTooltip()
     this.createTargetTooltip()
-    this.addHighlight(this.target, 'lightskyblue')
+    addHighlight(this.target, { color: 'lightskyblue', offset: '-2px' })
+    addHighlight(this.renderingElement, {
+      color: 'lime',
+      offset: '4px'
+    })
+
+    console.table({
+      trigger: { id: this.trigger.id, partial: this.trigger.partial },
+      target: { id: this.target.id, partial: this.target.partial },
+      [this.reflex]: {
+        id: this.renderingElementId,
+        partial: this.renderingPartial
+      }
+    })
   }
 
   hide () {
-    if (this.triggerTooltip) {
-      this.triggerTooltip.remove()
-      delete this.triggerTooltip
-    }
-    if (this.targetTooltip) {
-      this.targetTooltip.remove()
-      delete this.targetTooltip
-    }
-    this.removeHighlight(this.target)
+    this.destroyTriggerTooltip()
+    this.destroyTargetTooltip()
+    removeHighlight(this.target)
+    removeHighlight(this.renderingElement)
   }
 
   createTriggerTooltip () {
@@ -93,6 +108,12 @@ export default class ToggleDevtool {
     const left = Math.ceil(coords.left)
     this.triggerTooltip.style.top = `${top}px`
     this.triggerTooltip.style.left = `${left}px`
+  }
+
+  destroyTriggerTooltip () {
+    if (!this.triggerTooltip) return
+    this.triggerTooltip.remove()
+    delete this.triggerTooltip
   }
 
   createTargetTooltip () {
@@ -120,22 +141,9 @@ export default class ToggleDevtool {
     this.targetTooltip.style.left = `${left}px`
   }
 
-  addTriggerHightlight () {}
-
-  addHighlight (element, color) {
-    if (!element || element.originalStyles) return
-    const { outline, outlineOffset } = element
-    element.originalStyles = { outline, outlineOffset }
-    element.style.outline = `solid 3px ${color}`
-    element.style.outlineOffset = '-3px'
-  }
-
-  removeHighlight (element) {
-    if (element && element.originalStyles) {
-      for (const [key, value] of Object.entries(element.originalStyles)) {
-        value ? (element.style[key] = value) : (element.style[key] = '')
-      }
-      delete element.originalStyles
-    }
+  destroyTargetTooltip () {
+    if (!this.targetTooltip) return
+    this.targetTooltip.remove()
+    delete this.targetTooltip
   }
 }
