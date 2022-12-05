@@ -41,7 +41,7 @@ export default class SupervisorElement extends HTMLElement {
 
   close () {
     this.devtoolElements.forEach(el => {
-      if (el.checked) el.click()
+      if (el.checked) el.uncheck()
     })
     this.remove()
   }

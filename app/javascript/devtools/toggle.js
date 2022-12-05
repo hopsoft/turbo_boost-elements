@@ -8,7 +8,7 @@ document.addEventListener('reflex-behaviors:devtools-start', () =>
 const triggerTooltipId = 'toggle-trigger-tooltip'
 const targetTooltipId = 'toggle-target-tooltip'
 
-addEventListener('click', removeTooltips)
+addEventListener('click', () => setTimeout(removeTooltips))
 
 function removeTooltips () {
   const ids = [triggerTooltipId, targetTooltipId]
@@ -47,7 +47,7 @@ export default class ToggleDevtool {
     document.addEventListener('reflex-behaviors:devtool-enable', event => {
       const { name } = event.detail
       if (name === this.name)
-        addHighlight(this.trigger, { color: 'salmon', offset: '2px' })
+        addHighlight(this.trigger, { color: 'red', offset: '2px' })
     })
 
     document.addEventListener('reflex-behaviors:devtool-disable', event => {
@@ -65,9 +65,9 @@ export default class ToggleDevtool {
     this.hide()
     this.createTriggerTooltip()
     this.createTargetTooltip()
-    addHighlight(this.target, { color: 'lightskyblue', offset: '-2px' })
+    addHighlight(this.target, { color: 'blue', offset: '-2px' })
     addHighlight(this.renderingElement, {
-      color: 'lime',
+      color: 'turquoise',
       offset: '4px'
     })
 
@@ -99,7 +99,7 @@ export default class ToggleDevtool {
       .join('')
 
     this.triggerTooltip = appendTooltip(triggerTooltipId, title, content, {
-      backgroundColor: 'salmon',
+      backgroundColor: 'pink',
       emphaisColor: 'darkred'
     })
 

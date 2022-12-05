@@ -63,7 +63,7 @@ export default class TooltipElement extends HTMLElement {
         min-height: 30px;
         min-width: 100px;
         opacity: 0.9;
-        outline: solid 1px ${this.emphasisColor};
+        outline: solid 2px ${this.emphasisColor};
         padding: 8px 12px 8px 12px;
         white-space: nowrap;
       }

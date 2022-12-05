@@ -3,7 +3,10 @@ export default class DevtoolElement extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.innerHTML = this.html
-    this.labelElement.addEventListener('click', () => this.toggle())
+    this.labelElement.addEventListener('click', event => {
+      event.preventDefault()
+      this.toggle()
+    })
     this.checkboxElement.addEventListener('change', event =>
       this.dispatchEvent(new CustomEvent('change', { bubbles: true }))
     )
