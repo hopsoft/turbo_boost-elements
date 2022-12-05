@@ -1,48 +1,27 @@
 import ReflexElement from './reflex_element'
-import devtools from '../devtools'
+import DevtoolSupervisor from '../devtools/supervisor'
+import ToggleDevtool from '../devtools/toggle'
 
 export default class ToggleTriggerElement extends ReflexElement {
-  constructor () {
-    super()
+  connectedCallback () {
+    super.connectedCallback()
 
-    this.addEventListener('mouseenter', event => {
-      if (devtools.isEnabled('toggle')) {
-        clearTimeout(this.mouseLeaveTimeout)
-        event.target.target.classList.add('debug')
-        event.target.showDebugTooltips()
-      }
+    const mouseenter = () => this.devtool.show()
+    const mouseleave = () => this.devtool.hide()
+
+    document.addEventListener('reflex-behaviors:devtools-start', () => {
+      this.devtool = new ToggleDevtool(this)
+      this.addEventListener('mouseenter', mouseenter)
+      this.addEventListener('mouseleave', mouseleave)
     })
 
-    this.addEventListener('mouseleave', event => {
-      if (devtools.isEnabled('toggle')) {
-        clearTimeout(this.mouseLeaveTimeout)
-        this.mouseLeaveTimeout = setTimeout(() => {
-          event.target.target.classList.remove('debug')
-          document
-            .querySelectorAll('.reflex-behaviors-tooltip')
-            .forEach(tooltip => tooltip.remove())
-        }, 250)
-      }
+    document.addEventListener('reflex-behaviors:devtools-stop', () => {
+      this.removeEventListener('mouseenter', mouseenter)
+      this.removeEventListener('mouseleave', mouseleave)
+      delete this.devtool
     })
-  }
 
-  showDebugTooltips () {
-    const sharedViewPath = this.sharedViewPath
-    let shared = false
-    let title = `controls: ${this.controls}`
-    let body = this.viewStack.map(path => {
-      shared = shared || path === sharedViewPath
-      return `<div class='${shared ? 'shared' : null}'>${path}<div>`
-    })
-    devtools.tooltip(this, title, body.join(''), 'trigger', 'top')
-
-    shared = false
-    title = `id: ${this.target.id}`
-    body = this.target.viewStack.map(path => {
-      shared = shared || path === sharedViewPath
-      return `<div class='${shared ? 'shared' : null}'>${path}<div>`
-    })
-    devtools.tooltip(this.target, title, body.join(''), 'target', 'bottom')
+    DevtoolSupervisor.restart()
   }
 
   collapse () {
@@ -54,17 +33,36 @@ export default class ToggleTriggerElement extends ReflexElement {
     }
   }
 
-  get sharedViewPath () {
-    const targetViewStack = this.target.viewStack
-    return this.viewStack.find(path => targetViewStack.includes(path))
+  get sharedViews () {
+    if (!this.target) return []
+    const reducer = (memo, view) => {
+      if (this.target.viewStack.includes(view)) memo.push(view)
+      return memo
+    }
+    return this.viewStack.reduce(reducer.bind(this), [])
   }
 
-  get controls () {
-    return this.getAttribute('aria-controls')
+  get renderingInfo () {
+    if (!this.dataset.render) return {}
+    return JSON.parse(this.dataset.render)
+  }
+
+  get renderingPartial () {
+    return this.renderingInfo.partial
+  }
+
+  get renderingElement () {
+    const { id } = this.renderingInfo
+    if (!id) return null
+    return document.getElementById(id)
   }
 
   get expanded () {
     return this.getAttribute('aria-expanded') === 'true'
+  }
+
+  get controls () {
+    return this.getAttribute('aria-controls')
   }
 
   get target () {
@@ -94,6 +92,7 @@ addEventListener(
 )
 
 addEventListener('click', event => {
+  if (event.target.tagName.match(/reflex-behaviors-devtool/i)) return
   setTimeout(() => {
     const selector =
       'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'

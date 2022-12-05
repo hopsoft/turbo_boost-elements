@@ -5,8 +5,4 @@ import 'turbo_reflex'
 import './elements'
 import devtools from './devtools'
 
-const { enable, disable, start, stop } = devtools
-
-self.ReflexBehaviors = {
-  devtools: { enable, disable, start, stop }
-}
+self.ReflexBehaviors = { devtools }

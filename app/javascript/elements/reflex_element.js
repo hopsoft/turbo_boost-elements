@@ -1,6 +1,14 @@
 export default class ReflexElement extends HTMLElement {
+  constructor () {
+    super()
+    this.devtool = 'unknown'
+    this.attachShadow({ mode: 'open' })
+    this.shadowRoot.innerHTML = '<slot></slot>'
+  }
+
   connectedCallback () {
     this.ensureId()
+    this.dataset.elementOrigin = 'hopsoft/reflex_behaviors'
   }
 
   ensureId () {
@@ -21,6 +29,10 @@ export default class ReflexElement extends HTMLElement {
   get viewStack () {
     if (!this.dataset.viewStack) return []
     return JSON.parse(this.dataset.viewStack)
+  }
+
+  get partial () {
+    return this.viewStack[0]
   }
 
   get coordinates () {
