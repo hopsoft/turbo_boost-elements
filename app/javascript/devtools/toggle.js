@@ -1,4 +1,4 @@
-import { appendHTML, addHighlight, removeHighlight } from '../dom'
+import { appendHTML, addHighlight, removeHighlight } from './dom'
 import supervisor from './supervisor'
 
 document.addEventListener('reflex-behaviors:devtools-start', () =>
@@ -68,7 +68,8 @@ export default class ToggleDevtool {
     addHighlight(this.target, { color: 'blue', offset: '-2px' })
     addHighlight(this.renderingElement, {
       color: 'turquoise',
-      offset: '4px'
+      offset: '4px',
+      width: '4px'
     })
 
     console.table({

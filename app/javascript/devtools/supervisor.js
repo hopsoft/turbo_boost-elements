@@ -1,4 +1,4 @@
-import { appendHTML } from '../dom'
+import { appendHTML } from './dom'
 import DevtoolElement from './elements/devtool_element'
 import SupervisorElement from './elements/supervisor_element'
 import TooltipElement from './elements/tooltip_element'

@@ -15,13 +15,11 @@ export function addHighlight (element, options = {}) {
   color = color || 'red'
   offset = offset || '0px'
   width = width || '3px'
-  const { display, outline, outlineOffset } = element.style
+  const { outline, outlineOffset } = element.style
   element.originalStyles = element.originalStyles || {
-    display,
     outline,
     outlineOffset
   }
-  //element.style.display = 'inline-block'
   element.style.outline = `dotted ${width} ${color}`
   element.style.outlineOffset = offset
 }

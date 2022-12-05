@@ -1,4 +1,4 @@
-import { appendHTML } from '../../dom'
+import { appendHTML } from '../dom'
 
 export default class SupervisorElement extends HTMLElement {
   constructor () {
