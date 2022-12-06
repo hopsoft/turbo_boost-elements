@@ -132,8 +132,8 @@ export default class ToggleDevtool {
     })
 
     const coords = this.trigger.coordinates
-    const top = Math.ceil(coords.top - this.triggerTooltip.offsetHeight - 5)
-    const left = Math.ceil(coords.left)
+    const top = Math.ceil(coords.top - this.triggerTooltip.offsetHeight - 14)
+    const left = Math.ceil(coords.left - 15)
     this.triggerTooltip.style.top = `${top}px`
     this.triggerTooltip.style.left = `${left}px`
   }
@@ -149,7 +149,6 @@ export default class ToggleDevtool {
     if (!this.target.viewStack) return
 
     const title = `TARGET (id: ${this.target.id})`
-    const targetViewStack = this.target.viewStack || []
     const content = this.target.viewStack
       .map(view => {
         return this.trigger.sharedViews.includes(view)
@@ -165,8 +164,8 @@ export default class ToggleDevtool {
     })
 
     const coords = this.target.coordinates
-    const top = Math.ceil(coords.top + coords.height + 4)
-    const left = Math.ceil(coords.left)
+    const top = Math.ceil(coords.top + coords.height + 12)
+    const left = Math.ceil(coords.left - 15)
     this.targetTooltip.style.top = `${top}px`
     this.targetTooltip.style.left = `${left}px`
   }

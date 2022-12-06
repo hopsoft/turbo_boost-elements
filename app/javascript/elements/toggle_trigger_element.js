@@ -31,9 +31,9 @@ export default class ToggleTriggerElement extends ReflexElement {
 
   get sharedViews () {
     if (!this.target) return []
-    const targetViewStack = this.target.viewStack || []
+    if (!this.target.viewStack) return []
     const reducer = (memo, view) => {
-      if (targetViewStack.includes(view)) memo.push(view)
+      if (this.target.viewStack.includes(view)) memo.push(view)
       return memo
     }
     return this.viewStack.reduce(reducer.bind(this), [])
