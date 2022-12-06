@@ -10,7 +10,7 @@ customElements.define('reflex-behaviors-devools-tooltip', TooltipElement)
 let supervisorElement
 
 function stop () {
-  if (!supervisorElement) return
+  if (stopped()) return
   supervisorElement.close()
   supervisorElement.dispatchEvent(
     new CustomEvent('reflex-behaviors:devtools-stop', {
@@ -21,6 +21,7 @@ function stop () {
 }
 
 function start () {
+  if (started()) return
   appendHTML(
     '<reflex-behaviors-devtool-supervisor></reflex-behaviors-devtool-supervisor>'
   )
@@ -47,15 +48,28 @@ function restart () {
   })
 }
 
+function started () {
+  return !!supervisorElement
+}
+
+function stopped () {
+  return !started()
+}
+
 let restartTimeout
 function debouncedRestart () {
   clearTimeout(restartTimeout)
   restartTimeout = setTimeout(restart, 25)
 }
-addEventListener('turbo:load', debouncedRestart)
-addEventListener('turbo-frame:load', debouncedRestart)
-addEventListener('turbo-reflex:success', debouncedRestart)
-addEventListener('turbo-reflex:finish', debouncedRestart)
+
+function autoRestart () {
+  if (started()) debouncedRestart()
+}
+
+addEventListener('turbo:load', autoRestart)
+addEventListener('turbo-frame:load', autoRestart)
+addEventListener('turbo-reflex:success', autoRestart)
+addEventListener('turbo-reflex:finish', autoRestart)
 
 function register (name, label) {
   if (!supervisorElement) return
@@ -77,7 +91,13 @@ function enabled (name) {
 export default {
   enabled,
   register,
-  restart: debouncedRestart,
   start,
-  stop
+  stop,
+  restart: debouncedRestart,
+  get started () {
+    return started()
+  },
+  get stopped () {
+    return stopped()
+  }
 }

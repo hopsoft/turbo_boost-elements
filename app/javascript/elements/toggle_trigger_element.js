@@ -5,23 +5,19 @@ import ToggleDevtool from '../devtools/toggle'
 export default class ToggleTriggerElement extends ReflexElement {
   connectedCallback () {
     super.connectedCallback()
-
     const mouseenter = () => this.devtool.show()
-    const mouseleave = () => this.devtool.hide()
 
     document.addEventListener('reflex-behaviors:devtools-start', () => {
       this.devtool = new ToggleDevtool(this)
       this.addEventListener('mouseenter', mouseenter)
-      this.addEventListener('mouseleave', mouseleave)
     })
 
     document.addEventListener('reflex-behaviors:devtools-stop', () => {
       this.removeEventListener('mouseenter', mouseenter)
-      this.removeEventListener('mouseleave', mouseleave)
       delete this.devtool
     })
 
-    DevtoolSupervisor.restart()
+    if (DevtoolSupervisor.started) DevtoolSupervisor.restart()
   }
 
   collapse () {
@@ -35,6 +31,7 @@ export default class ToggleTriggerElement extends ReflexElement {
 
   get sharedViews () {
     if (!this.target) return []
+    if (!this.target.viewStack) return []
     const reducer = (memo, view) => {
       if (this.target.viewStack.includes(view)) memo.push(view)
       return memo

@@ -54,8 +54,22 @@ export default class DevtoolElement extends HTMLElement {
 
   get stylesheet () {
     return `
+      :host, :host * {
+        cursor: pointer;
+      }
+
       div {
         display: flex;
+        position: relative;
+        top: -1px;
+      }
+
+      input:checked + label{
+        font-weight: bold;
+      }
+
+      label {
+        color: indigo;
       }
     `
   }

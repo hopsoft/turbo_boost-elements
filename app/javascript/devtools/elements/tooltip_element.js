@@ -56,14 +56,15 @@ export default class TooltipElement extends HTMLElement {
 
       [role="tooltip"] {
         background-color: ${this.backgroundColor};
-        border-radius: 5px;
+        border-radius: 15px;
         filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
         font-family: monospace;
         left: 50px;
         min-height: 30px;
         min-width: 100px;
         opacity: 0.9;
-        outline: solid 2px ${this.emphasisColor};
+        outline-offset: 1px;
+        outline: solid 3px ${this.emphasisColor};
         padding: 8px 12px 8px 12px;
         white-space: nowrap;
       }
@@ -71,11 +72,11 @@ export default class TooltipElement extends HTMLElement {
       [role="tooltip"]::after {
         border-color: ${this.cssArrow};
         border-style: solid;
-        border-width: 5px;
+        border-width: 10px;
         content: "";
-        margin-left: -5px;
+        margin-left: -7px;
         position: absolute;
-        top: ${this.position === 'bottom' ? '-10px' : '100%'};
+        top: ${this.position === 'bottom' ? '-21px' : 'calc(100% + 1px)'};
       }
 
       slot[name="title"] {
