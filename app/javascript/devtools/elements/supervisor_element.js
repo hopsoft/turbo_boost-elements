@@ -72,7 +72,7 @@ export default class SupervisorElement extends HTMLElement {
         border-radius: 15px;
         bottom: 20px;
         display: block;
-        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
+        filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
         left: 50%;
         outline-offset: 1px;
         outline: solid 3px indigo;
