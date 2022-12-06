@@ -34,8 +34,11 @@ class ReflexBehaviors::ApplicationReflex < TurboReflex::Base
   private
 
   def hydrated_value(value)
-    GlobalID::Locator.locate_signed(value)
-  rescue
-    value
+    hydrated = begin
+      GlobalID::Locator.locate_signed(value)
+    rescue
+      value
+    end
+    hydrated.blank? ? nil : hydrated
   end
 end

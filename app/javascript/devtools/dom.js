@@ -22,13 +22,15 @@ export function addHighlight (element, options = {}) {
   }
   element.style.outline = `dotted ${width} ${color}`
   element.style.outlineOffset = offset
+  element.dataset.reflexBehaviorsHighlight = true
 }
 
 export function removeHighlight (element) {
-  if (element && element.originalStyles) {
-    for (const [key, value] of Object.entries(element.originalStyles)) {
+  if (!element) return
+  if (element.originalStyles) {
+    for (const [key, value] of Object.entries(element.originalStyles))
       value ? (element.style[key] = value) : (element.style[key] = '')
-    }
     delete element.originalStyles
   }
+  delete element.dataset.reflexBehaviorsHighlight
 }

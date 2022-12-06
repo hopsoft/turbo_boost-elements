@@ -7,7 +7,7 @@ export default class SupervisorElement extends HTMLElement {
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.innerHTML = this.html
     this.shadowRoot
-      .querySelector('button[data-role="closer"]')
+      .querySelector('button')
       .addEventListener('click', () => this.close())
 
     this.addEventListener('change', event => {
@@ -51,16 +51,16 @@ export default class SupervisorElement extends HTMLElement {
   }
 
   get closeElement () {
-    return this.querySelector('button[data-role="closer"]')
+    return this.querySelector('button')
   }
 
   get html () {
     return `
       <style>${this.stylesheet}</style>
-      <div data-role="container">
-        <strong>ReflexBehaviors</strong>
+      <div>
+        <label>ReflexBehaviors</label>
         <slot name="devtool"></slot>
-        <button data-role='closer'>X</button>
+        <button>X</button>
       </div>
     `
   }
@@ -68,45 +68,61 @@ export default class SupervisorElement extends HTMLElement {
   get stylesheet () {
     return `
       :host {
-        background-color: ghostwhite;
-        border-radius: 10px;
-        outline: solid 1px gainsboro;
+        background-color: lavender;
+        border-radius: 15px;
         bottom: 20px;
         display: block;
-        filter: drop-shadow(0 4px 3px rgba(0,0,0,.07));
+        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
         left: 50%;
+        outline-offset: 1px;
+        outline: solid 3px indigo;
         padding: 5px 10px;
         position: fixed;
         transform: translateX(-50%);
-        z-index: 10000;
+        z-index: 100000;
       }
 
       :host, :host * {
         -webkit-user-select: none;
+        font-family: helvetica, sans-serif;
         user-select: none;
       }
 
-      strong {
-        color: silver;
-        font-weight: 600;
+      :host:has( input) {
+        outline-color: red;
+        outline-width: 2px;
       }
 
-      div[data-role="container"] {
+      label {
+        color: indigo;
+        opacity: 0.5;
+      }
+
+      div {
         display: flex;
         gap: 0 5px;
+        position: relative;
       }
 
-      button[data-role="closer"] {
-        border: none;
-        background-color: gainsboro;
+      button {
+        background-color: thistle;
         border-radius: 50%;
-        color: white;
-        font-size: 12px;
+        border: none;
+        color: indigo;
+        cursor: pointer;
+        font-size: 10px;
         height: 18px;
         line-height: 18px;
         margin: 0 -5px 0 10px;
-        padding: 0 3px;
+        outline: solid 1px indigo;
+        padding: 0 2px;
+        position: relative;
+        top: 1px;
         width: 18px;
+      }
+
+      button:hover {
+        outline-width: 2px;
       }
     `
   }
