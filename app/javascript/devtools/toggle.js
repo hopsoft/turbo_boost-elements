@@ -53,6 +53,7 @@ export default class ToggleDevtool {
 
     document.addEventListener('click', event => {
       if (event.target.closest('reflex-behaviors-devools-tooltip')) return
+      activeToggle = null
       this.hide()
     })
   }
@@ -151,10 +152,10 @@ export default class ToggleDevtool {
     const title = `TARGET (id: ${this.target.id})`
     const content = this.target.viewStack
       .reverse()
-      .map(view => {
+      .map((view, index) => {
         return this.trigger.sharedViews.includes(view)
-          ? `<li slot="li-bottom">${view}</li>`
-          : `<li slot="li-top">${view}</li>`
+          ? `<div slot="content-top">${index + 1}. ${view}</div>`
+          : `<div slot="content-bottom">${index + 1}. ${view}</div>`
       }, this)
       .join('')
 
@@ -184,10 +185,10 @@ export default class ToggleDevtool {
     const title = `TRIGGER (controls: ${this.trigger.controls})`
     const content = this.trigger.viewStack
       .reverse()
-      .map(view => {
+      .map((view, index) => {
         return this.trigger.sharedViews.includes(view)
-          ? `<li slot="li-bottom">${view}</li>`
-          : `<li slot="li-top">${view}</li>`
+          ? `<div slot="content-top">${index + 1}. ${view}</div>`
+          : `<div slot="content-bottom">${index + 1}. ${view}</div>`
       }, this)
       .join('')
 
@@ -202,7 +203,7 @@ export default class ToggleDevtool {
     tooltip.style.top = `${top}px`
     tooltip.style.left = `${left}px`
 
-    tooltip.line = new LeaderLine(tooltip, this.trigger, {
+    tooltip.line = new LeaderLine(this.trigger, tooltip, {
       ...this.leaderLineOptions,
       color: 'blueviolet'
     })
@@ -256,10 +257,11 @@ export default class ToggleDevtool {
     return {
       dash: { animation: true },
       dropShadow: { opacity: 0.3 },
-      endPlugSize: 1.3,
+      endPlug: 'arrow3',
+      endPlugSize: 1.7,
       size: 3,
       startPlug: 'disc',
-      startPlugSize: 1.3
+      startPlugSize: 1
     }
   }
 }

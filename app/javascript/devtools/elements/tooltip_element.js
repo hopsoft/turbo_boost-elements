@@ -22,11 +22,9 @@ export default class TooltipElement extends HTMLElement {
       <style>${this.stylesheet}</style>
       <div>
         <slot name="title"></slot>
+        <slot name="content-top"></slot>
         <slot name="content"></slot>
-        <ol>
-          <slot name="li-top"></slot>
-          <slot name="li-bottom"></slot>
-        </ol>
+        <slot name="content-bottom"></slot>
       </div>
     `
   }
@@ -69,15 +67,20 @@ export default class TooltipElement extends HTMLElement {
         width: 100%;
       }
 
-      slot[name="li-top"] {
-        color: red;
+      slot[name="content-top"] {
+        color: ${this.color};
         font-weight: normal;
         opacity: 0.7;
       }
 
-      slot[name="content"],
-      slot[name="li-bottom"] {
+      slot[name="content"] {
         color: ${this.color};
+        font-weight: normal;
+        opacity: 0.7;
+      }
+
+      slot[name="content-bottom"] {
+        color: red;
         font-weight: normal;
         opacity: 0.7;
       }
