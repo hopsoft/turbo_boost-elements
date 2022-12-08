@@ -5,10 +5,6 @@ import {
   removeHighlight
 } from '../utils/dom'
 import supervisor from './supervisor'
-import {
-  addLeaderLineDependency,
-  removeLeaderLineDependency
-} from './dependencies'
 
 let activeToggle
 
@@ -38,7 +34,6 @@ export default class ToggleDevtool {
     document.addEventListener('reflex-behaviors:devtool-enable', event => {
       const { name } = event.detail
       if (name === this.name) {
-        addLeaderLineDependency()
         addHighlight(this.trigger, {
           outline: '3px dashed blueviolet',
           outlineOffset: '2px'
