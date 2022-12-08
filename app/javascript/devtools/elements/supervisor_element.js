@@ -1,4 +1,4 @@
-import { appendHTML } from '../dom'
+import { appendHTML } from '../../utils/dom'
 
 export default class SupervisorElement extends HTMLElement {
   constructor () {
@@ -60,7 +60,7 @@ export default class SupervisorElement extends HTMLElement {
       <div>
         <label>ReflexBehaviors</label>
         <slot name="devtool"></slot>
-        <button>X</button>
+        <button>✕</button>
       </div>
     `
   }
@@ -79,22 +79,19 @@ export default class SupervisorElement extends HTMLElement {
         padding: 5px 10px;
         position: fixed;
         transform: translateX(-50%);
-        z-index: 100000;
+        z-index: 8999;
       }
 
-      :host, :host * {
+      * {
         -webkit-user-select: none;
         font-family: helvetica, sans-serif;
+        font-size: 1rem;
         user-select: none;
-      }
-
-      :host:has( input) {
-        outline-color: red;
-        outline-width: 2px;
       }
 
       label {
         color: indigo;
+        cursor: grab;
         opacity: 0.5;
       }
 
@@ -119,10 +116,11 @@ export default class SupervisorElement extends HTMLElement {
         position: relative;
         top: 1px;
         width: 18px;
+        opacity: 0.5;
       }
 
       button:hover {
-        outline-width: 2px;
+        opacity: 1;
       }
     `
   }

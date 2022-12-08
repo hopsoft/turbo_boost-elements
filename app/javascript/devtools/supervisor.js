@@ -1,7 +1,13 @@
-import { appendHTML } from './dom'
+import { appendHTML } from '../utils/dom'
 import DevtoolElement from './elements/devtool_element'
 import SupervisorElement from './elements/supervisor_element'
 import TooltipElement from './elements/tooltip_element'
+import {
+  addLeaderLineDependency,
+  addPlainDraggableDependency,
+  removeLeaderLineDependency,
+  removePlainDraggableDependency
+} from './dependencies'
 
 customElements.define('reflex-behaviors-devtool', DevtoolElement)
 customElements.define('reflex-behaviors-devtool-supervisor', SupervisorElement)
@@ -18,16 +24,18 @@ function stop () {
     })
   )
   supervisorElement = null
+  removeLeaderLineDependency()
+  removePlainDraggableDependency()
 }
 
 function start () {
   if (started()) return
-  appendHTML(
+  addLeaderLineDependency()
+  addPlainDraggableDependency()
+  supervisorElement = appendHTML(
     '<reflex-behaviors-devtool-supervisor></reflex-behaviors-devtool-supervisor>'
   )
-  supervisorElement = document.body.querySelector(
-    'reflex-behaviors-devtool-supervisor'
-  )
+  // const drag = new PlainDraggable(supervisorElement) // TODO: wait for dependency to load
   supervisorElement.dispatchEvent(
     new CustomEvent('reflex-behaviors:devtools-start', {
       bubbles: true

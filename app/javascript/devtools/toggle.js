@@ -1,25 +1,29 @@
-import { appendHTML, addHighlight, removeHighlight } from './dom'
+import {
+  appendHTML,
+  addHighlight,
+  coordinates,
+  removeHighlight
+} from '../utils/dom'
 import supervisor from './supervisor'
+import {
+  addLeaderLineDependency,
+  removeLeaderLineDependency
+} from './dependencies'
 
 document.addEventListener('reflex-behaviors:devtools-start', () =>
   supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
 )
 
-const triggerTooltipId = 'toggle-trigger-tooltip'
-const targetTooltipId = 'toggle-target-tooltip'
-
-function appendTooltip (id, title, content, options = {}) {
-  let { backgroundColor, color, emphaisColor, position } = options
+function appendTooltip (title, content, options = {}) {
+  let { backgroundColor, color, position } = options
   color = color || 'white'
   position = position || 'top'
-
-  appendHTML(`
-    <reflex-behaviors-devools-tooltip id="${id}" position="${position}" background-color="${backgroundColor}" color="${color}" emphasis-color="${emphaisColor}">
+  return appendHTML(`
+    <reflex-behaviors-devools-tooltip position="${position}" background-color="${backgroundColor}" color="${color}">
       <div slot='title'>${title}</div>
       ${content}
     </reflex-behaviors-devools-tooltip>
   `)
-  return document.getElementById(id)
 }
 
 export default class ToggleDevtool {
@@ -31,8 +35,13 @@ export default class ToggleDevtool {
 
     document.addEventListener('reflex-behaviors:devtool-enable', event => {
       const { name } = event.detail
-      if (name === this.name)
-        addHighlight(this.trigger, { color: 'red', offset: '2px' })
+      if (name === this.name) {
+        addLeaderLineDependency()
+        addHighlight(this.trigger, {
+          outline: '3px dashed blueviolet',
+          outlineOffset: '2px'
+        })
+      }
     })
 
     document.addEventListener('reflex-behaviors:devtool-disable', event => {
@@ -52,24 +61,27 @@ export default class ToggleDevtool {
 
   show () {
     if (!this.enabled) return
+    if (this.showing) return
+    this.showing = true
     this.hide()
-    this.createTriggerTooltip()
-    this.createTargetTooltip()
-    addHighlight(this.target, { color: 'blue', offset: '-2px' })
 
-    let renderingPartial = this.trigger ? this.trigger.renderingPartial : null
-    renderingPartial =
-      renderingPartial || (this.target ? this.target.renderingPartial : null)
-
-    let renderingElement = this.trigger ? this.trigger.renderingElement : null
-    renderingElement =
-      renderingElement || (this.target ? this.target.renderingElement : null)
-
-    addHighlight(renderingElement, {
-      color: 'turquoise',
-      offset: '4px',
-      width: '4px'
+    addHighlight(this.target, {
+      outline: '3px dashed darkcyan',
+      outlineOffset: '-2px'
     })
+
+    addHighlight(this.renderingElement, {
+      outline: '3px dashed chocolate',
+      outlineOffset: '3px'
+    })
+
+    const targetTooltip = this.createTargetTooltip()
+    this.createTriggerTooltip(targetTooltip)
+    this.createRenderingTooltip()
+
+    document
+      .querySelectorAll('.leader-line')
+      .forEach(el => (el.style.zIndex = 100000))
 
     const data = {
       rendering: { partial: null, id: null },
@@ -77,8 +89,8 @@ export default class ToggleDevtool {
       target: { partial: null, id: null }
     }
 
-    if (renderingPartial) data.rendering.partial = renderingPartial
-    if (renderingElement) data.rendering.id = renderingElement.id
+    if (this.renderingPartial) data.rendering.partial = this.renderingPartial
+    if (this.renderingElement) data.rendering.id = this.renderingElement.id
 
     if (this.trigger)
       data.trigger = { partial: this.trigger.partial, id: this.trigger.id }
@@ -92,18 +104,7 @@ export default class ToggleDevtool {
   }
 
   hide () {
-    let renderingElement = this.trigger ? this.trigger.renderingElement : null
-    renderingElement =
-      renderingElement || (this.target ? this.target.renderingElement : null)
-
-    this.destroyTriggerTooltip()
-    this.destroyTargetTooltip()
-    removeHighlight(this.target)
-    removeHighlight(renderingElement)
-    this.cleanup()
-  }
-
-  cleanup () {
+    document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
       .querySelectorAll('reflex-behaviors-devools-tooltip')
       .forEach(el => el.remove())
@@ -115,9 +116,36 @@ export default class ToggleDevtool {
       })
   }
 
-  createTriggerTooltip () {
+  createRenderingTooltip () {
+    if (!this.renderingElement) return
+    const title = `RENDERING (id: ${this.renderingElement.id || 'unknown'})`
+    const content = `<div slot="emphasis">${this.renderingPartial}</div>`
+    const tooltip = appendTooltip(title, content, {
+      backgroundColor: 'lightyellow',
+      color: 'chocolate'
+    })
+
+    const coords = coordinates(this.renderingElement)
+    const top = Math.ceil(
+      coords.top + coords.height / 2 - tooltip.offsetHeight / 2
+    )
+    const left = Math.ceil(coords.left + coords.width + 100)
+    tooltip.style.top = `${top}px`
+    tooltip.style.left = `${left}px`
+
+    tooltip.line = new LeaderLine(tooltip, this.renderingElement, {
+      ...this.leaderLineOptions,
+      color: 'chocolate'
+    })
+
+    tooltip.drag = new PlainDraggable(tooltip)
+    tooltip.drag.onMove = () => tooltip.line.position()
+    return tooltip
+  }
+
+  createTriggerTooltip (targetTooltip) {
     if (!this.trigger) return
-    const title = `TRIGGER (targets: ${this.trigger.controls})`
+    const title = `TRIGGER (controls: ${this.trigger.controls})`
     const content = this.trigger.viewStack
       .map(view => {
         return this.trigger.sharedViews.includes(view)
@@ -126,22 +154,38 @@ export default class ToggleDevtool {
       }, this)
       .join('')
 
-    this.triggerTooltip = appendTooltip(triggerTooltipId, title, content, {
-      backgroundColor: 'pink',
-      emphaisColor: 'darkred'
+    const tooltip = appendTooltip(title, content, {
+      backgroundColor: 'lavender',
+      color: 'blueviolet'
     })
 
-    const coords = this.trigger.coordinates
-    const top = Math.ceil(coords.top - this.triggerTooltip.offsetHeight - 14)
-    const left = Math.ceil(coords.left - 15)
-    this.triggerTooltip.style.top = `${top}px`
-    this.triggerTooltip.style.left = `${left}px`
-  }
+    const coords = coordinates(this.trigger)
+    const top = Math.ceil(coords.top - tooltip.offsetHeight * 2)
+    const left = Math.ceil(coords.left + coords.width + tooltip.offsetWidth / 3)
+    tooltip.style.top = `${top}px`
+    tooltip.style.left = `${left}px`
 
-  destroyTriggerTooltip () {
-    if (!this.triggerTooltip) return
-    this.triggerTooltip.remove()
-    delete this.triggerTooltip
+    tooltip.line = new LeaderLine(tooltip, this.trigger, {
+      ...this.leaderLineOptions,
+      color: 'blueviolet'
+    })
+
+    tooltip.lineToTarget = new LeaderLine(tooltip, targetTooltip, {
+      ...this.leaderLineOptions,
+      color: 'blueviolet',
+      size: 2
+    })
+
+    tooltip.drag = new PlainDraggable(tooltip)
+    tooltip.drag.onMove = () => {
+      tooltip.line.position()
+      tooltip.lineToTarget.position()
+    }
+    targetTooltip.drag.onMove = () => {
+      targetTooltip.line.position()
+      tooltip.lineToTarget.position()
+    }
+    return tooltip
   }
 
   createTargetTooltip () {
@@ -157,22 +201,47 @@ export default class ToggleDevtool {
       }, this)
       .join('')
 
-    this.targetTooltip = appendTooltip(targetTooltipId, title, content, {
-      backgroundColor: 'lightskyblue',
-      emphaisColor: 'blue',
+    const tooltip = appendTooltip(title, content, {
+      backgroundColor: 'lightcyan',
+      color: 'darkcyan',
       position: 'bottom'
     })
 
-    const coords = this.target.coordinates
-    const top = Math.ceil(coords.top + coords.height + 12)
-    const left = Math.ceil(coords.left - 15)
-    this.targetTooltip.style.top = `${top}px`
-    this.targetTooltip.style.left = `${left}px`
+    const coords = coordinates(this.target)
+    const top = Math.ceil(coords.top + tooltip.offsetHeight)
+    const left = Math.ceil(coords.left + coords.width + tooltip.offsetWidth / 3)
+    tooltip.style.top = `${top}px`
+    tooltip.style.left = `${left}px`
+
+    tooltip.line = new LeaderLine(tooltip, this.target, {
+      ...this.leaderLineOptions,
+      color: 'darkcyan'
+    })
+
+    tooltip.drag = new PlainDraggable(tooltip)
+    return tooltip
   }
 
-  destroyTargetTooltip () {
-    if (!this.targetTooltip) return
-    this.targetTooltip.remove()
-    delete this.targetTooltip
+  get renderingPartial () {
+    let partial = this.trigger ? this.trigger.renderingPartial : null
+    partial = partial || (this.target ? this.target.renderingPartial : null)
+    return partial
+  }
+
+  get renderingElement () {
+    let element = this.trigger ? this.trigger.renderingElement : null
+    element = element || (this.target ? this.target.renderingElement : null)
+    return element
+  }
+
+  get leaderLineOptions () {
+    return {
+      dash: { animation: true },
+      dropShadow: { opacity: 0.3 },
+      endPlugSize: 1.3,
+      size: 3,
+      startPlug: 'disc',
+      startPlugSize: 1.3
+    }
   }
 }
