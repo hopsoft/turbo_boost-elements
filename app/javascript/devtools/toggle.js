@@ -77,9 +77,9 @@ export default class ToggleDevtool {
       outlineOffset: '3px'
     })
 
+    const renderingTooltip = this.createRenderingTooltip()
     const targetTooltip = this.createTargetTooltip()
-    this.createTriggerTooltip(targetTooltip)
-    this.createRenderingTooltip()
+    this.createTriggerTooltip(targetTooltip, renderingTooltip)
 
     document
       .querySelectorAll('.leader-line')
@@ -121,7 +121,7 @@ export default class ToggleDevtool {
   createRenderingTooltip () {
     if (!this.renderingElement) return
     const title = `RENDERING (id: ${this.renderingElement.id || 'unknown'})`
-    const content = `<div slot="emphasis">${this.renderingPartial}</div>`
+    const content = `<div slot="content">partial: ${this.renderingPartial}</div>`
     const tooltip = appendTooltip(title, content, {
       backgroundColor: 'lightyellow',
       color: 'chocolate'
@@ -141,18 +141,53 @@ export default class ToggleDevtool {
     })
 
     tooltip.drag = new PlainDraggable(tooltip)
-    tooltip.drag.onMove = () => tooltip.line.position()
     return tooltip
   }
 
-  createTriggerTooltip (targetTooltip) {
+  createTargetTooltip () {
+    if (!this.target) return
+    if (!this.target.viewStack) return
+
+    const title = `TARGET (id: ${this.target.id})`
+    const content = this.target.viewStack
+      .reverse()
+      .map(view => {
+        return this.trigger.sharedViews.includes(view)
+          ? `<li slot="li-bottom">${view}</li>`
+          : `<li slot="li-top">${view}</li>`
+      }, this)
+      .join('')
+
+    const tooltip = appendTooltip(title, content, {
+      backgroundColor: 'lightcyan',
+      color: 'darkcyan',
+      position: 'bottom'
+    })
+
+    const coords = coordinates(this.target)
+    const top = Math.ceil(coords.top + tooltip.offsetHeight)
+    const left = Math.ceil(coords.left + coords.width + tooltip.offsetWidth / 3)
+    tooltip.style.top = `${top}px`
+    tooltip.style.left = `${left}px`
+
+    tooltip.line = new LeaderLine(tooltip, this.target, {
+      ...this.leaderLineOptions,
+      color: 'darkcyan'
+    })
+
+    tooltip.drag = new PlainDraggable(tooltip)
+    return tooltip
+  }
+
+  createTriggerTooltip (targetTooltip, renderingTooltip) {
     if (!this.trigger) return
     const title = `TRIGGER (controls: ${this.trigger.controls})`
     const content = this.trigger.viewStack
+      .reverse()
       .map(view => {
         return this.trigger.sharedViews.includes(view)
-          ? `<div slot="emphasis">${view}</div>`
-          : `<div slot="normal">${view}</div>`
+          ? `<li slot="li-bottom">${view}</li>`
+          : `<li slot="li-top">${view}</li>`
       }, this)
       .join('')
 
@@ -175,6 +210,14 @@ export default class ToggleDevtool {
     tooltip.lineToTarget = new LeaderLine(tooltip, targetTooltip, {
       ...this.leaderLineOptions,
       color: 'blueviolet',
+      middleLabel: 'toggles',
+      size: 2
+    })
+
+    tooltip.lineToRendering = new LeaderLine(tooltip, renderingTooltip, {
+      ...this.leaderLineOptions,
+      color: 'blueviolet',
+      middleLabel: 'renders',
       size: 2
     })
 
@@ -182,45 +225,18 @@ export default class ToggleDevtool {
     tooltip.drag.onMove = () => {
       tooltip.line.position()
       tooltip.lineToTarget.position()
+      tooltip.lineToRendering.position()
     }
     targetTooltip.drag.onMove = () => {
       targetTooltip.line.position()
       tooltip.lineToTarget.position()
+      tooltip.lineToRendering.position()
     }
-    return tooltip
-  }
-
-  createTargetTooltip () {
-    if (!this.target) return
-    if (!this.target.viewStack) return
-
-    const title = `TARGET (id: ${this.target.id})`
-    const content = this.target.viewStack
-      .map(view => {
-        return this.trigger.sharedViews.includes(view)
-          ? `<div slot="emphasis">${view}</div>`
-          : `<div slot="normal">${view}</div>`
-      }, this)
-      .join('')
-
-    const tooltip = appendTooltip(title, content, {
-      backgroundColor: 'lightcyan',
-      color: 'darkcyan',
-      position: 'bottom'
-    })
-
-    const coords = coordinates(this.target)
-    const top = Math.ceil(coords.top + tooltip.offsetHeight)
-    const left = Math.ceil(coords.left + coords.width + tooltip.offsetWidth / 3)
-    tooltip.style.top = `${top}px`
-    tooltip.style.left = `${left}px`
-
-    tooltip.line = new LeaderLine(tooltip, this.target, {
-      ...this.leaderLineOptions,
-      color: 'darkcyan'
-    })
-
-    tooltip.drag = new PlainDraggable(tooltip)
+    renderingTooltip.drag.onMove = () => {
+      renderingTooltip.line.position()
+      tooltip.lineToTarget.position()
+      tooltip.lineToRendering.position()
+    }
     return tooltip
   }
 
