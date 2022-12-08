@@ -15,6 +15,15 @@ customElements.define('reflex-behaviors-devools-tooltip', TooltipElement)
 
 let supervisorElement
 
+function makeDraggable () {
+  if (!supervisorElement) return
+  try {
+    new PlainDraggable(supervisorElement)
+  } catch {
+    setTimeout(makeDraggable, 200)
+  }
+}
+
 function stop () {
   if (stopped()) return
   supervisorElement.close()
@@ -35,7 +44,7 @@ function start () {
   supervisorElement = appendHTML(
     '<reflex-behaviors-devtool-supervisor></reflex-behaviors-devtool-supervisor>'
   )
-  // const drag = new PlainDraggable(supervisorElement) // TODO: wait for dependency to load
+  setTimeout(makeDraggable, 200)
   supervisorElement.dispatchEvent(
     new CustomEvent('reflex-behaviors:devtools-start', {
       bubbles: true
