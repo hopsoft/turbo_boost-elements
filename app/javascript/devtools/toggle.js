@@ -212,14 +212,14 @@ export default class ToggleDevtool {
       ...this.leaderLineOptions,
       color: 'blueviolet',
       middleLabel: 'toggles',
-      size: 2
+      size: 2.1
     })
 
     tooltip.lineToRendering = new LeaderLine(tooltip, renderingTooltip, {
       ...this.leaderLineOptions,
       color: 'blueviolet',
       middleLabel: 'renders',
-      size: 2
+      size: 2.1
     })
 
     tooltip.drag = new PlainDraggable(tooltip)
