@@ -9,10 +9,6 @@ export default class TooltipElement extends HTMLElement {
     return this.getAttribute('color') || 'darkslategray'
   }
 
-  get emphasisColor () {
-    return this.getAttribute('emphasis-color') || 'black'
-  }
-
   get backgroundColor () {
     return this.getAttribute('background-color') || 'gainsboro'
   }
@@ -21,23 +17,14 @@ export default class TooltipElement extends HTMLElement {
     return this.getAttribute('position') || 'top'
   }
 
-  get cssArrow () {
-    switch (this.position) {
-      case 'bottom':
-        return `transparent transparent ${this.emphasisColor} transparent`
-      default:
-        return `${this.emphasisColor} transparent transparent transparent;`
-    }
-  }
-
   get html () {
     return `
       <style>${this.stylesheet}</style>
-      <div role="tooltip">
+      <div>
         <slot name="title"></slot>
-        <hr>
-        <slot name="normal"></slot>
-        <slot name="emphasis"></slot>
+        <slot name="content-top"></slot>
+        <slot name="content"></slot>
+        <slot name="content-bottom"></slot>
       </div>
     `
   }
@@ -47,56 +34,55 @@ export default class TooltipElement extends HTMLElement {
       :host {
         display: block;
         position: absolute;
-        z-index: 10000;
+        z-index: 8999;
       }
 
       * {
         color: ${this.color}
+        font-size: 1rem;
       }
 
-      [role="tooltip"] {
+      div {
         background-color: ${this.backgroundColor};
         border-radius: 15px;
         filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
         font-family: monospace;
-        left: 50px;
         min-height: 30px;
         min-width: 100px;
         opacity: 0.9;
         outline-offset: 1px;
-        outline: solid 3px ${this.emphasisColor};
+        outline: dashed 3px ${this.color};
         padding: 8px 12px 8px 12px;
+        position: relative;
         white-space: nowrap;
       }
 
-      [role="tooltip"]::after {
-        border-color: ${this.cssArrow};
-        border-style: solid;
-        border-width: 10px;
-        content: "";
-        margin-left: -7px;
-        position: absolute;
-        top: ${this.position === 'bottom' ? '-21px' : 'calc(100% + 1px)'};
-      }
-
       slot[name="title"] {
-        color: ${this.emphasisColor};
+        border-bottom: dotted 1px ${this.color};
+        color: ${this.color};
+        display: inline-block;
         font-weight: bold;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        width: 100%;
       }
 
-      slot[name="emphasis"] {
-        color: ${this.emphasisColor};
+      slot[name="content-top"] {
+        color: ${this.color};
         font-weight: normal;
         opacity: 0.7;
       }
 
-      hr {
-        background-color: ${this.emphasisColor};
-        border: none;
-        height: 1px;
-        margin-bottom: 4px;
-        margin-top: 4px;
-        opacity: 0.3;
+      slot[name="content"] {
+        color: ${this.color};
+        font-weight: normal;
+        opacity: 0.7;
+      }
+
+      slot[name="content-bottom"] {
+        color: red;
+        font-weight: normal;
+        opacity: 0.7;
       }
     `
   }

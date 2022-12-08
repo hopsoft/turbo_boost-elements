@@ -34,14 +34,4 @@ export default class ReflexElement extends HTMLElement {
   get partial () {
     return this.viewStack[0]
   }
-
-  get coordinates () {
-    const rect = this.getBoundingClientRect()
-    return {
-      left: rect.left + window.scrollX,
-      top: rect.top + window.scrollY,
-      width: this.offsetWidth,
-      height: this.offsetHeight
-    }
-  }
 }

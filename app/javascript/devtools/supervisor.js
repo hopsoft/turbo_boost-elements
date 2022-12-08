@@ -1,13 +1,28 @@
-import { appendHTML } from './dom'
+import { appendHTML } from '../utils/dom'
 import DevtoolElement from './elements/devtool_element'
 import SupervisorElement from './elements/supervisor_element'
 import TooltipElement from './elements/tooltip_element'
+import {
+  addLeaderLineDependency,
+  addPlainDraggableDependency,
+  removeLeaderLineDependency,
+  removePlainDraggableDependency
+} from './dependencies'
 
 customElements.define('reflex-behaviors-devtool', DevtoolElement)
 customElements.define('reflex-behaviors-devtool-supervisor', SupervisorElement)
 customElements.define('reflex-behaviors-devools-tooltip', TooltipElement)
 
 let supervisorElement
+
+function makeDraggable () {
+  if (!supervisorElement) return
+  try {
+    new PlainDraggable(supervisorElement)
+  } catch {
+    setTimeout(makeDraggable, 200)
+  }
+}
 
 function stop () {
   if (stopped()) return
@@ -18,16 +33,18 @@ function stop () {
     })
   )
   supervisorElement = null
+  removeLeaderLineDependency()
+  removePlainDraggableDependency()
 }
 
 function start () {
   if (started()) return
-  appendHTML(
+  addLeaderLineDependency()
+  addPlainDraggableDependency()
+  supervisorElement = appendHTML(
     '<reflex-behaviors-devtool-supervisor></reflex-behaviors-devtool-supervisor>'
   )
-  supervisorElement = document.body.querySelector(
-    'reflex-behaviors-devtool-supervisor'
-  )
+  setTimeout(makeDraggable, 200)
   supervisorElement.dispatchEvent(
     new CustomEvent('reflex-behaviors:devtools-start', {
       bubbles: true
