@@ -10,6 +10,8 @@ import {
   removeLeaderLineDependency
 } from './dependencies'
 
+let activeToggle
+
 document.addEventListener('reflex-behaviors:devtools-start', () =>
   supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
 )
@@ -61,8 +63,8 @@ export default class ToggleDevtool {
 
   show () {
     if (!this.enabled) return
-    if (this.showing) return
-    this.showing = true
+    if (activeToggle === this) return
+    activeToggle = this
     this.hide()
 
     addHighlight(this.target, {
