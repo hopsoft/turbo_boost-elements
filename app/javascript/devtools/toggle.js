@@ -46,11 +46,15 @@ export default class ToggleDevtool {
       if (name === this.name) removeHighlight(this.trigger)
     })
 
-    document.addEventListener('click', event => {
+    addEventListener('click', event => {
       if (event.target.closest('reflex-behaviors-devools-tooltip')) return
-      activeToggle = null
-      this.hide()
+      this.hide(true)
     })
+
+    addEventListener('turbo:load', () => this.hide(true))
+    addEventListener('turbo-frame:load', () => this.hide(true))
+    addEventListener('turbo-reflex:success', () => this.hide(true))
+    addEventListener('turbo-reflex:finish', () => this.hide(true))
   }
 
   get enabled () {
@@ -101,7 +105,7 @@ export default class ToggleDevtool {
     console.table(data)
   }
 
-  hide () {
+  hide (clearActiveToggle) {
     document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
       .querySelectorAll('reflex-behaviors-devools-tooltip')
@@ -112,6 +116,8 @@ export default class ToggleDevtool {
       .forEach(el => {
         if (!el.tagName.match(/toggle-trigger/i)) removeHighlight(el)
       })
+
+    if (clearActiveToggle) activeToggle = null
   }
 
   createRenderingTooltip () {

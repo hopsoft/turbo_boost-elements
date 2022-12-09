@@ -2,12 +2,7 @@ import { appendHTML } from '../utils/dom'
 import DevtoolElement from './elements/devtool_element'
 import SupervisorElement from './elements/supervisor_element'
 import TooltipElement from './elements/tooltip_element'
-import {
-  addLeaderLineDependency,
-  addPlainDraggableDependency,
-  removeLeaderLineDependency,
-  removePlainDraggableDependency
-} from './dependencies'
+import dependencies from './dependencies'
 
 customElements.define('reflex-behaviors-devtool', DevtoolElement)
 customElements.define('reflex-behaviors-devtool-supervisor', SupervisorElement)
@@ -33,14 +28,13 @@ function stop () {
     })
   )
   supervisorElement = null
-  removeLeaderLineDependency()
-  removePlainDraggableDependency()
+  dependencies.removeAll()
 }
 
 function start () {
   if (started()) return
-  addLeaderLineDependency()
-  addPlainDraggableDependency()
+  dependencies.add(dependencies.LeaderLine)
+  dependencies.add(dependencies.PlainDraggable)
   supervisorElement = appendHTML(
     '<reflex-behaviors-devtool-supervisor></reflex-behaviors-devtool-supervisor>'
   )
@@ -87,6 +81,7 @@ addEventListener('turbo:load', autoRestart)
 addEventListener('turbo-frame:load', autoRestart)
 addEventListener('turbo-reflex:success', autoRestart)
 addEventListener('turbo-reflex:finish', autoRestart)
+addEventListener('reflex-behaviors:devtools-close', stop)
 
 function register (name, label) {
   if (!supervisorElement) return
