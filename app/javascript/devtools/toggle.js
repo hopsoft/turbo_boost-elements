@@ -46,15 +46,21 @@ export default class ToggleDevtool {
       if (name === this.name) removeHighlight(this.trigger)
     })
 
+    let hideTimeout
+    const debouncedHide = () => {
+      clearTimeout(hideTimeout)
+      hideTimeout = setTimeout(this.hide(true), 25)
+    }
+
     addEventListener('click', event => {
       if (event.target.closest('reflex-behaviors-devools-tooltip')) return
-      this.hide(true)
+      debouncedHide()
     })
 
-    addEventListener('turbo:load', () => this.hide(true))
-    addEventListener('turbo-frame:load', () => this.hide(true))
-    addEventListener('turbo-reflex:success', () => this.hide(true))
-    addEventListener('turbo-reflex:finish', () => this.hide(true))
+    addEventListener('turbo:load', debouncedHide)
+    addEventListener('turbo-frame:load', debouncedHide)
+    addEventListener('turbo-reflex:success', debouncedHide)
+    addEventListener('turbo-reflex:finish', debouncedHide)
   }
 
   get enabled () {
@@ -248,7 +254,7 @@ export default class ToggleDevtool {
 
       renderingTooltip.drag.onMove = () => {
         renderingTooltip.line.position()
-        tooltip.lineToTarget.position()
+        if (tooltip.lineToTarget) tooltip.lineToTarget.position()
         tooltip.lineToRendering.position()
       }
     }
@@ -256,8 +262,8 @@ export default class ToggleDevtool {
     tooltip.drag = new PlainDraggable(tooltip)
     tooltip.drag.onMove = () => {
       tooltip.line.position()
-      tooltip.lineToTarget.position()
-      tooltip.lineToRendering.position()
+      if (tooltip.lineToTarget) tooltip.lineToTarget.position()
+      if (tooltip.lineToRendering) tooltip.lineToRendering.position()
     }
 
     return tooltip
