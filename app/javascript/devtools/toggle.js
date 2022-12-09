@@ -31,7 +31,7 @@ export default class ToggleDevtool {
     this.trigger = trigger
     this.target = trigger.target
 
-    document.addEventListener('reflex-behaviors:devtool-enable', event => {
+    let handler = event => {
       const { name } = event.detail
       if (name === this.name) {
         addHighlight(this.trigger, {
@@ -39,18 +39,25 @@ export default class ToggleDevtool {
           outlineOffset: '2px'
         })
       }
-    })
+    }
+    document.addEventListener('reflex-behaviors:devtool-enable', handler)
 
-    document.addEventListener('reflex-behaviors:devtool-disable', event => {
+    handler = event => {
       const { name } = event.detail
       if (name === this.name) removeHighlight(this.trigger)
-    })
+    }
+    document.addEventListener('reflex-behaviors:devtool-disable', handler)
 
-    document.addEventListener('click', event => {
+    handler = event => {
       if (event.target.closest('reflex-behaviors-devools-tooltip')) return
       activeToggle = null
       this.hide()
-    })
+    }
+    addEventListener('click', handler)
+    addEventListener('turbo:load', handler)
+    addEventListener('turbo-frame:load', handler)
+    addEventListener('turbo-reflex:success', handler)
+    addEventListener('turbo-reflex:finish', handler)
   }
 
   get enabled () {

@@ -6,9 +6,13 @@ export default class SupervisorElement extends HTMLElement {
     this.enabledDevtools = {}
     this.attachShadow({ mode: 'open' })
     this.shadowRoot.innerHTML = this.html
-    this.shadowRoot
-      .querySelector('button')
-      .addEventListener('click', () => this.close())
+    this.shadowRoot.querySelector('button').addEventListener('click', () =>
+      this.dispatchEvent(
+        new CustomEvent('reflex-behaviors:devtools-close', {
+          bubbles: true
+        })
+      )
+    )
 
     this.addEventListener('change', event => {
       const devtoolElement = event.target
