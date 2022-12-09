@@ -52,6 +52,7 @@ export function removeHighlight (element) {
 }
 
 export function coordinates (element) {
+  if (!element) return {}
   const rect = element.getBoundingClientRect()
   return {
     left: rect.left + window.scrollX,

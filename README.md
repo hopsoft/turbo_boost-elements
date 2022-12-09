@@ -93,6 +93,8 @@ Import and intialize ReflexBehaviors in your application.
 
 ```diff
 # Gemfile
++gem "turbo_ready", "~> VERSION"
++gem "turbo_reflex", "~> VERSION"
 +gem "reflex_behaviors", "~> VERSION"
 ```
 
@@ -100,13 +102,17 @@ Import and intialize ReflexBehaviors in your application.
 # package.json
 "dependencies": {
   "@hotwired/turbo-rails": ">=7.2",
++  "turbo_ready": "^VERSION"
++  "turbo_reflex": "^VERSION"
 +  "reflex_behaviors": "^VERSION"
 ```
 
 ```diff
 # app/javascript/application.js
 import '@hotwired/turbo-rails'
-+import 'reflex_behaviors' // automatically imports and sets up both TurboReady and TurboReflex
++import 'turbo_ready'
++import 'turbo_reflex'
++import 'reflex_behaviors'
 ```
 
 ## Behaviors

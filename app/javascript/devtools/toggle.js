@@ -46,15 +46,21 @@ export default class ToggleDevtool {
       if (name === this.name) removeHighlight(this.trigger)
     })
 
+    let hideTimeout
+    const debouncedHide = () => {
+      clearTimeout(hideTimeout)
+      hideTimeout = setTimeout(this.hide(true), 25)
+    }
+
     addEventListener('click', event => {
       if (event.target.closest('reflex-behaviors-devools-tooltip')) return
-      this.hide(true)
+      debouncedHide()
     })
 
-    addEventListener('turbo:load', () => this.hide(true))
-    addEventListener('turbo-frame:load', () => this.hide(true))
-    addEventListener('turbo-reflex:success', () => this.hide(true))
-    addEventListener('turbo-reflex:finish', () => this.hide(true))
+    addEventListener('turbo:load', debouncedHide)
+    addEventListener('turbo-frame:load', debouncedHide)
+    addEventListener('turbo-reflex:success', debouncedHide)
+    addEventListener('turbo-reflex:finish', debouncedHide)
   }
 
   get enabled () {
@@ -72,7 +78,7 @@ export default class ToggleDevtool {
       outlineOffset: '-2px'
     })
 
-    addHighlight(this.renderingElement, {
+    addHighlight(this.trigger.renderingElement, {
       outline: '3px dashed chocolate',
       outlineOffset: '3px'
     })
@@ -86,21 +92,28 @@ export default class ToggleDevtool {
       .forEach(el => (el.style.zIndex = 100000))
 
     const data = {
-      rendering: { partial: null, id: null },
-      trigger: { partial: null, id: null },
-      target: { partial: null, id: null }
+      rendering: {
+        partial: this.trigger.renderingPartial,
+        id: this.trigger.renderingInfo.id,
+        status: this.trigger.renderingElement ? 'OK' : 'Not Found'
+      },
+      trigger: { partial: null, id: null, status: 'Not Found' },
+      target: { partial: null, id: null, status: 'Not Found' }
     }
 
-    if (this.renderingPartial) data.rendering.partial = this.renderingPartial
-    if (this.renderingElement) data.rendering.id = this.renderingElement.id
-
     if (this.trigger)
-      data.trigger = { partial: this.trigger.partial, id: this.trigger.id }
+      data.trigger = {
+        partial: this.trigger.partial,
+        id: this.trigger.id,
+        status: 'OK'
+      }
 
     if (this.target)
-      data.target = { partial: this.target.partial, id: this.target.id }
-    else if (this.trigger)
-      data.target.id = `No element matches the targeted DOM id: ${this.trigger.controls}`
+      data.target = {
+        partial: this.target.partial,
+        id: this.target.id,
+        status: 'OK'
+      }
 
     console.table(data)
   }
@@ -121,15 +134,20 @@ export default class ToggleDevtool {
   }
 
   createRenderingTooltip () {
-    if (!this.renderingElement) return
-    const title = `RENDERING (id: ${this.renderingElement.id || 'unknown'})`
-    const content = `<div slot="content">partial: ${this.renderingPartial}</div>`
+    if (!this.trigger.renderingElement)
+      return console.debug(
+        `Unable to create the rendering tooltip! No element matches the DOM id: '${this.trigger.renderingInfo.id}'`
+      )
+
+    const title = `RENDERING (id: ${this.trigger.renderingElement.id ||
+      'unknown'})`
+    const content = `<div slot="content">partial: ${this.trigger.renderingPartial}</div>`
     const tooltip = appendTooltip(title, content, {
       backgroundColor: 'lightyellow',
       color: 'chocolate'
     })
 
-    const coords = coordinates(this.renderingElement)
+    const coords = coordinates(this.trigger.renderingElement)
     const top = Math.ceil(
       coords.top + coords.height / 2 - tooltip.offsetHeight / 2
     )
@@ -137,7 +155,7 @@ export default class ToggleDevtool {
     tooltip.style.top = `${top}px`
     tooltip.style.left = `${left}px`
 
-    tooltip.line = new LeaderLine(tooltip, this.renderingElement, {
+    tooltip.line = new LeaderLine(tooltip, this.trigger.renderingElement, {
       ...this.leaderLineOptions,
       color: 'chocolate'
     })
@@ -147,8 +165,10 @@ export default class ToggleDevtool {
   }
 
   createTargetTooltip () {
-    if (!this.target) return
-    if (!this.target.viewStack) return
+    if (!this.target)
+      return console.debug(
+        `Unable to create the target tooltip! No element matches the DOM id: '${this.trigger.controls}'`
+      )
 
     const title = `TARGET (id: ${this.target.id})`
     const content = this.target.viewStack
@@ -209,49 +229,44 @@ export default class ToggleDevtool {
       color: 'blueviolet'
     })
 
-    tooltip.lineToTarget = new LeaderLine(tooltip, targetTooltip, {
-      ...this.leaderLineOptions,
-      color: 'blueviolet',
-      middleLabel: 'toggles',
-      size: 2.1
-    })
+    if (targetTooltip) {
+      tooltip.lineToTarget = new LeaderLine(tooltip, targetTooltip, {
+        ...this.leaderLineOptions,
+        color: 'blueviolet',
+        middleLabel: 'toggles',
+        size: 2.1
+      })
 
-    tooltip.lineToRendering = new LeaderLine(tooltip, renderingTooltip, {
-      ...this.leaderLineOptions,
-      color: 'blueviolet',
-      middleLabel: 'renders',
-      size: 2.1
-    })
+      targetTooltip.drag.onMove = () => {
+        targetTooltip.line.position()
+        tooltip.lineToTarget.position()
+        tooltip.lineToRendering.position()
+      }
+    }
+
+    if (renderingTooltip) {
+      tooltip.lineToRendering = new LeaderLine(tooltip, renderingTooltip, {
+        ...this.leaderLineOptions,
+        color: 'blueviolet',
+        middleLabel: 'renders',
+        size: 2.1
+      })
+
+      renderingTooltip.drag.onMove = () => {
+        renderingTooltip.line.position()
+        if (tooltip.lineToTarget) tooltip.lineToTarget.position()
+        tooltip.lineToRendering.position()
+      }
+    }
 
     tooltip.drag = new PlainDraggable(tooltip)
     tooltip.drag.onMove = () => {
       tooltip.line.position()
-      tooltip.lineToTarget.position()
-      tooltip.lineToRendering.position()
+      if (tooltip.lineToTarget) tooltip.lineToTarget.position()
+      if (tooltip.lineToRendering) tooltip.lineToRendering.position()
     }
-    targetTooltip.drag.onMove = () => {
-      targetTooltip.line.position()
-      tooltip.lineToTarget.position()
-      tooltip.lineToRendering.position()
-    }
-    renderingTooltip.drag.onMove = () => {
-      renderingTooltip.line.position()
-      tooltip.lineToTarget.position()
-      tooltip.lineToRendering.position()
-    }
+
     return tooltip
-  }
-
-  get renderingPartial () {
-    let partial = this.trigger ? this.trigger.renderingPartial : null
-    partial = partial || (this.target ? this.target.renderingPartial : null)
-    return partial
-  }
-
-  get renderingElement () {
-    let element = this.trigger ? this.trigger.renderingElement : null
-    element = element || (this.target ? this.target.renderingElement : null)
-    return element
   }
 
   get leaderLineOptions () {
