@@ -31,7 +31,7 @@ export default class ToggleDevtool {
     this.trigger = trigger
     this.target = trigger.target
 
-    let handler = event => {
+    document.addEventListener('reflex-behaviors:devtool-enable', event => {
       const { name } = event.detail
       if (name === this.name) {
         addHighlight(this.trigger, {
@@ -39,25 +39,22 @@ export default class ToggleDevtool {
           outlineOffset: '2px'
         })
       }
-    }
-    document.addEventListener('reflex-behaviors:devtool-enable', handler)
+    })
 
-    handler = event => {
+    document.addEventListener('reflex-behaviors:devtool-disable', event => {
       const { name } = event.detail
       if (name === this.name) removeHighlight(this.trigger)
-    }
-    document.addEventListener('reflex-behaviors:devtool-disable', handler)
+    })
 
-    handler = event => {
+    addEventListener('click', event => {
       if (event.target.closest('reflex-behaviors-devools-tooltip')) return
-      activeToggle = null
-      this.hide()
-    }
-    addEventListener('click', handler)
-    addEventListener('turbo:load', handler)
-    addEventListener('turbo-frame:load', handler)
-    addEventListener('turbo-reflex:success', handler)
-    addEventListener('turbo-reflex:finish', handler)
+      this.hide(true)
+    })
+
+    addEventListener('turbo:load', () => this.hide(true))
+    addEventListener('turbo-frame:load', () => this.hide(true))
+    addEventListener('turbo-reflex:success', () => this.hide(true))
+    addEventListener('turbo-reflex:finish', () => this.hide(true))
   }
 
   get enabled () {
@@ -108,7 +105,7 @@ export default class ToggleDevtool {
     console.table(data)
   }
 
-  hide () {
+  hide (clearActiveToggle) {
     document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
       .querySelectorAll('reflex-behaviors-devools-tooltip')
@@ -119,6 +116,8 @@ export default class ToggleDevtool {
       .forEach(el => {
         if (!el.tagName.match(/toggle-trigger/i)) removeHighlight(el)
       })
+
+    if (clearActiveToggle) activeToggle = null
   }
 
   createRenderingTooltip () {
