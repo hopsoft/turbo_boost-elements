@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "turbo_reflex"
 require_relative "version"
 
 module ReflexBehaviors

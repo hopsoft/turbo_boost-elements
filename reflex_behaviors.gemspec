@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 6.1"
   s.add_dependency "turbo-rails", ">= 1.1"
-  s.add_dependency "turbo_ready", ">= 0.1.3"
   s.add_dependency "turbo_reflex", ">= 0.0.29"
 
   s.add_development_dependency "magic_frozen_string_literal"
