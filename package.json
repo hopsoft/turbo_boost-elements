@@ -7,7 +7,7 @@
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "turbo_reflex": ">= 0.0.29"
+    "turbo_reflex": ">= 0.0.30"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
