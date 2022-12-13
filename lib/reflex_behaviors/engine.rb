@@ -2,6 +2,7 @@
 
 require "turbo_reflex"
 require_relative "version"
+require_relative "../../app/helpers/reflex_behaviors/application_helper"
 
 module ReflexBehaviors
   def self.config

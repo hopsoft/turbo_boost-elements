@@ -21,8 +21,8 @@ class ReflexBehaviors::ApplicationReflex < TurboReflex::Base
   protected
 
   def render_payload
-    return {} if element.dataset.render.blank?
-    @render_payload ||= JSON.parse(element.dataset.render).deep_symbolize_keys.tap do |payload|
+    return {} if element.render.blank?
+    @render_payload ||= JSON.parse(element.render).deep_symbolize_keys.tap do |payload|
       payload[:assigns] = {} if payload[:assigns].blank?
       payload[:assigns].each { |key, value| payload[:assigns][key] = hydrated_value(value) }
 

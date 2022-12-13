@@ -40,8 +40,9 @@ export default class ToggleTriggerElement extends ReflexElement {
   }
 
   get renderingInfo () {
-    if (!this.dataset.render) return {}
-    return JSON.parse(this.dataset.render)
+    const value = this.getAttribute('render')
+    if (!value) return {}
+    return JSON.parse(value)
   }
 
   get renderingPartial () {
@@ -67,11 +68,11 @@ export default class ToggleTriggerElement extends ReflexElement {
   }
 
   get active () {
-    return this.getAttribute('data-active') === 'true'
+    return this.getAttribute('active') === 'true'
   }
 
   set active (value) {
-    this.setAttribute('data-active', !!value)
+    this.setAttribute('active', !!value)
   }
 }
 
@@ -92,7 +93,7 @@ addEventListener('click', event => {
   if (event.target.tagName.match(/reflex-behaviors-devtool/i)) return
   setTimeout(() => {
     const selector =
-      'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'
+      'toggle-trigger[aria-controls][aria-expanded="true"][auto-collapse="true"]'
     document.querySelectorAll(selector).forEach(trigger => trigger.collapse())
   })
 })

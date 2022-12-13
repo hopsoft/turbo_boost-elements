@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-require ReflexBehaviors::Engine.root.join("lib/reflex_behaviors/tag_builders")
-
 module ReflexBehaviors::ApplicationHelper
+  extend ActiveSupport::Concern
+
+  included do
+    require ReflexBehaviors::Engine.root.join("lib/reflex_behaviors/tag_builders")
+  end
+
   def idomatic_partial_path(partial_path)
     partial_path.to_s.gsub("/_", "/").split(".").first
   end

@@ -4,7 +4,7 @@ class ReflexBehaviors::ToggleReflex < ReflexBehaviors::ApplicationReflex
   prevent_controller_action
 
   def show
-    if element.dataset.remember?
+    if element.remember == "true"
       state[element.aria.controls] = true
     else
       state.now[element.aria.controls] = true

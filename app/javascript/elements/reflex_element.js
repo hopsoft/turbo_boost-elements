@@ -8,7 +8,6 @@ export default class ReflexElement extends HTMLElement {
 
   connectedCallback () {
     this.ensureId()
-    this.dataset.elementOrigin = 'hopsoft/reflex_behaviors'
   }
 
   ensureId () {
@@ -27,8 +26,9 @@ export default class ReflexElement extends HTMLElement {
   }
 
   get viewStack () {
-    if (!this.dataset.viewStack) return []
-    return JSON.parse(this.dataset.viewStack)
+    const value = this.getAttribute('view-stack')
+    if (!value) return []
+    return JSON.parse(value)
   }
 
   get partial () {

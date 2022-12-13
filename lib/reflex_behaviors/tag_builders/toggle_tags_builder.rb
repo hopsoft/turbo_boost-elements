@@ -8,18 +8,21 @@ module ReflexBehaviors::TagBuilders
       kwargs = kwargs.with_indifferent_access
       kwargs[:id] ||= "#{target}-toggle-trigger"
 
-      kwargs[:aria] ||= {}
-      kwargs[:aria][:atomic] ||= true
-      kwargs[:aria][:relevant] ||= "all"
-      kwargs[:aria].merge!(controls: target, expanded: target_expanded?(target))
-
       kwargs[:data] ||= {}
-      kwargs[:data][:auto_collapse] = !!kwargs[:data][:auto_collapse]
-      kwargs[:data][:view_stack] = view_stack.to_json if Rails.env.development?
-      kwargs[:data][:remember] = !!kwargs[:data][:remember]
-      kwargs[:data][:render] = render
       kwargs[:data][:turbo_reflex] = "ReflexBehaviors::ToggleReflex##{action}" unless disabled
 
+      kwargs[:aria] ||= {}
+      kwargs[:aria][:atomic] ||= true
+      kwargs[:aria][:controls] = target
+      kwargs[:aria][:expanded] = target_expanded?(target)
+      kwargs[:aria][:relevant] ||= "all"
+
+      kwargs[:auto_collapse] = !!kwargs[:auto_collapse]
+      kwargs[:remember] = !!kwargs[:remember]
+      kwargs[:render] = render
+      kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
+
+      kwargs.transform_keys!(&:dasherize)
       content_tag("toggle-trigger", nil, kwargs, &block)
     end
 
@@ -32,9 +35,9 @@ module ReflexBehaviors::TagBuilders
       kwargs[:aria][:label] ||= "Dynamic Content Region"
       kwargs[:aria][:live] ||= "polite"
 
-      kwargs[:data] ||= {}
-      kwargs[:data][:view_stack] = view_stack.to_json if Rails.env.development?
+      kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
+      kwargs.transform_keys!(&:dasherize)
       if expanded || target_expanded?(id)
         content_tag("toggle-target", nil, kwargs, &block)
       else
