@@ -21,24 +21,31 @@ class ReflexBehaviors::ApplicationReflex < TurboReflex::Base
   protected
 
   def render_payload
-    return {} if element.render.blank?
-    @render_payload ||= JSON.parse(element.render).deep_symbolize_keys.tap do |payload|
-      payload[:assigns] = {} if payload[:assigns].blank?
-      payload[:assigns].each { |key, value| payload[:assigns][key] = hydrated_value(value) }
-
-      payload[:locals] = {} if payload[:locals].blank?
-      payload[:locals].each { |key, value| payload[:locals][key] = hydrated_value(value) }
-    end
+    return {} if element.renders.blank?
+    @render_payload ||= {partial: idomatic_partial_path(element.renders)}.tap do |payload|
+      if element.assigns.present?
+        payload[:assigns] = JSON.parse(element.assigns)
+        payload[:assigns].each { |key, value| payload[:assigns][key] = hydrate_value(value) }
+      end
+      if element.locals.present?
+        payload[:locals] = JSON.parse(element.locals)
+        payload[:locals].each { |key, value| payload[:locals][key] = hydrate_value(value) }
+      end
+    end.deep_symbolize_keys
   end
 
   private
 
-  def hydrated_value(value)
+  def hydrate_value(value)
     hydrated = begin
       GlobalID::Locator.locate_signed(value)
     rescue
       value
     end
     hydrated.blank? ? nil : hydrated
+  end
+
+  def idomatic_partial_path(partial_path)
+    partial_path.to_s.gsub("/_", "/").split(".").first
   end
 end
