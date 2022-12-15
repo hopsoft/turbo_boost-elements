@@ -12,13 +12,14 @@ document.addEventListener('reflex-behaviors:devtools-start', () =>
   supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
 )
 
-function appendTooltip (title, content, options = {}) {
+function appendTooltip (title, subtitle, content, options = {}) {
   let { backgroundColor, color, position } = options
   color = color || 'white'
   position = position || 'top'
   return appendHTML(`
     <reflex-behaviors-devools-tooltip position="${position}" background-color="${backgroundColor}" color="${color}">
       <div slot='title'>${title}</div>
+      <div slot='subtitle'>${subtitle}</div>
       ${content}
     </reflex-behaviors-devools-tooltip>
   `)
@@ -142,9 +143,13 @@ export default class ToggleDevtool {
         `Unable to create the morph tooltip! No element matches the DOM id: '${this.triggerElement.morphs}'`
       )
 
-    const title = `MORPHS (id: ${this.triggerElement.morphs || 'unknown'})`
-    const content = `<div slot="content">partial: ${this.triggerElement.renders}</div>`
-    const tooltip = appendTooltip(title, content, {
+    const title = 'PARTIAL'
+    const subtitle = `
+      id: ${this.triggerElement.morphs || 'unknown'}<br>
+      partial: ${this.triggerElement.renders || 'unknown'}
+    `
+    const content = '<div slot="content"></div>'
+    const tooltip = appendTooltip(title, subtitle, content, {
       backgroundColor: 'lightyellow',
       color: 'chocolate'
     })
@@ -172,7 +177,11 @@ export default class ToggleDevtool {
         `Unable to create the target tooltip! No element matches the DOM id: '${this.triggerElement.controls}'`
       )
 
-    const title = `TARGET (id: ${this.targetElement.id})`
+    const title = 'TARGET'
+    const subtitle = `
+      id: ${this.targetElement.id}<br>
+      labeled by: ${this.targetElement.labeledBy}
+    `
     const content = this.targetElement.viewStack
       .reverse()
       .map((view, index) => {
@@ -182,7 +191,7 @@ export default class ToggleDevtool {
       }, this)
       .join('')
 
-    const tooltip = appendTooltip(title, content, {
+    const tooltip = appendTooltip(title, subtitle, content, {
       backgroundColor: 'lightcyan',
       color: 'darkcyan',
       position: 'bottom'
@@ -205,7 +214,11 @@ export default class ToggleDevtool {
 
   createTriggerTooltip (targetTooltip, morphTooltip) {
     if (!this.triggerElement) return
-    const title = `TRIGGER (controls: ${this.triggerElement.controls})`
+    const title = 'TRIGGER'
+    const subtitle = `
+      id: ${this.triggerElement.id}<br>
+      controls: ${this.triggerElement.controls}
+    `
     const content = this.triggerElement.viewStack
       .reverse()
       .map((view, index) => {
@@ -215,7 +228,7 @@ export default class ToggleDevtool {
       }, this)
       .join('')
 
-    const tooltip = appendTooltip(title, content, {
+    const tooltip = appendTooltip(title, subtitle, content, {
       backgroundColor: 'lavender',
       color: 'blueviolet'
     })
@@ -250,7 +263,7 @@ export default class ToggleDevtool {
       tooltip.lineToRendering = new LeaderLine(tooltip, morphTooltip, {
         ...this.leaderLineOptions,
         color: 'blueviolet',
-        middleLabel: 'morphs',
+        middleLabel: 'renders and morphs',
         size: 2.1
       })
 
@@ -263,6 +276,7 @@ export default class ToggleDevtool {
 
     tooltip.drag = new PlainDraggable(tooltip)
     tooltip.drag.onMove = () => {
+      console.log('nate', tooltip.line)
       tooltip.line.position()
       if (tooltip.lineToTarget) tooltip.lineToTarget.position()
       if (tooltip.lineToRendering) tooltip.lineToRendering.position()

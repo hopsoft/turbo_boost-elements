@@ -12,13 +12,14 @@ export default class ToggleTriggerElement extends ReflexElement {
 
     this.addEventListener(TurboReflex.events.start, () => {
       this.active = true
-      this.targetElement.triggerElement = this
+      this.targetElement.currentTriggerElement = this
       this.targetElement.renderCachedHTML()
     })
 
     this.addEventListener(TurboReflex.events.success, () => {
       this.active = false
       this.targetElement.cacheHTML()
+      this.targetElement.collapseMatches()
       this.targetElement.focus()
     })
 
@@ -44,6 +45,10 @@ export default class ToggleTriggerElement extends ReflexElement {
     })
 
     if (DevtoolSupervisor.started) DevtoolSupervisor.restart()
+  }
+
+  hideDevtool () {
+    if (this.devtool) this.devtool.hide(true)
   }
 
   // a list of views shared between the trigger and target
@@ -82,6 +87,10 @@ export default class ToggleTriggerElement extends ReflexElement {
   get targetElement () {
     if (!this.controls) return null
     return document.getElementById(this.controls)
+  }
+
+  get collapseSelector () {
+    return this.getAttribute('collapse-selector')
   }
 
   get focusSelector () {

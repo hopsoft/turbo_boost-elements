@@ -22,6 +22,7 @@ export default class TooltipElement extends HTMLElement {
       <style>${this.stylesheet}</style>
       <div>
         <slot name="title"></slot>
+        <slot name="subtitle"></slot>
         <slot name="content-top"></slot>
         <slot name="content"></slot>
         <slot name="content-bottom"></slot>
@@ -52,18 +53,29 @@ export default class TooltipElement extends HTMLElement {
         opacity: 0.9;
         outline-offset: 1px;
         outline: dashed 3px ${this.color};
-        padding: 8px 12px 8px 12px;
+        padding: 12px;
         position: relative;
         white-space: nowrap;
       }
 
       slot[name="title"] {
-        border-bottom: dotted 1px ${this.color};
         color: ${this.color};
-        display: inline-block;
+        display: block;
         font-weight: bold;
+        width: 100%;
+      }
+
+      slot[name="subtitle"] {
+        border-bottom: dotted 1px ${this.color};
+        border-top: dotted 1px ${this.color};
+        color: ${this.color};
+        display: block;
+        font-size: 0.8rem;
+        font-weight: lighter;
         margin-bottom: 8px;
-        padding-bottom: 8px;
+        margin-top: 4px;
+        padding-bottom: 4px;
+        padding-top: 4px;
         width: 100%;
       }
 
