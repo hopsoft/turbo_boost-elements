@@ -123,8 +123,8 @@ This example will re-render the `post` partial and toggle the `form` section.
 <%= tag.div id: dom_id(post) do %>
   <!-- content -->
 
-  <%= toggle_trigger_tag target: dom_id(post, :form),
-    render: reflex_render(id: dom_id(post), partial: current_partial_path, locals: local_assigns, assigns: { post: @post }) do %>
+  <%= toggle_trigger_tag renders: current_partial_path, morphs: dom_id(post),
+    controls: dom_id(post, :form), locals: local_assigns, assigns: { post: @post }) do %>
     <% if toggle_target_collapsed?  dom_id(post, :form) %>
       <%= link_to "Edit Post Inline", request.path %>
     <% else %>
@@ -142,26 +142,30 @@ This example will re-render the `post` partial and toggle the `form` section.
 
 #### Tag Helpers
 
-- `toggle_trigger_tag(target:, render:, auto_collapse: false, disabled: false, aria: {}, data: {}, **kwargs, &block)`
+- `toggle_trigger_tag`
 
-    - `target` - **REQUIRED**, the DOM id of the target
-    - `render` - **REQUIRED**, a payload that indicates what the reflex should render
-    - `block` - **REQUIRED**, the block of HTML to render inside the trigger container element
-    - `disabled` - `[false]`, indicates if the trigger should be disabled
-    - `aria` - `[{}]`, the desired ARIA payload, sensible defaults are automatically applied
-    - `data` - `[{}]`, the desired dataset payload, sensible defaults are automatically applied
+    - `renders` REQUIRED, the partial path to render
+    - `morphs` REQUIRED, `dom_id` of the partial's outermost containing element
+    - `controls` REQUIRED, `dom_id` of the toggle target
+    - `assigns` `{}`, `assigns` required to render the partial i.e. instance variables
+    - `locals` `{}`, `local_assigns` required to render the parital
+    - `collapse_selector` `nil`, CSS selector for other targets to collapse when the target is expanded
+    - `focus_selector` `nil`, CSS selector for the element to focus when the target is expanded
+    - `method` `:toggle`, reflex method to inovke (show, hide, toggle)
+    - `disabled` `false`, disable the trigger
+    - `remember` `false`, remember state between requests
+    - `kwargs` generic support for additional element attributes like `class` etc.
+    - `&block` a Ruby block that emits the rendered content
 
-        - `auto_collapse` - `[false]`, indicates if the toggled content automatically collapses when the user clicks outside
-        - `remember` - [false], indicates if the toggled state should be remembered across requests
+- `toggle_target_tag`
 
-    - `kwargs` - generic support for additional element attributes like `class` etc.
-
-- `toggle_target_tag(id, expanded: false, **kwargs, &block)`
-
-    - `id` - **REQUIRED**, the DOM id of the target
-    - `block` - **REQUIRED**, the block of HTML to render inside the trigger container element
-    - `expanded` - [false] override that indicates whether or not the target is expanded
-    - `kwargs` - generic support for additional element attributes like `class` etc.
+  - `id` REQUIRED, the `dom_id` for the element
+  - `collapse_on` `[]`, list of events that trigger collapse
+  - `collapse_selector` `nil`, CSS selector for other targets to collapse when this target is expanded
+  - `expanded` `false`, override to force expansion
+  - `focus_selector` `nil`, CSS selector for the element to focus when content is expanded
+    - `kwargs` generic support for additional element attributes like `class` etc.
+    - `&block` a Ruby block that emits the rendered content
 
 ## Releasing
 
