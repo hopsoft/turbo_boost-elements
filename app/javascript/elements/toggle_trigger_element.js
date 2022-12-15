@@ -18,9 +18,9 @@ export default class ToggleTriggerElement extends ReflexElement {
 
     this.addEventListener(TurboReflex.events.success, () => {
       this.active = false
-      this.targetElement.cacheHTML()
-      this.targetElement.collapseMatches()
       this.targetElement.focus()
+      this.targetElement.collapseMatches()
+      this.targetElement.cacheHTML()
     })
 
     this.addEventListener(TurboReflex.events.finish, () => {
