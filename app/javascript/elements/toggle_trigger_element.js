@@ -6,21 +6,25 @@ export default class ToggleTriggerElement extends ReflexElement {
   connectedCallback () {
     super.connectedCallback()
 
-    if (this.targetElement)
+    if (this.targetElement) {
       this.targetElement.setAttribute('aria-labeledby', this.id)
+    }
 
-    // activity
     this.addEventListener(TurboReflex.events.start, () => {
       this.active = true
-      if (this.targetElement && this.cachedContent)
-        this.targetElement.innerHTML = this.cachedContent
+      this.targetElement.triggerElement = this
+      this.targetElement.renderCachedHTML()
     })
+
     this.addEventListener(TurboReflex.events.success, () => {
-      this.targetElement.active = false
-      this.cachedContent = this.targetElement.innerHTML
+      this.active = false
+      this.targetElement.cacheHTML()
+      this.targetElement.focus()
     })
+
     this.addEventListener(TurboReflex.events.finish, () => {
-      this.targetElement.active = false
+      this.active = false
+      this.targetElement.focus()
     })
 
     this.initializeDevtool()
@@ -78,6 +82,10 @@ export default class ToggleTriggerElement extends ReflexElement {
   get targetElement () {
     if (!this.controls) return null
     return document.getElementById(this.controls)
+  }
+
+  get focusSelector () {
+    return this.getAttribute('focus-selector')
   }
 
   // indicates if the target is expanded

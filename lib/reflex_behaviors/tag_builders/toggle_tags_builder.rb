@@ -10,6 +10,7 @@ module ReflexBehaviors::TagBuilders
       controls:, # REQUIRED - dom_id of the toggle target
       assigns: {}, # assigns required to render the partial i.e. instance variables
       locals: {}, # local_assigns required to render the parital
+      focus_selector: nil, # CSS selector for the element to focus when the target is expanded
       method: :toggle, # reflex method to inovke (show, hide, toggle)
       disabled: false, # disable the trigger
       remember: false, # remember state between requests
@@ -38,6 +39,7 @@ module ReflexBehaviors::TagBuilders
       kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
       # misc
+      kwargs[:focus_selector] = focus_selector
       kwargs[:remember] = !!remember
 
       args = kwargs.select { |_, value| value.present? }
@@ -46,15 +48,17 @@ module ReflexBehaviors::TagBuilders
 
     def target_tag(
       id, # REQUIRED - the dom_id for the element
-      expanded: false, # override to force expansion
       collapse_on: [], # list of events that trigger collapse
+      expanded: false, # override to force expansion
+      focus_selector: nil, # CSS selector for the element to focus when content is expanded
       **kwargs,
       &block
     )
       kwargs = kwargs.with_indifferent_access
       kwargs[:id] = id
-      kwargs[:role] = "region"
       kwargs[:collapse_on] = collapse_on.to_json
+      kwargs[:focus_selector] = focus_selector
+      kwargs[:role] = "region"
 
       # aria
       kwargs[:aria] ||= {}
