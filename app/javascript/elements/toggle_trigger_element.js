@@ -11,22 +11,19 @@ export default class ToggleTriggerElement extends ReflexElement {
     }
 
     this.addEventListener(TurboReflex.events.start, () => {
-      this.active = true
+      this.busy = true
       this.targetElement.currentTriggerElement = this
       this.targetElement.renderCachedHTML()
     })
 
     this.addEventListener(TurboReflex.events.success, () => {
-      this.active = false
+      this.busy = false
       this.targetElement.focus()
       this.targetElement.collapseMatches()
       this.targetElement.cacheHTML()
     })
 
-    this.addEventListener(TurboReflex.events.finish, () => {
-      this.active = false
-      this.targetElement.focus()
-    })
+    this.addEventListener(TurboReflex.events.finish, () => (this.busy = false))
 
     this.initializeDevtool()
   }
@@ -111,12 +108,12 @@ export default class ToggleTriggerElement extends ReflexElement {
     return !this.expanded
   }
 
-  // indicates if an rpc call is active
-  get active () {
-    return this.getAttribute('active') === 'true'
+  // indicates if an rpc call is active/busy
+  get busy () {
+    return this.getAttribute('busy') === 'true'
   }
 
-  set active (value) {
-    this.setAttribute('active', !!value)
+  set busy (value) {
+    this.setAttribute('busy', !!value)
   }
 }
