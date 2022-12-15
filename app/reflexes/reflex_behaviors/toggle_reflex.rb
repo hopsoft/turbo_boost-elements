@@ -4,18 +4,18 @@ class ReflexBehaviors::ToggleReflex < ReflexBehaviors::ApplicationReflex
   prevent_controller_action
 
   def show
-    if element.dataset.remember?
+    if element.remember == "true"
       state[element.aria.controls] = true
     else
       state.now[element.aria.controls] = true
     end
 
-    morph "##{render_payload[:id]}", render(render_payload.except(:id))
+    morph "##{element.morphs}", render(render_payload)
   end
 
   def hide
     state[element.aria.controls] = false
-    morph "##{render_payload[:id]}", render(render_payload.except(:id))
+    morph "##{element.morphs}", render(render_payload)
   end
 
   def toggle

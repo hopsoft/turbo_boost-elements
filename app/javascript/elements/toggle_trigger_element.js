@@ -5,14 +5,38 @@ import ToggleDevtool from '../devtools/toggle'
 export default class ToggleTriggerElement extends ReflexElement {
   connectedCallback () {
     super.connectedCallback()
+
+    if (this.targetElement) {
+      this.targetElement.setAttribute('aria-labeledby', this.id)
+    }
+
+    this.addEventListener(TurboReflex.events.start, () => {
+      this.busy = true
+      this.targetElement.currentTriggerElement = this
+      this.targetElement.renderCachedHTML()
+    })
+
+    this.addEventListener(TurboReflex.events.success, () => {
+      this.busy = false
+      this.targetElement.focus()
+      this.targetElement.collapseMatches()
+      this.targetElement.cacheHTML()
+    })
+
+    this.addEventListener(TurboReflex.events.finish, () => (this.busy = false))
+
+    this.initializeDevtool()
+  }
+
+  initializeDevtool () {
     const mouseenter = () => this.devtool.show()
 
-    document.addEventListener('reflex-behaviors:devtools-start', () => {
+    addEventListener('reflex-behaviors:devtools-start', () => {
       this.devtool = new ToggleDevtool(this)
       this.addEventListener('mouseenter', mouseenter)
     })
 
-    document.addEventListener('reflex-behaviors:devtools-stop', () => {
+    addEventListener('reflex-behaviors:devtools-stop', () => {
       this.removeEventListener('mouseenter', mouseenter)
       delete this.devtool
     })
@@ -20,79 +44,76 @@ export default class ToggleTriggerElement extends ReflexElement {
     if (DevtoolSupervisor.started) DevtoolSupervisor.restart()
   }
 
-  collapse () {
-    try {
-      this.target.remove()
-      this.setAttribute('aria-expanded', false)
-    } catch (error) {
-      console.error('Failed to collapse toggle-trigger target!', error)
-    }
+  hideDevtool () {
+    if (this.devtool) this.devtool.hide(true)
   }
 
+  // a list of views shared between the trigger and target
   get sharedViews () {
-    if (!this.target) return []
-    if (!this.target.viewStack) return []
+    if (!this.targetElement) return []
+    if (!this.targetElement.viewStack) return []
     const reducer = (memo, view) => {
-      if (this.target.viewStack.includes(view)) memo.push(view)
+      if (this.targetElement.viewStack.includes(view)) memo.push(view)
       return memo
     }
     return this.viewStack.reduce(reducer.bind(this), [])
   }
 
-  get renderingInfo () {
-    if (!this.dataset.render) return {}
-    return JSON.parse(this.dataset.render)
+  // the partial to render
+  get renders () {
+    return this.getAttribute('renders')
   }
 
-  get renderingPartial () {
-    return this.renderingInfo.partial
+  // the renderered partial's top wrapping dom_id
+  get morphs () {
+    return this.getAttribute('morphs')
   }
 
-  get renderingElement () {
-    const { id } = this.renderingInfo
-    if (!id) return null
-    return document.getElementById(id)
+  // the morph element
+  get morphElement () {
+    if (!this.morphs) return null
+    return document.getElementById(this.morphs)
   }
 
-  get expanded () {
-    return this.getAttribute('aria-expanded') === 'true'
-  }
-
+  // the target's dom_id
   get controls () {
     return this.getAttribute('aria-controls')
   }
 
-  get target () {
+  // the target element
+  get targetElement () {
+    if (!this.controls) return null
     return document.getElementById(this.controls)
   }
 
-  get active () {
-    return this.getAttribute('data-active') === 'true'
+  get collapseSelector () {
+    return this.getAttribute('collapse-selector')
   }
 
-  set active (value) {
-    this.setAttribute('data-active', !!value)
+  get focusSelector () {
+    return this.getAttribute('focus-selector')
+  }
+
+  // indicates if the target is expanded
+  get expanded () {
+    return this.getAttribute('aria-expanded') === 'true'
+  }
+
+  set expanded (value) {
+    this.setAttribute('aria-expanded', !!value)
+  }
+
+  // indicates if the target is expanded
+  get collapsed () {
+    return !this.expanded
+  }
+
+  // indicates if an rpc call is active/busy
+  get busy () {
+    return this.getAttribute('busy') === 'true'
+  }
+
+  set busy (value) {
+    this.setAttribute('busy', !!value)
   }
 }
-
-addEventListener(
-  TurboReflex.events.start,
-  event => (event.target.active = true)
-)
-addEventListener(
-  TurboReflex.events.success,
-  event => (event.target.active = false)
-)
-addEventListener(
-  TurboReflex.events.finish,
-  event => (event.target.active = false)
-)
-
-addEventListener('click', event => {
-  if (event.target.tagName.match(/reflex-behaviors-devtool/i)) return
-  setTimeout(() => {
-    const selector =
-      'toggle-trigger[aria-controls][aria-expanded="true"][data-auto-collapse="true"]'
-    document.querySelectorAll(selector).forEach(trigger => trigger.collapse())
-  })
-})
