@@ -45,10 +45,6 @@ export default class ToggleTargetElement extends ReflexElement {
     )
   }
 
-  set focusSelector (value) {
-    this.setAttribute('focus-selector', value)
-  }
-
   get focusElement () {
     return this.querySelector(this.focusSelector)
   }
