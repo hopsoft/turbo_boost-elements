@@ -5,18 +5,18 @@ require_relative "base_tag_builder"
 module ReflexBehaviors::TagBuilders
   class ToggleTagsBuilder < BaseTagBuilder
     def trigger_tag(
-      renders:, # REQUIRED - the partial path to render
-      morphs:, # REQUIRED - dom_id of the partial's outermost containing element
-      controls:, # REQUIRED - dom_id of the toggle target
-      assigns: {}, # assigns required to render the partial i.e. instance variables
-      locals: {}, # local_assigns required to render the parital
-      collapse_selector: nil, # CSS selector for other targets to collapse when the target is expanded
+      renders:, # REQUIRED, the partial path to render
+      morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element
+      controls:, # REQUIRED, `dom_id` of the toggle target
+      assigns: {}, # `assigns` required to render the partial (i.e. instance variables)
+      locals: {}, # `local_assigns` required to render the parital
+      collapse_selector: nil, # CSS selector for other matching targets to collapse when the target is expanded
       focus_selector: nil, # CSS selector for the element to focus when the target is expanded
-      method: :toggle, # reflex method to inovke (show, hide, toggle)
+      method: :toggle, # reflex method to inovke (:show, :hide, :toggle)
       disabled: false, # disable the trigger
-      remember: false, # remember state between requests
-      **kwargs,
-      &block
+      remember: false, # remember ephemeral UI state between requests
+      **kwargs, # generic support for additional element attributes like `class` etc.
+      &block # a Ruby block that emits this trigger's content
     )
       kwargs = kwargs.with_indifferent_access
       kwargs[:id] ||= "#{controls}-toggle-trigger"
@@ -49,13 +49,13 @@ module ReflexBehaviors::TagBuilders
     end
 
     def target_tag(
-      id, # REQUIRED - the dom_id for the element
-      collapse_on: [], # list of events that trigger collapse
-      collapse_selector: nil, # CSS selector for other targets to collapse when this target is expanded
+      id, # REQUIRED, the `dom_id` for the element
+      collapse_on: [], # list of events that will collapse this target
+      collapse_selector: nil, # CSS selector for other matching targets to collapse when this target is expanded
       expanded: false, # override to force expansion
-      focus_selector: nil, # CSS selector for the element to focus when content is expanded
-      **kwargs,
-      &block
+      focus_selector: nil, # CSS selector for the element to focus when this target is expanded
+      **kwargs, # generic support for additional element attributes like `class` etc.
+      &block # a Ruby block that emits this target's content
     )
       kwargs = kwargs.with_indifferent_access
       kwargs[:id] = id
