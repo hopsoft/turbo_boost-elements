@@ -110,6 +110,19 @@ import '@hotwired/turbo-rails'
 +import 'reflex_behaviors'
 ```
 
+Add TurboReflex behavior to the Rails app
+
+```diff
+# app/views/layouts/application.html.erb
+<html>
+  <head>
++  <%= turbo_reflex.meta_tag %>
+  </head>
+  <body>
+  </body>
+</html>
+```
+
 ## Behaviors
 
 ### Toggle
@@ -124,7 +137,7 @@ This example will re-render the `post` partial and toggle the `form` section.
   <!-- content -->
 
   <%= toggle_trigger_tag renders: current_partial_path, morphs: dom_id(post),
-    controls: dom_id(post, :form), locals: local_assigns, assigns: { post: @post }) do %>
+    controls: dom_id(post, :form), locals: local_assigns, assigns: { post: @post } do %>
     <% if toggle_target_collapsed?  dom_id(post, :form) %>
       <%= link_to "Edit Post Inline", request.path %>
     <% else %>
