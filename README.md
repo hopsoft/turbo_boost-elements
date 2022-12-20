@@ -52,6 +52,8 @@ Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.
   - [Behaviors](#behaviors)
     - [Toggle](#toggle)
       - [Tag Helpers](#tag-helpers)
+      - [DevTools helpers](#devtools-helpers)
+  - [Introductory Video](#introductory-video)
   - [Releasing](#releasing)
   - [License](#license)
 
@@ -182,6 +184,23 @@ This example will re-render the `post` partial and toggle the `form` section.
 
 If a named keyword argument is shared by both the `trigger` and `target`,
 the trigger value will take precendence because multiple triggers might control the same target.
+
+
+#### DevTools Helpers
+To make your development easier, Reflex Behaviors comes with a browser DevTools helper.
+You can enable the helper from your javascript console or your application's javascript file
+
+```js
+ReflexBehaviors.devtools.start()
+```
+
+
+## Introductory Video
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/WERDPzOz1sA/maxresdefault.jpg)]([https://www.youtube.com/watch?v=WERDPzOz1sA](https://www.youtube.com/watch?v=WERDPzOz1sA))
+
+
+
+
 
 ## Releasing
 
