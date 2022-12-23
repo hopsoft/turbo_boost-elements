@@ -196,9 +196,7 @@ ReflexBehaviors.devtools.start()
 
 
 ## Introductory Video
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/WERDPzOz1sA/maxresdefault.jpg)]([https://www.youtube.com/watch?v=WERDPzOz1sA](https://www.youtube.com/watch?v=WERDPzOz1sA))
-
-
+[![Watch the introduction on YouTube](https://img.youtube.com/vi/WERDPzOz1sA/maxresdefault.jpg)](https://youtu.be/WERDPzOz1sA "Watch the introduction on YouTube")
 
 
 
