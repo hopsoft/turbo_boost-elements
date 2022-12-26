@@ -2,7 +2,7 @@
 
 require_relative "base_tag_builder"
 
-class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < BaseTagBuilder
+class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Elements::TagBuilders::BaseTagBuilder
   def trigger_tag(
     renders:, # REQUIRED, the partial path to render
     morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element

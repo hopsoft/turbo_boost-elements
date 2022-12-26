@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TurboBoost::Elements::BaseTagBuilder
+class TurboBoost::Elements::TagBuilders::BaseTagBuilder
   attr_reader :view_context
   delegate :content_tag, :turbo_boost, to: :view_context
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "turbo_boost-commands"
+require "turbo_boost/commands"
 require_relative "version"
 require_relative "../../../app/helpers/turbo_boost/elements/application_helper"
 
