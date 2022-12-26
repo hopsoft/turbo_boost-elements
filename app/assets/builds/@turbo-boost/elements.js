@@ -16,8 +16,7 @@ ${r?'Expression: "'+r+`"
 
       div {
         display: flex;
-        position: relative;
-        top: -1px;
+        margin-right: 10px;
       }
 
       input:checked + label{
@@ -25,25 +24,25 @@ ${r?'Expression: "'+r+`"
       }
 
       label {
-        color: indigo;
+        color: black;
       }
     `}};var He=class extends HTMLElement{constructor(){super(),this.enabledDevtools={},this.attachShadow({mode:"open"}),this.shadowRoot.innerHTML=this.html,this.shadowRoot.querySelector("button").addEventListener("click",()=>this.dispatchEvent(new CustomEvent("turbo-boost:devtools-close",{bubbles:!0}))),this.addEventListener("change",t=>{let r=t.target,{checked:n,name:o}=r;n?this.enableDevtool(o):this.disableDevtool(o)})}enableDevtool(t){this.enabledDevtools[t]||(this.enabledDevtools[t]=!0,this.dispatchEvent(new CustomEvent("turbo-boost:devtool-enable",{bubbles:!0,detail:{name:t}})))}disableDevtool(t){this.enabledDevtools[t]&&(delete this.enabledDevtools[t],this.dispatchEvent(new CustomEvent("turbo-boost:devtool-disable",{bubbles:!0,detail:{name:t}})))}close(){this.devtoolElements.forEach(t=>{t.checked&&t.uncheck()}),this.remove()}get devtoolElements(){return this.querySelectorAll('[slot="devtool"]')}get closeElement(){return this.querySelector("button")}get html(){return`
       <style>${this.stylesheet}</style>
       <div>
-        <label><img src="https://ik.imagekit.io/hopsoft/turbo-boost-logo_zHiiimlvT.webp?ik-sdk-version=javascript-1.4.3&updatedAt=1671722004342"></label>
+        <img src="https://ik.imagekit.io/hopsoft/turbo-boost-logo_zHiiimlvT.webp?ik-sdk-version=javascript-1.4.3&updatedAt=1671722004342">
         <slot name="devtool"></slot>
         <button>\u2715</button>
       </div>
     `}get stylesheet(){return`
       :host {
-        background-color: lavender;
-        border-radius: 15px;
+        background-color: gainsboro;
+        border-radius: 5px;
         bottom: 20px;
         display: block;
         filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
         left: 50%;
         outline-offset: 1px;
-        outline: solid 3px indigo;
+        outline: solid 2px black;
         padding: 5px 10px;
         position: fixed;
         transform: translateX(-50%);
@@ -57,10 +56,12 @@ ${r?'Expression: "'+r+`"
         user-select: none;
       }
 
-      label {
+      img {
+        align-self: center;
         cursor: grab;
-        display: inline-block;
-        height: 50px;
+        height: 25px;
+        margin-left: -5px;
+        vertical-align: middle;
       }
 
       div {
@@ -69,22 +70,25 @@ ${r?'Expression: "'+r+`"
         position: relative;
       }
 
+      [slot="devtool"] {
+        align-self: center;
+      }
+
       button {
-        background-color: thistle;
+        align-self: center;
+        background-color: darkgray;
         border-radius: 50%;
         border: none;
-        color: indigo;
+        color: black;
         cursor: pointer;
         font-size: 10px;
         height: 18px;
         line-height: 18px;
-        margin: 0 -5px 0 10px;
-        outline: solid 1px indigo;
-        padding: 0 2px;
-        position: relative;
-        top: 1px;
-        width: 18px;
+        margin-right: -5px;
         opacity: 0.5;
+        outline: solid 1px black;
+        padding: 0 2px;
+        width: 18px;
       }
 
       button:hover {
@@ -92,8 +96,11 @@ ${r?'Expression: "'+r+`"
       }
     `}};var je=class extends HTMLElement{constructor(){super(),this.attachShadow({mode:"open"}),this.shadowRoot.innerHTML=this.html}get color(){return this.getAttribute("color")||"darkslategray"}get backgroundColor(){return this.getAttribute("background-color")||"gainsboro"}get position(){return this.getAttribute("position")||"top"}get html(){return`
       <style>${this.stylesheet}</style>
-      <div>
-        <slot name="title"></slot>
+      <div role="container">
+        <div role="title">
+          <slot name="title"></slot>
+          <img src="https://ik.imagekit.io/hopsoft/turbo-boost-logo_zHiiimlvT.webp?ik-sdk-version=javascript-1.4.3&updatedAt=1671722004342">
+        </div>
         <slot name="subtitle"></slot>
         <slot name="content-top"></slot>
         <slot name="content"></slot>
@@ -111,7 +118,7 @@ ${r?'Expression: "'+r+`"
         font-size: 1rem;
       }
 
-      div {
+      [role="container"] {
         background-color: ${this.backgroundColor};
         border-radius: 15px;
         filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
@@ -126,11 +133,20 @@ ${r?'Expression: "'+r+`"
         white-space: nowrap;
       }
 
-      slot[name="title"] {
+      [role="title"] {
+        display: flex;
+      }
+
+      [role="title"] slot[name="title"] {
         color: ${this.color};
         display: block;
+        flex-grow: 1;
         font-weight: bold;
-        width: 100%;
+      }
+
+      [role="title"] img {
+        height: 25px;
+        vertical-align: middle;
       }
 
       slot[name="subtitle"] {
@@ -169,12 +185,12 @@ ${r?'Expression: "'+r+`"
         <span slot="label">${t}</span>
       </turbo-boost-devtool>
     `,M)}function ra(e){return M?M.enabledDevtools[e]:!1}var Z={enabled:ra,register:ta,start:co,stop:gr,restart:po,get started(){return vt()},get stopped(){return fo()}};var br;document.addEventListener("turbo-boost:devtools-start",()=>Z.register("toggle","toggles<small>(trigger/target)</small>"));function vr(e,t,r,n={}){let{backgroundColor:o,color:i,position:s}=n;return i=i||"white",s=s||"top",Be(`
-    <turbo-boost-devool-tooltip position="${s}" background-color="${o}" color="${i}">
+    <turbo-boost-devtool-tooltip position="${s}" background-color="${o}" color="${i}">
       <div slot='title'>${e}</div>
       <div slot='subtitle'>${t}</div>
       ${r}
-    </turbo-boost-devool-tooltip>
-  `)}var Fe=class{constructor(t){this.name="toggle",this.command=t.dataset.turboCommand,this.triggerElement=t,this.targetElement=t.targetElement,this.morphElement=t.morphElement,document.addEventListener("turbo-boost:devtool-enable",o=>{let{name:i}=o.detail;i===this.name&&mt(this.triggerElement,{outline:"3px dashed blueviolet",outlineOffset:"2px"})}),document.addEventListener("turbo-boost:devtool-disable",o=>{let{name:i}=o.detail;i===this.name&&gt(this.triggerElement)});let r,n=()=>{clearTimeout(r),r=setTimeout(this.hide(!0),25)};addEventListener("click",o=>{o.target.closest("turbo-boost-devool-tooltip")||n()}),addEventListener("turbo:load",n),addEventListener("turbo-frame:load",n),addEventListener(TurboBoost.Commands.events.success,n),addEventListener(TurboBoost.Commands.events.finish,n)}get enabled(){return Z.enabled(this.name)}show(){if(!this.enabled||br===this)return;br=this,this.hide(),mt(this.targetElement,{outline:"3px dashed darkcyan",outlineOffset:"-2px"}),mt(this.triggerElement.morphElement,{outline:"3px dashed chocolate",outlineOffset:"3px"});let t=this.createMorphTooltip(),r=this.createTargetTooltip();this.createTriggerTooltip(r,t),document.querySelectorAll(".leader-line").forEach(o=>o.style.zIndex=1e5);let n={morph:{partial:this.triggerElement.renders,id:this.triggerElement.morphs,status:this.morphElement?"OK":"Not Found"},trigger:{partial:null,id:null,status:"Not Found"},target:{partial:null,id:null,status:"Not Found"}};this.triggerElement&&(n.trigger={partial:this.triggerElement.partial,id:this.triggerElement.id,status:"OK"},n.target.id=this.triggerElement.controls),this.targetElement&&(n.target={partial:this.targetElement.partial,id:this.targetElement.id,status:"OK"}),console.table(n)}hide(t){document.querySelectorAll(".leader-line").forEach(r=>r.remove()),document.querySelectorAll("turbo-boost-devool-tooltip").forEach(r=>r.remove()),document.querySelectorAll("[data-turbo-boost-highlight]").forEach(r=>{r.tagName.match(/turbo-boost-toggle-trigger/i)||gt(r)}),t&&(br=null)}createMorphTooltip(){if(!this.triggerElement.morphs)return console.debug(`Unable to create the morph tooltip! No element matches the DOM id: '${this.triggerElement.morphs}'`);let t="PARTIAL",r=`
+    </turbo-boost-devtool-tooltip>
+  `)}var Fe=class{constructor(t){this.name="toggle",this.command=t.dataset.turboCommand,this.triggerElement=t,this.targetElement=t.targetElement,this.morphElement=t.morphElement,document.addEventListener("turbo-boost:devtool-enable",o=>{let{name:i}=o.detail;i===this.name&&mt(this.triggerElement,{outline:"3px dashed blueviolet",outlineOffset:"2px"})}),document.addEventListener("turbo-boost:devtool-disable",o=>{let{name:i}=o.detail;i===this.name&&gt(this.triggerElement)});let r,n=()=>{clearTimeout(r),r=setTimeout(this.hide(!0),25)};addEventListener("click",o=>{o.target.closest("turbo-boost-devtool-tooltip")||n()}),addEventListener("turbo:load",n),addEventListener("turbo-frame:load",n),addEventListener(TurboBoost.Commands.events.success,n),addEventListener(TurboBoost.Commands.events.finish,n)}get enabled(){return Z.enabled(this.name)}show(){if(!this.enabled||br===this)return;br=this,this.hide(),mt(this.targetElement,{outline:"3px dashed darkcyan",outlineOffset:"-2px"}),mt(this.triggerElement.morphElement,{outline:"3px dashed chocolate",outlineOffset:"3px"});let t=this.createMorphTooltip(),r=this.createTargetTooltip();this.createTriggerTooltip(r,t),document.querySelectorAll(".leader-line").forEach(o=>o.style.zIndex=1e5);let n={morph:{partial:this.triggerElement.renders,id:this.triggerElement.morphs,status:this.morphElement?"OK":"Not Found"},trigger:{partial:null,id:null,status:"Not Found"},target:{partial:null,id:null,status:"Not Found"}};this.triggerElement&&(n.trigger={partial:this.triggerElement.partial,id:this.triggerElement.id,status:"OK"},n.target.id=this.triggerElement.controls),this.targetElement&&(n.target={partial:this.targetElement.partial,id:this.targetElement.id,status:"OK"}),console.table(n)}hide(t){document.querySelectorAll(".leader-line").forEach(r=>r.remove()),document.querySelectorAll("turbo-boost-devtool-tooltip").forEach(r=>r.remove()),document.querySelectorAll("[data-turbo-boost-highlight]").forEach(r=>{r.tagName.match(/turbo-boost-toggle-trigger/i)||gt(r)}),t&&(br=null)}createMorphTooltip(){if(!this.triggerElement.morphs)return console.debug(`Unable to create the morph tooltip! No element matches the DOM id: '${this.triggerElement.morphs}'`);let t="PARTIAL",r=`
       id: ${this.triggerElement.morphs||"unknown"}<br>
       partial: ${this.triggerElement.renders||"unknown"}
     `,o=vr(t,r,'<div slot="content"></div>',{backgroundColor:"lightyellow",color:"chocolate"}),i=bt(this.morphElement),s=Math.ceil(i.top+i.height/2-o.offsetHeight/2),a=Math.ceil(i.left+i.width+100);return o.style.top=`${s}px`,o.style.left=`${a}px`,o.line=new LeaderLine(o,this.morphElement,{...this.leaderLineOptions,color:"chocolate"}),o.drag=new PlainDraggable(o),o}createTargetTooltip(){if(!this.targetElement)return console.debug(`Unable to create the target tooltip! No element matches the DOM id: '${this.triggerElement.controls}'`);let t="TARGET",r=`
@@ -183,5 +199,5 @@ ${r?'Expression: "'+r+`"
     `,n=this.targetElement.viewStack.reverse().map((l,u)=>this.triggerElement.sharedViews.includes(l)?`<div slot="content-top">${u+1}. ${l}</div>`:`<div slot="content-bottom">${u+1}. ${l}</div>`,this).join(""),o=vr(t,r,n,{backgroundColor:"lightcyan",color:"darkcyan",position:"bottom"}),i=bt(this.targetElement),s=Math.ceil(i.top+o.offsetHeight),a=Math.ceil(i.left+i.width+o.offsetWidth/3);return o.style.top=`${s}px`,o.style.left=`${a}px`,o.line=new LeaderLine(o,this.targetElement,{...this.leaderLineOptions,color:"darkcyan"}),o.drag=new PlainDraggable(o),o}createTriggerTooltip(t,r){if(!this.triggerElement)return;let n="TRIGGER",o=`
       id: ${this.triggerElement.id}<br>
       controls: ${this.triggerElement.controls}
-    `,i=this.triggerElement.viewStack.reverse().map((d,p)=>this.triggerElement.sharedViews.includes(d)?`<div slot="content-top">${p+1}. ${d}</div>`:`<div slot="content-bottom">${p+1}. ${d}</div>`,this).join(""),s=vr(n,o,i,{backgroundColor:"lavender",color:"blueviolet"}),a=bt(this.triggerElement),l=Math.ceil(a.top-s.offsetHeight*2),u=Math.ceil(a.left+a.width+s.offsetWidth/3);return s.style.top=`${l}px`,s.style.left=`${u}px`,s.line=new LeaderLine(this.triggerElement,s,{...this.leaderLineOptions,color:"blueviolet"}),t&&(s.lineToTarget=new LeaderLine(s,t,{...this.leaderLineOptions,color:"blueviolet",middleLabel:"toggles",size:2.1}),t.drag.onMove=()=>{t.line.position(),s.lineToTarget.position(),s.lineToRendering.position()}),r&&(s.lineToRendering=new LeaderLine(s,r,{...this.leaderLineOptions,color:"blueviolet",middleLabel:"renders and morphs",size:2.1}),r.drag.onMove=()=>{r.line.position(),s.lineToTarget&&s.lineToTarget.position(),s.lineToRendering.position()}),s.drag=new PlainDraggable(s),s.drag.onMove=()=>{console.log("nate",s.line),s.line.position(),s.lineToTarget&&s.lineToTarget.position(),s.lineToRendering&&s.lineToRendering.position()},s}get leaderLineOptions(){return{dash:{animation:!0},dropShadow:{opacity:.3},endPlug:"arrow3",endPlugSize:1.7,size:3,startPlug:"disc",startPlugSize:1}}};var Ke=class extends ae{connectedCallback(){super.connectedCallback(),this.targetElement&&this.targetElement.setAttribute("aria-labeledby",this.id),this.addEventListener(TurboBoost.Commands.events.start,()=>{this.busy=!0,this.targetElement.currentTriggerElement=this,this.targetElement.renderCachedHTML()}),this.addEventListener(TurboBoost.Commands.events.success,()=>{this.busy=!1,this.targetElement.focus(),this.targetElement.collapseMatches(),this.targetElement.cacheHTML()}),this.addEventListener(TurboBoost.Commands.events.finish,()=>this.busy=!1),this.initializeDevtool()}initializeDevtool(){let t=()=>this.devtool.show();addEventListener("turbo-boost:devtools-start",()=>{this.devtool=new Fe(this),this.addEventListener("mouseenter",t)}),addEventListener("turbo-boost:devtools-stop",()=>{this.removeEventListener("mouseenter",t),delete this.devtool}),Z.started&&Z.restart()}hideDevtool(){this.devtool&&this.devtool.hide(!0)}get sharedViews(){if(!this.targetElement)return[];if(!this.targetElement.viewStack)return[];let t=(r,n)=>(this.targetElement.viewStack.includes(n)&&r.push(n),r);return this.viewStack.reduce(t.bind(this),[])}get renders(){return this.getAttribute("renders")}get morphs(){return this.getAttribute("morphs")}get morphElement(){return this.morphs?document.getElementById(this.morphs):null}get controls(){return this.getAttribute("aria-controls")}get targetElement(){return this.controls?document.getElementById(this.controls):null}get collapseSelector(){return this.getAttribute("collapse-selector")}get focusSelector(){return this.getAttribute("focus-selector")}get expanded(){return this.getAttribute("aria-expanded")==="true"}set expanded(t){this.setAttribute("aria-expanded",!!t)}get collapsed(){return!this.expanded}get busy(){return this.getAttribute("busy")==="true"}set busy(t){this.setAttribute("busy",!!t)}};customElements.define("turbo-boost-toggle-target",De);customElements.define("turbo-boost-toggle-trigger",Ke);var{restart:na,start:oa,stop:ia}=Z,ho={restart:na,start:oa,stop:ia};self.TurboBoost=self.TurboBoost||{};self.TurboBoost.Elements={devtools:ho};
+    `,i=this.triggerElement.viewStack.reverse().map((d,p)=>this.triggerElement.sharedViews.includes(d)?`<div slot="content-top">${p+1}. ${d}</div>`:`<div slot="content-bottom">${p+1}. ${d}</div>`,this).join(""),s=vr(n,o,i,{backgroundColor:"lavender",color:"blueviolet"}),a=bt(this.triggerElement),l=Math.ceil(a.top-s.offsetHeight*2),u=Math.ceil(a.left+a.width+s.offsetWidth/3);return s.style.top=`${l}px`,s.style.left=`${u}px`,s.line=new LeaderLine(this.triggerElement,s,{...this.leaderLineOptions,color:"blueviolet"}),t&&(s.lineToTarget=new LeaderLine(s,t,{...this.leaderLineOptions,color:"blueviolet",middleLabel:"toggles",size:2.1}),t.drag.onMove=()=>{t.line.position(),s.lineToTarget.position(),s.lineToRendering.position()}),r&&(s.lineToRendering=new LeaderLine(s,r,{...this.leaderLineOptions,color:"blueviolet",middleLabel:"renders and morphs",size:2.1}),r.drag.onMove=()=>{r.line.position(),s.lineToTarget&&s.lineToTarget.position(),s.lineToRendering.position()}),s.drag=new PlainDraggable(s),s.drag.onMove=()=>{console.log("nate",s.line),s.line.position(),s.lineToTarget&&s.lineToTarget.position(),s.lineToRendering&&s.lineToRendering.position()},s}get leaderLineOptions(){return{dash:{animation:!0},dropShadow:{opacity:.3},endPlug:"arrow3",endPlugSize:1.7,size:3,startPlug:"disc",startPlugSize:1}}};var Ke=class extends ae{connectedCallback(){super.connectedCallback(),this.targetElement&&this.targetElement.setAttribute("aria-labeledby",this.id),this.addEventListener(TurboBoost.Commands.events.start,()=>{this.busy=!0,this.targetElement.currentTriggerElement=this,this.targetElement.renderCachedHTML()}),this.addEventListener(TurboBoost.Commands.events.success,()=>{this.busy=!1,this.targetElement.focus(),this.targetElement.collapseMatches(),this.targetElement.cacheHTML()}),this.addEventListener(TurboBoost.Commands.events.finish,()=>this.busy=!1),this.initializeDevtool()}initializeDevtool(){let t=()=>this.devtool.show();addEventListener("turbo-boost:devtools-start",()=>{this.devtool=new Fe(this),this.addEventListener("mouseenter",t)}),addEventListener("turbo-boost:devtools-stop",()=>{this.removeEventListener("mouseenter",t),delete this.devtool}),Z.started&&Z.restart()}hideDevtool(){this.devtool&&this.devtool.hide(!0)}get sharedViews(){if(!this.targetElement)return[];if(!this.targetElement.viewStack)return[];let t=(r,n)=>(this.targetElement.viewStack.includes(n)&&r.push(n),r);return this.viewStack.reduce(t.bind(this),[])}get renders(){return this.getAttribute("renders")}get morphs(){return this.getAttribute("morphs")}get morphElement(){return this.morphs?document.getElementById(this.morphs):null}get controls(){return this.getAttribute("aria-controls")}get targetElement(){return this.controls?document.getElementById(this.controls):null}get collapseSelector(){return this.getAttribute("collapse-selector")}get focusSelector(){return this.getAttribute("focus-selector")}get expanded(){return this.getAttribute("aria-expanded")==="true"}set expanded(t){this.setAttribute("aria-expanded",!!t)}get collapsed(){return!this.expanded}get busy(){return this.getAttribute("busy")==="true"}set busy(t){this.setAttribute("busy",!!t)}};customElements.define("turbo-boost-toggle-target",De);customElements.define("turbo-boost-toggle-trigger",Ke);var{restart:na,start:oa,stop:ia}=Z,ho={restart:na,start:oa,stop:ia};self.TurboBoost=self.TurboBoost||{};self.TurboBoost.devtools=ho;self.TurboBoost.Elements={};var hu=self.TurboBoost.Elements;export{hu as default};
 //# sourceMappingURL=elements.js.map

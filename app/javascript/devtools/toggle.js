@@ -17,11 +17,11 @@ function appendTooltip (title, subtitle, content, options = {}) {
   color = color || 'white'
   position = position || 'top'
   return appendHTML(`
-    <turbo-boost-devool-tooltip position="${position}" background-color="${backgroundColor}" color="${color}">
+    <turbo-boost-devtool-tooltip position="${position}" background-color="${backgroundColor}" color="${color}">
       <div slot='title'>${title}</div>
       <div slot='subtitle'>${subtitle}</div>
       ${content}
-    </turbo-boost-devool-tooltip>
+    </turbo-boost-devtool-tooltip>
   `)
 }
 
@@ -55,7 +55,7 @@ export default class ToggleDevtool {
     }
 
     addEventListener('click', event => {
-      if (event.target.closest('turbo-boost-devool-tooltip')) return
+      if (event.target.closest('turbo-boost-devtool-tooltip')) return
       debouncedHide()
     })
 
@@ -125,7 +125,7 @@ export default class ToggleDevtool {
   hide (clearActiveToggle) {
     document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
-      .querySelectorAll('turbo-boost-devool-tooltip')
+      .querySelectorAll('turbo-boost-devtool-tooltip')
       .forEach(el => el.remove())
 
     document.querySelectorAll('[data-turbo-boost-highlight]').forEach(el => {

@@ -20,8 +20,11 @@ export default class TooltipElement extends HTMLElement {
   get html () {
     return `
       <style>${this.stylesheet}</style>
-      <div>
-        <slot name="title"></slot>
+      <div role="container">
+        <div role="title">
+          <slot name="title"></slot>
+          <img src="https://ik.imagekit.io/hopsoft/turbo-boost-logo_zHiiimlvT.webp?ik-sdk-version=javascript-1.4.3&updatedAt=1671722004342">
+        </div>
         <slot name="subtitle"></slot>
         <slot name="content-top"></slot>
         <slot name="content"></slot>
@@ -43,7 +46,7 @@ export default class TooltipElement extends HTMLElement {
         font-size: 1rem;
       }
 
-      div {
+      [role="container"] {
         background-color: ${this.backgroundColor};
         border-radius: 15px;
         filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
@@ -58,11 +61,20 @@ export default class TooltipElement extends HTMLElement {
         white-space: nowrap;
       }
 
-      slot[name="title"] {
+      [role="title"] {
+        display: flex;
+      }
+
+      [role="title"] slot[name="title"] {
         color: ${this.color};
         display: block;
+        flex-grow: 1;
         font-weight: bold;
-        width: 100%;
+      }
+
+      [role="title"] img {
+        height: 25px;
+        vertical-align: middle;
       }
 
       slot[name="subtitle"] {
