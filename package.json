@@ -1,13 +1,13 @@
 {
-  "name": "reflex_behaviors",
+  "name": "@turbo-boost/elements",
   "version": "0.0.10",
-  "description": "Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.",
+  "description": "Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.",
   "main": "app/javascript/index.js",
-  "repository": "https://github.com/hopsoft/reflex_behaviors",
+  "repository": "https://github.com/hopsoft/turbo_boost-elements",
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "turbo_reflex": ">= 0.0.30"
+    "@turbo-boost/commands": ">= 0.0.1"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
@@ -18,6 +18,6 @@
     "prettier-standard": "^16.4.1"
   },
   "scripts": {
-    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --outfile=app/assets/builds/reflex_behaviors.js"
+    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --outfile=app/assets/builds/@turbo-boost/elements.js"
   }
 }

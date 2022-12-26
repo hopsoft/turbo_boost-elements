@@ -4,9 +4,9 @@ import SupervisorElement from './elements/supervisor_element'
 import TooltipElement from './elements/tooltip_element'
 import dependencies from './dependencies'
 
-customElements.define('reflex-behaviors-devtool', DevtoolElement)
-customElements.define('reflex-behaviors-devtool-supervisor', SupervisorElement)
-customElements.define('reflex-behaviors-devools-tooltip', TooltipElement)
+customElements.define('turbo-boost-devtool', DevtoolElement)
+customElements.define('turbo-boost-devtool-supervisor', SupervisorElement)
+customElements.define('turbo-boost-devtool-tooltip', TooltipElement)
 
 let supervisorElement
 
@@ -23,7 +23,7 @@ function stop () {
   if (stopped()) return
   supervisorElement.close()
   supervisorElement.dispatchEvent(
-    new CustomEvent('reflex-behaviors:devtools-stop', {
+    new CustomEvent('turbo-boost:devtools-stop', {
       bubbles: true
     })
   )
@@ -36,11 +36,11 @@ function start () {
   dependencies.add(dependencies.LeaderLine)
   dependencies.add(dependencies.PlainDraggable)
   supervisorElement = appendHTML(
-    '<reflex-behaviors-devtool-supervisor></reflex-behaviors-devtool-supervisor>'
+    '<turbo-boost-devtool-supervisor></turbo-boost-devtool-supervisor>'
   )
   setTimeout(makeDraggable, 200)
   supervisorElement.dispatchEvent(
-    new CustomEvent('reflex-behaviors:devtools-start', {
+    new CustomEvent('turbo-boost:devtools-start', {
       bubbles: true
     })
   )
@@ -79,17 +79,17 @@ function autoRestart () {
 
 addEventListener('turbo:load', autoRestart)
 addEventListener('turbo-frame:load', autoRestart)
-addEventListener('turbo-reflex:success', autoRestart)
-addEventListener('turbo-reflex:finish', autoRestart)
-addEventListener('reflex-behaviors:devtools-close', stop)
+addEventListener(TurboBoost.Commands.events.success, autoRestart)
+addEventListener(TurboBoost.Commands.events.finish, autoRestart)
+addEventListener('turbo-boost:devtools-close', stop)
 
 function register (name, label) {
   if (!supervisorElement) return
   return appendHTML(
     `
-      <reflex-behaviors-devtool name="${name}" slot="devtool">
+      <turbo-boost-devtool name="${name}" slot="devtool">
         <span slot="label">${label}</span>
-      </reflex-behaviors-devtool>
+      </turbo-boost-devtool>
     `,
     supervisorElement
   )

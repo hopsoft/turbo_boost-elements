@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../../../lib/reflex_behaviors/tag_builders"
+require_relative "../../../../lib/turbo_boost/elements/tag_builders"
 
-module ReflexBehaviors::ApplicationHelper
+module TurboBoost::Elements::ApplicationHelper
   def current_partial_path
     path = nil
     prefix = "app/views/"
@@ -37,6 +37,6 @@ module ReflexBehaviors::ApplicationHelper
   private
 
   def toggle_tag_builder
-    @toggle_tag_builder ||= ReflexBehaviors::TagBuilders::ToggleTagsBuilder.new(self)
+    @toggle_tag_builder ||= TurboBoost::Elements::TagBuilders::ToggleTagsBuilder.new(self)
   end
 end

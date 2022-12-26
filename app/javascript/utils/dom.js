@@ -38,7 +38,7 @@ export function addHighlight (element, options = {}) {
   }
   element.style.outline = outline
   element.style.outlineOffset = outlineOffset
-  element.dataset.reflexBehaviorsHighlight = true
+  element.dataset.turboBoostHighlight = true
 }
 
 export function removeHighlight (element) {
@@ -48,7 +48,7 @@ export function removeHighlight (element) {
       value ? (element.style[key] = value) : (element.style[key] = '')
     delete element.originalStyles
   }
-  delete element.dataset.reflexBehaviorsHighlight
+  delete element.dataset.turboBoostHighlight
 }
 
 export function coordinates (element) {

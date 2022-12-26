@@ -8,7 +8,7 @@ export default class SupervisorElement extends HTMLElement {
     this.shadowRoot.innerHTML = this.html
     this.shadowRoot.querySelector('button').addEventListener('click', () =>
       this.dispatchEvent(
-        new CustomEvent('reflex-behaviors:devtools-close', {
+        new CustomEvent('turbo-boost:devtools-close', {
           bubbles: true
         })
       )
@@ -25,7 +25,7 @@ export default class SupervisorElement extends HTMLElement {
     if (this.enabledDevtools[name]) return
     this.enabledDevtools[name] = true
     this.dispatchEvent(
-      new CustomEvent('reflex-behaviors:devtool-enable', {
+      new CustomEvent('turbo-boost:devtool-enable', {
         bubbles: true,
         detail: { name: name }
       })
@@ -36,7 +36,7 @@ export default class SupervisorElement extends HTMLElement {
     if (!this.enabledDevtools[name]) return
     delete this.enabledDevtools[name]
     this.dispatchEvent(
-      new CustomEvent('reflex-behaviors:devtool-disable', {
+      new CustomEvent('turbo-boost:devtool-disable', {
         bubbles: true,
         detail: { name: name }
       })
@@ -62,7 +62,7 @@ export default class SupervisorElement extends HTMLElement {
     return `
       <style>${this.stylesheet}</style>
       <div>
-        <label>ReflexBehaviors</label>
+        <label><img src="https://ik.imagekit.io/hopsoft/turbo-boost-logo_zHiiimlvT.webp?ik-sdk-version=javascript-1.4.3&updatedAt=1671722004342"></label>
         <slot name="devtool"></slot>
         <button>✕</button>
       </div>
@@ -94,9 +94,9 @@ export default class SupervisorElement extends HTMLElement {
       }
 
       label {
-        color: indigo;
         cursor: grab;
-        opacity: 0.5;
+        display: inline-block;
+        height: 50px;
       }
 
       div {

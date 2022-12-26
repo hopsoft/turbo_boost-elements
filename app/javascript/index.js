@@ -1,5 +1,6 @@
-import 'turbo_reflex'
+import '@turbo-boost/commands'
 import './elements'
 import devtools from './devtools'
 
-self.ReflexBehaviors = { devtools }
+self.TurboBoost = self.TurboBoost || {}
+self.TurboBoost.Elements = { devtools }

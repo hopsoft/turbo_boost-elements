@@ -1,6 +1,6 @@
-import ReflexElement from './reflex_element'
+import TurboBoostElement from './turbo_boost_element'
 
-export default class ToggleTargetElement extends ReflexElement {
+export default class ToggleTargetElement extends TurboBoostElement {
   connectedCallback () {
     super.connectedCallback()
 

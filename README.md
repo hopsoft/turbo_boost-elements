@@ -1,37 +1,37 @@
 <p align="center">
   <h1 align="center">
-    Welcome to Reflex Behaviors 👋
+    Welcome to TurboBoost Elements 👋
   </h1>
   <p align="center">
     <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
       <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1116-47d299.svg" />
     </a>
-    <a href="https://codeclimate.com/github/hopsoft/reflex_behaviors/maintainability">
+    <a href="https://codeclimate.com/github/hopsoft/turbo_boost-elements/maintainability">
       <img src="https://api.codeclimate.com/v1/badges/7aac6daed3e4032e292e/maintainability" />
     </a>
-    <a href="https://rubygems.org/gems/reflex_behaviors">
-      <img alt="GEM Version" src="https://img.shields.io/gem/v/reflex_behaviors?color=168AFE&include_prereleases&logo=ruby&logoColor=FE1616">
+    <a href="https://rubygems.org/gems/turbo_boost-elements">
+      <img alt="GEM Version" src="https://img.shields.io/gem/v/turbo_boost-elements?color=168AFE&include_prereleases&logo=ruby&logoColor=FE1616">
     </a>
-    <a href="https://rubygems.org/gems/reflex_behaviors">
-      <img alt="GEM Downloads" src="https://img.shields.io/gem/dt/reflex_behaviors?color=168AFE&logo=ruby&logoColor=FE1616">
+    <a href="https://rubygems.org/gems/turbo_boost-elements">
+      <img alt="GEM Downloads" src="https://img.shields.io/gem/dt/turbo_boost-elements?color=168AFE&logo=ruby&logoColor=FE1616">
     </a>
     <a href="https://github.com/testdouble/standard">
       <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
     </a>
-    <a href="https://www.npmjs.com/package/reflex_behaviors">
-      <img alt="NPM Version" src="https://img.shields.io/npm/v/reflex_behaviors?color=168AFE&logo=npm">
+    <a href="https://www.npmjs.com/package/@turbo-boost/elements">
+      <img alt="NPM Version" src="https://img.shields.io/npm/v/@turbo-boost/elements?color=168AFE&logo=npm">
     </a>
-    <a href="https://www.npmjs.com/package/reflex_behaviors">
-      <img alt="NPM Downloads" src="https://img.shields.io/npm/dm/reflex_behaviors?color=168AFE&logo=npm">
+    <a href="https://www.npmjs.com/package/@turbo-boost/elements">
+      <img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@turbo-boost/elements?color=168AFE&logo=npm">
     </a>
-    <a href="https://bundlephobia.com/package/reflex_behaviors@">
-      <img alt="NPM Bundle Size" src="https://img.shields.io/bundlephobia/minzip/reflex_behaviors?label=bundle%20size&logo=npm&color=47d299">
+    <a href="https://bundlephobia.com/package/@turbo-boost/elements@">
+      <img alt="NPM Bundle Size" src="https://img.shields.io/bundlephobia/minzip/@turbo-boost/elements?label=bundle%20size&logo=npm&color=47d299">
     </a>
     <a href="https://github.com/sheerun/prettier-standard">
       <img alt="JavaScript Style" src="https://img.shields.io/badge/style-prettier--standard-168AFE?logo=javascript&logoColor=f4e137" />
     </a>
-    <a href="https://github.com/hopsoft/reflex_behaviors/actions/workflows/tests.yml">
-      <img alt="Tests" src="https://github.com/hopsoft/reflex_behaviors/actions/workflows/tests.yml/badge.svg" />
+    <a href="https://github.com/hopsoft/@turbo-boost/elements/actions/workflows/tests.yml">
+      <img alt="Tests" src="https://github.com/hopsoft/@turbo-boost/elements/actions/workflows/tests.yml/badge.svg" />
     </a>
     <a href="https://twitter.com/hopsoft">
       <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/hopsoft?logo=twitter&style=social">
@@ -39,7 +39,7 @@
   </p>
 </p>
 
-Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.
+Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.
 
 <!-- Tocer[start]: Auto-generated, don't remove. -->
 
@@ -63,7 +63,7 @@ Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.
   <em>Proudly sponsored by</em>
 </p>
 <p align="center">
-  <a href="https://www.clickfunnels.com?utm_source=hopsoft&utm_medium=open-source&utm_campaign=reflex_behaviors">
+  <a href="https://www.clickfunnels.com?utm_source=hopsoft&utm_medium=open-source&utm_campaign=turbo_boost-elements">
     <img src="https://images.clickfunnel.com/uploads/digital_asset/file/176632/clickfunnels-dark-logo.svg" width="575" />
   </a>
 </p>
@@ -75,57 +75,47 @@ Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps.
 - [turbo-rails](https://rubygems.org/gems/turbo-rails) `>=1.1`
 - [@hotwired/turbo](https://yarnpkg.com/package/@hotwired/turbo) `>=7.2.0`
 - [@hotwired/turbo-rails](https://yarnpkg.com/package/@hotwired/turbo-rails) `>=7.2.0`
-- [turbo_ready](https://github.com/hopsoft/turbo_ready) `>=0.1.2`
-- [turbo_reflex](https://github.com/hopsoft/turbo_reflex) `>=0.0.28`
-
-## Installation
-
-Be sure to install the same version for each libary.
-
-```sh
-bundle add "reflex_behaviors --version VERSION"
-yarn add "reflex_behaviors@VERSION --exact"
-```
+- [turbo_boost-commands](https://github.com/hopsoft/turbo_boost-commands) `>=0.0.2`
 
 ## Setup
 
-Import and intialize ReflexBehaviors in your application.
+Add TurboBoost Elements dependencies
 
 ```diff
 # Gemfile
 gem "turbo-rails", ">= 1.1", "< 2"
-+gem "reflex_behaviors", "~> VERSION"
++gem "turbo_boost-elements", "~> VERSION"
 ```
 
 ```diff
 # package.json
 "dependencies": {
   "@hotwired/turbo-rails": ">=7.2",
-+  "reflex_behaviors": "^VERSION"
++  "@turbo-boost/elements": "^VERSION"
 ```
 
 ```diff
 # app/javascript/application.js
 import '@hotwired/turbo-rails'
-+import 'reflex_behaviors'
++import '@turbo-boost/elements'
 ```
 
-Add TurboReflex behavior to the Rails app
+Add TurboBoost to your Rails app
 
 ```diff
 # app/views/layouts/application.html.erb
 <html>
   <head>
-+  <%= turbo_reflex.meta_tag %>
++  <%= turbo_boost.meta_tag %>
   </head>
   <body>
   </body>
 </html>
 ```
 
-## Behaviors
+## Elements
 
-### Toggle
+### `<toggle-trigger>` and `<toggle-target>`
 
 Toggle content via conditional rendering.
 
@@ -164,7 +154,7 @@ This example will re-render the `post` partial and toggle the `form` section.
   - `locals` - `{}`, `local_assigns` required to render the parital
   - `collapse_selector` - `nil`, CSS selector for other matching targets to collapse when the target is expanded
   - `focus_selector` - `nil`, CSS selector for the element to focus when the target is expanded
-  - `method` - `:toggle`, reflex method to inovke (:show, :hide, :toggle)
+  - `method` - `:toggle`, method to inovke (:show, :hide, :toggle)
   - `disabled` - `false`, disable the trigger
   - `remember` - `false`, remember ephemeral UI state between requests
   - `kwargs` - generic support for additional element attributes like `class` etc.
@@ -186,7 +176,7 @@ the trigger value will take precendence because multiple triggers might control 
 ## Releasing
 
 1. Run `yarn` and `bundle` to pick up the latest
-1. Bump version number at `lib/reflex_behaviors/version.rb`. Pre-release versions use `.preN`
+1. Bump version number at `lib/turbo_boost/elements/version.rb`. Pre-release versions use `.preN`
 1. Run `rake build` and `yarn build`
 1. Run `bin/standardize`
 1. Commit and push changes to GitHub
@@ -194,7 +184,7 @@ the trigger value will take precendence because multiple triggers might control 
 1. Run `yarn publish --no-git-tag-version`
 1. Yarn will prompt you for the new version. Pre-release versions use `-preN`
 1. Commit and push changes to GitHub
-1. Create a new release on GitHub ([here](https://github.com/hopsoft/reflex_behaviors/releases)) and generate the changelog for the stable release for it
+1. Create a new release on GitHub ([here](https://github.com/hopsoft/turbo_boost-elements/releases)) and generate the changelog for the stable release for it
 
 ## License
 
