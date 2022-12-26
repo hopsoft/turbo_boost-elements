@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ReflexBehaviors::ToggleReflex < ReflexBehaviors::ApplicationReflex
+class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCommand
   prevent_controller_action
 
   def show

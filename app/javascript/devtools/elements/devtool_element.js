@@ -60,8 +60,7 @@ export default class DevtoolElement extends HTMLElement {
 
       div {
         display: flex;
-        position: relative;
-        top: -1px;
+        margin-right: 10px;
       }
 
       input:checked + label{
@@ -69,7 +68,7 @@ export default class DevtoolElement extends HTMLElement {
       }
 
       label {
-        color: indigo;
+        color: black;
       }
     `
   }

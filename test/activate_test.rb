@@ -2,8 +2,8 @@
 
 require "test_helper"
 
-class ReflexBehaviorsTest < ActiveSupport::TestCase
+class TurboBoost::ElementsTest < ActiveSupport::TestCase
   test "it has a version number" do
-    assert ReflexBehaviors::VERSION
+    assert TurboBoost::Elements::VERSION
   end
 end

@@ -8,7 +8,7 @@ export default class SupervisorElement extends HTMLElement {
     this.shadowRoot.innerHTML = this.html
     this.shadowRoot.querySelector('button').addEventListener('click', () =>
       this.dispatchEvent(
-        new CustomEvent('reflex-behaviors:devtools-close', {
+        new CustomEvent('turbo-boost:devtools-close', {
           bubbles: true
         })
       )
@@ -25,7 +25,7 @@ export default class SupervisorElement extends HTMLElement {
     if (this.enabledDevtools[name]) return
     this.enabledDevtools[name] = true
     this.dispatchEvent(
-      new CustomEvent('reflex-behaviors:devtool-enable', {
+      new CustomEvent('turbo-boost:devtool-enable', {
         bubbles: true,
         detail: { name: name }
       })
@@ -36,7 +36,7 @@ export default class SupervisorElement extends HTMLElement {
     if (!this.enabledDevtools[name]) return
     delete this.enabledDevtools[name]
     this.dispatchEvent(
-      new CustomEvent('reflex-behaviors:devtool-disable', {
+      new CustomEvent('turbo-boost:devtool-disable', {
         bubbles: true,
         detail: { name: name }
       })
@@ -62,7 +62,7 @@ export default class SupervisorElement extends HTMLElement {
     return `
       <style>${this.stylesheet}</style>
       <div>
-        <label>ReflexBehaviors</label>
+        <img src="https://ik.imagekit.io/hopsoft/turbo-boost-logo_zHiiimlvT.webp?ik-sdk-version=javascript-1.4.3&updatedAt=1671722004342">
         <slot name="devtool"></slot>
         <button>✕</button>
       </div>
@@ -72,14 +72,14 @@ export default class SupervisorElement extends HTMLElement {
   get stylesheet () {
     return `
       :host {
-        background-color: lavender;
-        border-radius: 15px;
+        background-color: gainsboro;
+        border-radius: 5px;
         bottom: 20px;
         display: block;
         filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.3));
         left: 50%;
         outline-offset: 1px;
-        outline: solid 3px indigo;
+        outline: solid 2px black;
         padding: 5px 10px;
         position: fixed;
         transform: translateX(-50%);
@@ -93,10 +93,12 @@ export default class SupervisorElement extends HTMLElement {
         user-select: none;
       }
 
-      label {
-        color: indigo;
+      img {
+        align-self: center;
         cursor: grab;
-        opacity: 0.5;
+        height: 25px;
+        margin-left: -5px;
+        vertical-align: middle;
       }
 
       div {
@@ -105,22 +107,25 @@ export default class SupervisorElement extends HTMLElement {
         position: relative;
       }
 
+      [slot="devtool"] {
+        align-self: center;
+      }
+
       button {
-        background-color: thistle;
+        align-self: center;
+        background-color: darkgray;
         border-radius: 50%;
         border: none;
-        color: indigo;
+        color: black;
         cursor: pointer;
         font-size: 10px;
         height: 18px;
         line-height: 18px;
-        margin: 0 -5px 0 10px;
-        outline: solid 1px indigo;
-        padding: 0 2px;
-        position: relative;
-        top: 1px;
-        width: 18px;
+        margin-right: -5px;
         opacity: 0.5;
+        outline: solid 1px black;
+        padding: 0 2px;
+        width: 18px;
       }
 
       button:hover {

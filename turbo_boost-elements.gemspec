@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require_relative "lib/reflex_behaviors/version"
+require_relative "lib/turbo_boost/elements/version"
 
 Gem::Specification.new do |s|
-  s.name = "reflex_behaviors"
-  s.version = ReflexBehaviors::VERSION
+  s.name = "turbo_boost-elements"
+  s.version = TurboBoost::Elements::VERSION
   s.authors = ["Nate Hopkins (hopsoft)"]
   s.email = ["natehop@gmail.com"]
-  s.homepage = "https://github.com/hopsoft/reflex_behaviors"
-  s.summary = "Pre-built easy to use reactive TurboReflex behaviors for Rails/Hotwire apps."
+  s.homepage = "https://github.com/hopsoft/turbo_boost-elements"
+  s.summary = "Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps."
   s.description = s.summary
   s.license = "MIT"
 
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 6.1"
   s.add_dependency "turbo-rails", ">= 1.1"
-  s.add_dependency "turbo_reflex", ">= 0.0.30"
+  s.add_dependency "turbo_boost-commands", ">= 0.0.2"
 
   s.add_development_dependency "magic_frozen_string_literal"
   s.add_development_dependency "minitest-reporters"

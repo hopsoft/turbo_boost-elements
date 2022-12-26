@@ -1,8 +1,8 @@
-import ReflexElement from './reflex_element'
+import TurboBoostElement from './turbo_boost_element'
 import DevtoolSupervisor from '../devtools/supervisor'
 import ToggleDevtool from '../devtools/toggle'
 
-export default class ToggleTriggerElement extends ReflexElement {
+export default class ToggleTriggerElement extends TurboBoostElement {
   connectedCallback () {
     super.connectedCallback()
 
@@ -10,20 +10,23 @@ export default class ToggleTriggerElement extends ReflexElement {
       this.targetElement.setAttribute('aria-labeledby', this.id)
     }
 
-    this.addEventListener(TurboReflex.events.start, () => {
+    this.addEventListener(TurboBoost.Commands.events.start, () => {
       this.busy = true
       this.targetElement.currentTriggerElement = this
       this.targetElement.renderCachedHTML()
     })
 
-    this.addEventListener(TurboReflex.events.success, () => {
+    this.addEventListener(TurboBoost.Commands.events.success, () => {
       this.busy = false
       this.targetElement.focus()
       this.targetElement.collapseMatches()
       this.targetElement.cacheHTML()
     })
 
-    this.addEventListener(TurboReflex.events.finish, () => (this.busy = false))
+    this.addEventListener(
+      TurboBoost.Commands.events.finish,
+      () => (this.busy = false)
+    )
 
     this.initializeDevtool()
   }
@@ -31,12 +34,12 @@ export default class ToggleTriggerElement extends ReflexElement {
   initializeDevtool () {
     const mouseenter = () => this.devtool.show()
 
-    addEventListener('reflex-behaviors:devtools-start', () => {
+    addEventListener('turbo-boost:devtools-start', () => {
       this.devtool = new ToggleDevtool(this)
       this.addEventListener('mouseenter', mouseenter)
     })
 
-    addEventListener('reflex-behaviors:devtools-stop', () => {
+    addEventListener('turbo-boost:devtools-stop', () => {
       this.removeEventListener('mouseenter', mouseenter)
       delete this.devtool
     })

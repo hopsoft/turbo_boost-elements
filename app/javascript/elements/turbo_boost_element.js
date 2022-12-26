@@ -1,4 +1,4 @@
-export default class ReflexElement extends HTMLElement {
+export default class TurboBoostElement extends HTMLElement {
   constructor () {
     super()
     this.devtool = 'unknown'

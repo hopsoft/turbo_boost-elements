@@ -8,7 +8,7 @@ import supervisor from './supervisor'
 
 let activeToggle
 
-document.addEventListener('reflex-behaviors:devtools-start', () =>
+document.addEventListener('turbo-boost:devtools-start', () =>
   supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
 )
 
@@ -17,23 +17,23 @@ function appendTooltip (title, subtitle, content, options = {}) {
   color = color || 'white'
   position = position || 'top'
   return appendHTML(`
-    <reflex-behaviors-devools-tooltip position="${position}" background-color="${backgroundColor}" color="${color}">
+    <turbo-boost-devtool-tooltip position="${position}" background-color="${backgroundColor}" color="${color}">
       <div slot='title'>${title}</div>
       <div slot='subtitle'>${subtitle}</div>
       ${content}
-    </reflex-behaviors-devools-tooltip>
+    </turbo-boost-devtool-tooltip>
   `)
 }
 
 export default class ToggleDevtool {
   constructor (triggerElement) {
     this.name = 'toggle'
-    this.reflex = triggerElement.dataset.turboReflex
+    this.command = triggerElement.dataset.turboCommand
     this.triggerElement = triggerElement // SEE: app/javascript/elements/toggle_trigger_element.js
     this.targetElement = triggerElement.targetElement // SEE: app/javascript/elements/toggle_target_element.js
     this.morphElement = triggerElement.morphElement
 
-    document.addEventListener('reflex-behaviors:devtool-enable', event => {
+    document.addEventListener('turbo-boost:devtool-enable', event => {
       const { name } = event.detail
       if (name === this.name) {
         addHighlight(this.triggerElement, {
@@ -43,7 +43,7 @@ export default class ToggleDevtool {
       }
     })
 
-    document.addEventListener('reflex-behaviors:devtool-disable', event => {
+    document.addEventListener('turbo-boost:devtool-disable', event => {
       const { name } = event.detail
       if (name === this.name) removeHighlight(this.triggerElement)
     })
@@ -55,14 +55,14 @@ export default class ToggleDevtool {
     }
 
     addEventListener('click', event => {
-      if (event.target.closest('reflex-behaviors-devools-tooltip')) return
+      if (event.target.closest('turbo-boost-devtool-tooltip')) return
       debouncedHide()
     })
 
     addEventListener('turbo:load', debouncedHide)
     addEventListener('turbo-frame:load', debouncedHide)
-    addEventListener('turbo-reflex:success', debouncedHide)
-    addEventListener('turbo-reflex:finish', debouncedHide)
+    addEventListener(TurboBoost.Commands.events.success, debouncedHide)
+    addEventListener(TurboBoost.Commands.events.finish, debouncedHide)
   }
 
   get enabled () {
@@ -125,14 +125,12 @@ export default class ToggleDevtool {
   hide (clearActiveToggle) {
     document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
-      .querySelectorAll('reflex-behaviors-devools-tooltip')
+      .querySelectorAll('turbo-boost-devtool-tooltip')
       .forEach(el => el.remove())
 
-    document
-      .querySelectorAll('[data-reflex-behaviors-highlight]')
-      .forEach(el => {
-        if (!el.tagName.match(/toggle-trigger/i)) removeHighlight(el)
-      })
+    document.querySelectorAll('[data-turbo-boost-highlight]').forEach(el => {
+      if (!el.tagName.match(/turbo-boost-toggle-trigger/i)) removeHighlight(el)
+    })
 
     if (clearActiveToggle) activeToggle = null
   }

@@ -3,5 +3,5 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# Specify your gem's dependencies in reflex_behaviors.gemspec.
+# Specify your gem's dependencies in turbo_boost-elements.gemspec.
 gemspec
