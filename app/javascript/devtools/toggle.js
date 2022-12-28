@@ -274,7 +274,6 @@ export default class ToggleDevtool {
 
     tooltip.drag = new PlainDraggable(tooltip)
     tooltip.drag.onMove = () => {
-      console.log('nate', tooltip.line)
       tooltip.line.position()
       if (tooltip.lineToTarget) tooltip.lineToTarget.position()
       if (tooltip.lineToRendering) tooltip.lineToRendering.position()
