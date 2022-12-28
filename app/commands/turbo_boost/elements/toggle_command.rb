@@ -4,7 +4,7 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
   prevent_controller_action
 
   def show
-    if element.remember == "true"
+    if element.remember?
       state[element.aria.controls] = true
     else
       state.now[element.aria.controls] = true
