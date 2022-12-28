@@ -181,20 +181,17 @@ This example will re-render the `post` partial and toggle the `form` section.
 If a named keyword argument is shared by both the `trigger` and `target`,
 the trigger value will take precendence because multiple triggers might control the same target.
 
+#### DevTools
 
-#### DevTools Helpers
-To make your development easier, Reflex Behaviors comes with a browser DevTools helper.
-You can enable the helper from your javascript console or your application's javascript file
+TurboBoost ships with client/browser based devtools designed to improve the developer experience.
+You can enable the devtools with JavaScript like so.
 
 ```js
-ReflexBehaviors.devtools.start()
+TurboBoost.devtools.start()
 ```
-
 
 ## Introductory Video
 [![Watch the introduction on YouTube](https://img.youtube.com/vi/WERDPzOz1sA/maxresdefault.jpg)](https://youtu.be/WERDPzOz1sA "Watch the introduction on YouTube")
-
-
 
 ## Releasing
 

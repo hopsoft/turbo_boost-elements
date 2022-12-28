@@ -10,12 +10,12 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
       state.now[element.aria.controls] = true
     end
 
-    morph "##{element.morphs}", render(render_payload)
+    morph render(element.render_options), id: element.morphs
   end
 
   def hide
     state[element.aria.controls] = false
-    morph "##{element.morphs}", render(render_payload)
+    morph render(element.render_options), id: element.morphs
   end
 
   def toggle

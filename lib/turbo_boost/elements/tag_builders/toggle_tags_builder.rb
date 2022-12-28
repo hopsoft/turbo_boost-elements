@@ -3,12 +3,12 @@
 require_relative "base_tag_builder"
 
 class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Elements::TagBuilders::BaseTagBuilder
+  include TurboBoost::Commands::AttributeHydration
+
   def trigger_tag(
     renders:, # REQUIRED, the partial path to render
     morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element
     controls:, # REQUIRED, `dom_id` of the toggle target
-    assigns: {}, # `assigns` required to render the partial (i.e. instance variables)
-    locals: {}, # `local_assigns` required to render the parital
     collapse_selector: nil, # CSS selector for other matching targets to collapse when the target is expanded
     focus_selector: nil, # CSS selector for the element to focus when the target is expanded
     method: :toggle, # method to inovke (:show, :hide, :toggle)
@@ -34,9 +34,6 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     # rendering
     kwargs[:renders] = renders
     kwargs[:morphs] = morphs
-    kwargs[:assigns] = dehydrate_hash(assigns).compact.to_json if assigns.present?
-    kwargs[:locals] = dehydrate_hash(locals).compact.to_json if locals.present?
-    kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
     # misc
     kwargs[:collapse_selector] = collapse_selector
@@ -44,7 +41,12 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     kwargs[:remember] = !!remember
 
     args = kwargs.select { |_, value| value.present? }
-    content_tag("turbo-boost-toggle-trigger", nil, args.transform_keys(&:dasherize), &block)
+    args = args.transform_keys(&:dasherize)
+    args = dehydrate(args.except(:aria, :data))
+    args[:aria] = dehydrate(kwargs[:aria]) # aria is a known hash, dehydrate separately
+    args[:data] = dehydrate(kwargs[:data]) # data is a known hash, dehydrate separately
+
+    content_tag("turbo-boost-toggle-trigger", nil, args, &block)
   end
 
   def target_tag(
