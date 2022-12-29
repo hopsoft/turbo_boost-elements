@@ -18,6 +18,7 @@
     "prettier-standard": "^16.4.1"
   },
   "scripts": {
-    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --outfile=app/assets/builds/@turbo-boost/elements.js"
-  }
+    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --outfile=app/assets/builds/@turbo-boost/elements.mjs"
+  },
+  "module": "app/assets/builds/@turbo-boost/elements.mjs"
 }
