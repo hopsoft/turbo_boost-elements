@@ -24,9 +24,9 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     kwargs[:data] ||= {}
     kwargs[:data][:turbo_command] = "TurboBoost::Elements::ToggleCommand##{method}" unless disabled
 
-    # target / aria
+    # aria
     kwargs[:aria] ||= {}
-    kwargs[:aria][:controls] = controls
+    kwargs[:aria][:controls] = controls # toggle target
     kwargs[:aria][:expanded] = target_expanded?(controls)
     kwargs[:aria][:atomic] ||= true
     kwargs[:aria][:relevant] ||= "all"
@@ -34,6 +34,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     # rendering
     kwargs[:renders] = renders
     kwargs[:morphs] = morphs
+    kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
     # misc
     kwargs[:collapse_selector] = collapse_selector
