@@ -11,6 +11,7 @@
     "web-components"
   ],
   "type": "module",
+  "main": "app/assets/builds/@turbo-boost/elements.js",
   "exports": "app/assets/builds/@turbo-boost/elements.js",
   "files": [
     "app/assets/builds"
