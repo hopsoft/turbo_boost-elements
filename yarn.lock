@@ -251,7 +251,7 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@turbo-boost/commands@>= 0.0.1":
+"@turbo-boost/commands@>= 0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@turbo-boost/commands/-/commands-0.0.2.tgz#247e92b8a3a7c5a474742505d087838252a26aac"
   integrity sha512-OiEWEv7YGyMIOJSB8IgF5GV9/aCtf/kYGQdmc6lyOqu/bGpbjjgyF+wAWU1oGXO5BYr4c+rAN1Gj65rvPXTzmg==

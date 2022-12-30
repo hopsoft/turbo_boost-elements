@@ -2,12 +2,24 @@
   "name": "@turbo-boost/elements",
   "version": "0.0.1",
   "description": "Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.",
-  "main": "app/javascript/index.js",
+  "keywords": [
+    "hotwire",
+    "hotwired",
+    "rails",
+    "turbo",
+    "turbo-boost",
+    "web-components"
+  ],
+  "type": "module",
+  "exports": "app/javascript/builds/@turbo-boost/elements.js",
+  "files": [
+    "app/assets/builds"
+  ],
   "repository": "https://github.com/hopsoft/turbo_boost-elements",
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.1"
+    "@turbo-boost/commands": ">= 0.0.2"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
@@ -18,7 +30,6 @@
     "prettier-standard": "^16.4.1"
   },
   "scripts": {
-    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --outfile=app/assets/builds/@turbo-boost/elements.mjs"
-  },
-  "module": "app/assets/builds/@turbo-boost/elements.mjs"
+    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --outfile=app/assets/builds/@turbo-boost/elements.js"
+  }
 }
