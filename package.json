@@ -12,7 +12,6 @@
   ],
   "type": "module",
   "main": "app/assets/builds/@turbo-boost/elements.js",
-  "exports": "app/assets/builds/@turbo-boost/elements.js",
   "files": [
     "app/assets/builds"
   ],
@@ -20,7 +19,7 @@
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.2"
+    "@turbo-boost/commands": ">= 0.0.3"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"

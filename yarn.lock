@@ -251,17 +251,17 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@turbo-boost/commands@>= 0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@turbo-boost/commands/-/commands-0.0.2.tgz#247e92b8a3a7c5a474742505d087838252a26aac"
-  integrity sha512-OiEWEv7YGyMIOJSB8IgF5GV9/aCtf/kYGQdmc6lyOqu/bGpbjjgyF+wAWU1oGXO5BYr4c+rAN1Gj65rvPXTzmg==
+"@turbo-boost/commands@>= 0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@turbo-boost/commands/-/commands-0.0.3.tgz#18291d7c984f27294cfbf673771d6b361d7083fc"
+  integrity sha512-4X4Ld4Rgn2l3YI5V1NhA9Q8ZPW9VBFBCIugY12uo0SUWfCxh5jyGtgRSicCn4BfUYJdXAY3X+c1hxNGDGAXK6w==
   dependencies:
-    "@turbo-boost/streams" ">= 0.0.2"
+    "@turbo-boost/streams" ">= 0.0.4"
 
-"@turbo-boost/streams@>= 0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@turbo-boost/streams/-/streams-0.0.2.tgz#98c0facf6b2cb4a14fc47dfeedc734cce36b76a7"
-  integrity sha512-qZ6Nh+jLwkJEqTn7qLmoSw1MdgwCFbc/NrdMPyp0IS//A3skqYpwY3R8BlEB/Ez/nuIvH4eTsPjorY9HdR6BPQ==
+"@turbo-boost/streams@>= 0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@turbo-boost/streams/-/streams-0.0.4.tgz#61ffcb15a1417199e08daab775cecc934b4044d9"
+  integrity sha512-a8ZYwwnZB5BitnZgbTYl0pZ4yFD0/J8coIw51Nx7zgWN8mCcGS5Rq/NSQJFIVzqDL1dQHtCxGuC1alDBwzVwTQ==
   dependencies:
     "@alpinejs/morph" ">=3.10.4"
     alpinejs ">=3.10.4"
