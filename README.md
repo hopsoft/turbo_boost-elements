@@ -4,7 +4,7 @@
   </h1>
   <p align="center">
     <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-      <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1114-47d299.svg" />
+      <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1105-47d299.svg" />
     </a>
     <a href="https://codeclimate.com/github/hopsoft/turbo_boost-elements/maintainability">
       <img src="https://api.codeclimate.com/v1/badges/7aac6daed3e4032e292e/maintainability" />
