@@ -3,17 +3,10 @@
 require_relative "../../../../lib/turbo_boost/elements/tag_builders"
 
 module TurboBoost::Elements::ApplicationHelper
+  # Returns an idiomatic path for the currently rendering template
+  # i.e. How you'd pass the path to a `render partial: ...` call
   def current_partial_path
-    path = nil
-    prefix = "app/views/"
-    start = 1
-    while path.nil? && start < 100
-      location = caller_locations(start, 1).first
-      path = location.path if location.path.include?(prefix)
-      start += 1
-    end
-    return "unknown" if path.nil?
-    path[(path.index(prefix) + prefix.length), path.rindex("/")]
+    @virtual_path.to_s.gsub("/_", "/")
   end
 
   def method_missing(name, ...)

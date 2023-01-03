@@ -7,8 +7,6 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     renders:, # REQUIRED, the partial path to render
     morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element
     controls:, # REQUIRED, `dom_id` of the toggle target
-    assigns: {}, # `assigns` required to render the partial (i.e. instance variables)
-    locals: {}, # `local_assigns` required to render the parital
     collapse_selector: nil, # CSS selector for other matching targets to collapse when the target is expanded
     focus_selector: nil, # CSS selector for the element to focus when the target is expanded
     method: :toggle, # method to inovke (:show, :hide, :toggle)
@@ -24,9 +22,9 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     kwargs[:data] ||= {}
     kwargs[:data][:turbo_command] = "TurboBoost::Elements::ToggleCommand##{method}" unless disabled
 
-    # target / aria
+    # aria
     kwargs[:aria] ||= {}
-    kwargs[:aria][:controls] = controls
+    kwargs[:aria][:controls] = controls # toggle target
     kwargs[:aria][:expanded] = target_expanded?(controls)
     kwargs[:aria][:atomic] ||= true
     kwargs[:aria][:relevant] ||= "all"
@@ -34,8 +32,6 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     # rendering
     kwargs[:renders] = renders
     kwargs[:morphs] = morphs
-    kwargs[:assigns] = dehydrate_hash(assigns).compact.to_json if assigns.present?
-    kwargs[:locals] = dehydrate_hash(locals).compact.to_json if locals.present?
     kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
     # misc
@@ -44,7 +40,9 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     kwargs[:remember] = !!remember
 
     args = kwargs.select { |_, value| value.present? }
-    content_tag("turbo-boost-toggle-trigger", nil, args.transform_keys(&:dasherize), &block)
+    args = args.transform_keys(&:dasherize)
+
+    content_tag("turbo-boost-toggle-trigger", nil, args, &block)
   end
 
   def target_tag(

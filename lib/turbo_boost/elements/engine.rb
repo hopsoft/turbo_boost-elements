@@ -12,8 +12,9 @@ module TurboBoost::Elements
   class Engine < ::Rails::Engine
     config.turbo_boost_elements = ActiveSupport::OrderedOptions.new
 
-    ActiveSupport.on_load(:action_controller) do
-      try :helper, TurboBoost::Elements::ApplicationHelper
+    ActiveSupport.on_load(:action_controller_base) do
+      # `self` is ActionController::Base
+      helper TurboBoost::Elements::ApplicationHelper
     end
   end
 end

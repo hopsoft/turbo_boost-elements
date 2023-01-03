@@ -4,7 +4,7 @@
   </h1>
   <p align="center">
     <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-      <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1131-47d299.svg" />
+      <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1114-47d299.svg" />
     </a>
     <a href="https://codeclimate.com/github/hopsoft/turbo_boost-elements/maintainability">
       <img src="https://api.codeclimate.com/v1/badges/7aac6daed3e4032e292e/maintainability" />
@@ -181,20 +181,17 @@ This example will re-render the `post` partial and toggle the `form` section.
 If a named keyword argument is shared by both the `trigger` and `target`,
 the trigger value will take precendence because multiple triggers might control the same target.
 
+#### DevTools
 
-#### DevTools Helpers
-To make your development easier, Reflex Behaviors comes with a browser DevTools helper.
-You can enable the helper from your javascript console or your application's javascript file
+TurboBoost ships with client/browser based devtools designed to improve the developer experience.
+You can enable the devtools with JavaScript like so.
 
 ```js
-ReflexBehaviors.devtools.start()
+TurboBoost.devtools.start()
 ```
-
 
 ## Introductory Video
 [![Watch the introduction on YouTube](https://img.youtube.com/vi/WERDPzOz1sA/maxresdefault.jpg)](https://youtu.be/WERDPzOz1sA "Watch the introduction on YouTube")
-
-
 
 ## Releasing
 
