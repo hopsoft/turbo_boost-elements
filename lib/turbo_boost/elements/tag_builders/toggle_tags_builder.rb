@@ -3,8 +3,6 @@
 require_relative "base_tag_builder"
 
 class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Elements::TagBuilders::BaseTagBuilder
-  include TurboBoost::Commands::AttributeHydration
-
   def trigger_tag(
     renders:, # REQUIRED, the partial path to render
     morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element
@@ -43,9 +41,6 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
 
     args = kwargs.select { |_, value| value.present? }
     args = args.transform_keys(&:dasherize)
-    args = dehydrate(args.except(:aria, :data))
-    args[:aria] = dehydrate(kwargs[:aria]) # aria is a known hash, dehydrate separately
-    args[:data] = dehydrate(kwargs[:data]) # data is a known hash, dehydrate separately
 
     content_tag("turbo-boost-toggle-trigger", nil, args, &block)
   end
