@@ -1,6 +1,6 @@
 {
   "name": "@turbo-boost/elements",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.",
   "keywords": [
     "hotwire",
