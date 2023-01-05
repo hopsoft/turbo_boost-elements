@@ -16,13 +16,13 @@ Gem::Specification.new do |s|
   s.metadata["source_code_uri"] = s.homepage
   s.metadata["changelog_uri"] = s.homepage + "/blob/main/CHANGELOG.md"
 
-  s.files = Dir["lib/**/*.rb", "app/**/*", "bin/*", "[A-Z]*"]
+  s.files = Dir["{app,lib}/**/*", "MIT-LICENSE", "README.md"]
 
   s.required_ruby_version = ">= 2.7.3"
 
   s.add_dependency "rails", ">= 6.1"
   s.add_dependency "turbo-rails", ">= 1.1"
-  s.add_dependency "turbo_boost-commands", ">= 0.0.4"
+  s.add_dependency "turbo_boost-commands", ">= 0.0.5"
 
   s.add_development_dependency "magic_frozen_string_literal"
   s.add_development_dependency "minitest-reporters"
