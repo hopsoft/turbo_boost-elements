@@ -14,7 +14,7 @@ function deactivateTrixAttributes (editor) {
 }
 
 function focusTrixEditorElement (element) {
-  if (element.value.length === 0) return element.focus()
+  if (element.value.length === 0) return
 
   const editor = element.editor
 
@@ -43,21 +43,20 @@ function focusTrixEditorElement (element) {
   ])
 }
 
-function shouldRefocus (element) {
+function shouldEnhanceFocus (element) {
   return (
     element.closest('turbo-boost-toggle-target') &&
     element.tagName.match(/^input|textarea|trix-editor$/i)
   )
 }
 
-function refocus (element) {
+function enhanceFocus (element) {
   const trixEditorElement = element.closest('trix-editor')
 
   try {
     if (trixEditorElement) {
       focusTrixEditorElement(trixEditorElement)
     } else {
-      element.focus()
       element.selectionStart = element.selectionEnd = element.value.length
     }
   } finally {
@@ -68,21 +67,11 @@ function refocus (element) {
   }
 }
 
-let refocusing = false
 addEventListener(
   'focus',
   event => {
-    if (refocusing) return
-    refocusing = true
-
-    try {
-      if (shouldRefocus(document.activeElement)) {
-        event.preventDefault()
-        refocus(document.activeElement)
-      }
-    } finally {
-      refocusing = false
-    }
+    if (shouldEnhanceFocus(document.activeElement))
+      enhanceFocus(document.activeElement)
   },
   true
 )
