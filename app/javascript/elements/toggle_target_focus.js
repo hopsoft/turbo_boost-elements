@@ -1,4 +1,4 @@
-function deactivateAllAttributes (editor) {
+function deactivateTrixAttributes (editor) {
   const attributes = [
     'bold',
     'bullet',
@@ -34,7 +34,7 @@ function focusTrixEditorElement (element) {
   editor.setSelectedRange([lastRange[1], editor.getSelectedRange()[1]])
 
   // deactivate all trix features for the selection
-  deactivateAllAttributes(editor)
+  deactivateTrixAttributes(editor)
 
   // move cursor to end and collapse the selection
   editor.setSelectedRange([
