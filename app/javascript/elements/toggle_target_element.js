@@ -1,4 +1,5 @@
 import TurboBoostElement from './turbo_boost_element'
+import './toggle_target_focus'
 
 export default class ToggleTargetElement extends TurboBoostElement {
   connectedCallback () {
@@ -55,9 +56,7 @@ export default class ToggleTargetElement extends TurboBoostElement {
   focus () {
     clearTimeout(this.focusTimeout)
     this.focusTimeout = setTimeout(() => {
-      if (!this.focusElement) return
-      this.focusElement.focus()
-      this.focusElement.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      if (this.focusElement) this.focusElement.focus()
     }, 50)
   }
 
