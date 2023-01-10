@@ -59,6 +59,7 @@ function enhanceFocus (element) {
     } else {
       element.selectionStart = element.selectionEnd = element.value.length
     }
+  } catch (_) {
   } finally {
     setTimeout(
       () => element.scrollIntoView({ block: 'center', behavior: 'smooth' }),
