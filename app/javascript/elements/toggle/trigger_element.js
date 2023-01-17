@@ -1,8 +1,22 @@
-import TurboBoostElement from './turbo_boost_element'
-import DevtoolSupervisor from '../devtools/supervisor'
-import ToggleDevtool from '../devtools/toggle'
+import TurboBoostElement from '../turbo_boost_element'
+import DevtoolSupervisor from '../../devtools/supervisor'
+import ToggleDevtool from '../../devtools/toggle'
+
+const stylesheet = ``
+
+const html = `
+  <style>${stylesheet}</style>
+  <turbo-boost>
+    <slot name="busy"></slot>
+    <slot></slot>
+  </turbo-boost>
+`
 
 export default class ToggleTriggerElement extends TurboBoostElement {
+  constructor (html) {
+    super(html)
+  }
+
   connectedCallback () {
     super.connectedCallback()
 
@@ -95,6 +109,15 @@ export default class ToggleTriggerElement extends TurboBoostElement {
 
   get focusSelector () {
     return this.getAttribute('focus-selector')
+  }
+
+  // indicates if the toggle state should be remembered across requests
+  get remember () {
+    return this.getAttribute('remember') === 'true'
+  }
+
+  set remember (value) {
+    return this.setAttribute('remember', !!value)
   }
 
   // indicates if the target is expanded

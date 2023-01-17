@@ -10,6 +10,7 @@ module TurboBoost::Elements
   end
 
   class Engine < ::Rails::Engine
+    isolate_namespace TurboBoost::Elements
     config.turbo_boost_elements = ActiveSupport::OrderedOptions.new
 
     ActiveSupport.on_load(:action_controller_base) do

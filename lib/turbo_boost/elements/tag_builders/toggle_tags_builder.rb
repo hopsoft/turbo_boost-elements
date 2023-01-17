@@ -3,6 +3,18 @@
 require_relative "base_tag_builder"
 
 class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Elements::TagBuilders::BaseTagBuilder
+  def busy_tag(**kwargs, &block)
+    options = kwargs.select { |_, value| value.present? }
+    options.transform_keys!(&:dasherize)
+    view_context.tag.public_send(:"turbo-boost", options, &block)
+  end
+
+  # def content_tag(**kwargs, &block)
+  # options = kwargs.select { |_, value| value.present? }
+  # options.transform_keys!(&:dasherize)
+  # view_context.tag.public_send(:"turbo-boost", options, &block)
+  # end
+
   def trigger_tag(
     renders:, # REQUIRED, the partial path to render
     morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element
@@ -39,10 +51,10 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     kwargs[:focus_selector] = focus_selector
     kwargs[:remember] = !!remember
 
-    args = kwargs.select { |_, value| value.present? }
-    args = args.transform_keys(&:dasherize)
+    options = kwargs.select { |_, value| value.present? }
+    options.transform_keys!(&:dasherize)
 
-    content_tag("turbo-boost-toggle-trigger", nil, args, &block)
+    tag.public_send(:"turbo-boost-toggle-trigger", **options, &block)
   end
 
   def target_tag(
@@ -68,16 +80,18 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     # rendering
     kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
-    args = kwargs.select { |_, value| value.present? }
+    options = kwargs.select { |_, value| value.present? }
+    options.transform_keys!(&:dasherize)
+
     if expanded || target_expanded?(id)
-      content_tag("turbo-boost-toggle-target", nil, args.transform_keys!(&:dasherize), &block)
+      tag.public_send(:"turbo-boost-toggle-target", **options, &block)
     else
-      content_tag("turbo-boost-toggle-target", nil, args.transform_keys!(&:dasherize))
+      tag.public_send(:"turbo-boost-toggle-target", **options) {}
     end
   end
 
   def target_expanded?(dom_id)
-    !!turbo_boost.state[dom_id]
+    !!controller_pack.state[dom_id]
   end
 
   def target_collapsed?(dom_id)

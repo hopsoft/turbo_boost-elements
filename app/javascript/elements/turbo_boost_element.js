@@ -1,9 +1,9 @@
 export default class TurboBoostElement extends HTMLElement {
-  constructor () {
+  constructor (html) {
     super()
     this.devtool = 'unknown'
     this.attachShadow({ mode: 'open' })
-    this.shadowRoot.innerHTML = '<slot></slot>'
+    this.shadowRoot.innerHTML = html || '<slot></slot>'
   }
 
   connectedCallback () {
@@ -12,7 +12,10 @@ export default class TurboBoostElement extends HTMLElement {
 
   ensureId () {
     if (this.id.trim().length) return
-    this.id = `${this.tagName}-${this.uuidv4()}`.toLowerCase()
+    this.id = `${this.tagName.replace(
+      /\./g,
+      ':'
+    )}-${this.uuidv4()}`.toLowerCase()
   }
 
   // SEE: https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid

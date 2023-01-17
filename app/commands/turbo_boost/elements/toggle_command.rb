@@ -22,7 +22,6 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
   end
 
   def toggle
-    validate_element!
     element.aria.expanded? ? hide : show
   end
 

@@ -1,3 +1,4 @@
+// Icons courtesy of https://feathericons.com/
 import {
   appendHTML,
   addHighlight,
@@ -115,7 +116,7 @@ export default class ToggleDevtool {
     if (this.targetElement)
       data.target = {
         partial: this.targetElement.partial,
-        id: this.targetElement.id,
+        dom_id: this.targetElement.id,
         status: 'OK'
       }
 
@@ -141,12 +142,19 @@ export default class ToggleDevtool {
         `Unable to create the morph tooltip! No element matches the DOM id: '${this.triggerElement.morphs}'`
       )
 
-    const title = 'PARTIAL'
-    const subtitle = `
-      id: ${this.triggerElement.morphs || 'unknown'}<br>
-      partial: ${this.triggerElement.renders || 'unknown'}
+    const title = `
+      <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+      RENDERING
     `
-    const content = '<div slot="content"></div>'
+    const subtitle = `
+      <b>partial</b>: ${this.triggerElement.renders || 'unknown'}<br>
+      <b>morphs</b>: ${this.triggerElement.morphs || 'unknown'}<br>
+    `
+    const content = `
+      <div slot="content-top" style="font-size:85%; font-style:italic; font-weight:100;">
+        The <b>TRIGGER</b> toggles the <b>TARGET</b> then renders the partial &amp; morphs the element.<br>
+      </div>
+    `
     const tooltip = appendTooltip(title, subtitle, content, {
       backgroundColor: 'lightyellow',
       color: 'chocolate'
@@ -175,19 +183,30 @@ export default class ToggleDevtool {
         `Unable to create the target tooltip! No element matches the DOM id: '${this.triggerElement.controls}'`
       )
 
-    const title = 'TARGET'
-    const subtitle = `
-      id: ${this.targetElement.id}<br>
-      labeled by: ${this.targetElement.labeledBy}
+    const title = `
+      <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+      TARGET
     `
-    const content = this.targetElement.viewStack
+    const subtitle = `
+      <b>id</b>: ${this.targetElement.id}<br>
+      <b>aria-labeled-by</b>: ${this.targetElement.labeledBy}<br>
+    `
+    let content = this.targetElement.viewStack
       .reverse()
       .map((view, index) => {
         return this.triggerElement.sharedViews.includes(view)
-          ? `<div slot="content-top">${index + 1}. ${view}</div>`
+          ? `<div slot="content">${index + 1}. ${view}</div>`
           : `<div slot="content-bottom">${index + 1}. ${view}</div>`
       }, this)
       .join('')
+
+    content = `
+      <div slot="content-top">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <b>View Stack</b>
+      </div>
+      ${content}
+    `
 
     const tooltip = appendTooltip(title, subtitle, content, {
       backgroundColor: 'lightcyan',
@@ -212,19 +231,32 @@ export default class ToggleDevtool {
 
   createTriggerTooltip (targetTooltip, morphTooltip) {
     if (!this.triggerElement) return
-    const title = 'TRIGGER'
-    const subtitle = `
-      id: ${this.triggerElement.id}<br>
-      controls: ${this.triggerElement.controls}
+    const title = `
+      <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="M13 13l6 6"></path></svg>
+      TRIGGER
     `
-    const content = this.triggerElement.viewStack
+    const subtitle = `
+      <b>id</b>: ${this.triggerElement.id}<br>
+      <b>aria-controls</b>: ${this.triggerElement.controls}<br>
+      <b>aria-expanded</b>: ${this.triggerElement.expanded}<br>
+      <b>remember</b>: ${this.triggerElement.remember}<br>
+    `
+    let content = this.triggerElement.viewStack
       .reverse()
       .map((view, index) => {
         return this.triggerElement.sharedViews.includes(view)
-          ? `<div slot="content-top">${index + 1}. ${view}</div>`
+          ? `<div slot="content">${index + 1}. ${view}</div>`
           : `<div slot="content-bottom">${index + 1}. ${view}</div>`
       }, this)
       .join('')
+
+    content = `
+      <div slot="content-top">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <b>View Stack</b>
+      </div>
+      ${content}
+    `
 
     const tooltip = appendTooltip(title, subtitle, content, {
       backgroundColor: 'lavender',
@@ -261,7 +293,7 @@ export default class ToggleDevtool {
       tooltip.lineToRendering = new LeaderLine(tooltip, morphTooltip, {
         ...this.leaderLineOptions,
         color: 'blueviolet',
-        middleLabel: 'renders and morphs',
+        middleLabel: 'renders & morphs',
         size: 2.1
       })
 
