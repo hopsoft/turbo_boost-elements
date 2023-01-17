@@ -9,12 +9,6 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     view_context.tag.public_send(:"turbo-boost", options, &block)
   end
 
-  # def content_tag(**kwargs, &block)
-  # options = kwargs.select { |_, value| value.present? }
-  # options.transform_keys!(&:dasherize)
-  # view_context.tag.public_send(:"turbo-boost", options, &block)
-  # end
-
   def trigger_tag(
     renders:, # REQUIRED, the partial path to render
     morphs:, # REQUIRED, `dom_id` of the partial's outermost containing element

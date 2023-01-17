@@ -10,7 +10,7 @@ import supervisor from './supervisor'
 let activeToggle
 
 document.addEventListener('turbo-boost:devtools-start', () =>
-  supervisor.register('toggle', 'toggles<small>(trigger/target)</small>')
+  supervisor.register('toggle', 'toggles')
 )
 
 function appendTooltip (title, subtitle, content, options = {}) {

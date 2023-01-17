@@ -2833,7 +2833,7 @@ var supervisor_default = {
 var activeToggle;
 document.addEventListener(
   "turbo-boost:devtools-start",
-  () => supervisor_default.register("toggle", "toggles<small>(trigger/target)</small>")
+  () => supervisor_default.register("toggle", "toggles")
 );
 function appendTooltip(title, subtitle, content, options = {}) {
   let { backgroundColor, color, position } = options;
