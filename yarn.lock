@@ -251,10 +251,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@turbo-boost/commands@>= 0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@turbo-boost/commands/-/commands-0.0.8.tgz#7f53bab31883e3ebf12fa8ec25dd94f5203ce07f"
-  integrity sha512-3Z12pIs+qLC45UAtSuALhYWFeVwhVZOxN4/9cuVgjQGsyvBFx28IdovT0yZqieN8Mys1ZSK2XtksgixIv+7fcw==
+"@turbo-boost/commands@>= 0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@turbo-boost/commands/-/commands-0.0.9.tgz#b9ccf2ca0354218bf177a1e53b3f46da5ea5b70f"
+  integrity sha512-WU5qrcmSl96wAO5itsQSKS7x8rJx0g8V6NxbA+nKaIHm6i2V6UyWpr3sHYi1A/7yv1OJcwLrcb8dS2EMUBR/Tw==
   dependencies:
     "@turbo-boost/streams" ">= 0.0.5"
 

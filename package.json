@@ -18,7 +18,7 @@
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.8"
+    "@turbo-boost/commands": ">= 0.0.9"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
