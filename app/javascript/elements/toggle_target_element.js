@@ -26,21 +26,23 @@ export default class ToggleTargetElement extends TurboBoostElement {
     // this.innerHTML = this.cachedHTML
   }
 
-  collapse () {
-    clearTimeout(this.collapseTimeout)
-    this.collapseTimeout = setTimeout(() => {
-      this.innerHTML = ''
-      try {
-        this.currentTriggerElement.expanded = false
-        this.currentTriggerElement.hideDevtool()
-      } catch {}
-    }, 250)
+  collapse (delay = 250) {
+    if (delay > 0) {
+      clearTimeout(this.collapseTimeout)
+      return (this.collapseTimeout = setTimeout(() => this.collapse(0), delay))
+    }
+
+    this.innerHTML = ''
+    try {
+      this.currentTriggerElement.expanded = false
+      this.currentTriggerElement.hideDevtool()
+    } catch {}
   }
 
   collapseMatches () {
     document.querySelectorAll(this.collapseSelector).forEach(el => {
       if (el === this) return
-      if (el.collapse) el.collapse()
+      if (el.collapse) el.collapse(0)
     })
   }
 
