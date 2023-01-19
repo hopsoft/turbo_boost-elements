@@ -1,7 +1,7 @@
-import TurboBoostElement from '../turbo_boost_element'
-import './target_focus'
+import ToggleElement from '../toggle_element'
+import './focus'
 
-export default class ToggleTargetElement extends TurboBoostElement {
+export default class ToggleTargetElement extends ToggleElement {
   connectedCallback () {
     super.connectedCallback()
 

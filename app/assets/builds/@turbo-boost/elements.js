@@ -2140,7 +2140,7 @@ self.TurboBoost.Commands = { logger: Hr, schema: D, events: L, registerEventDele
 } };
 var _l = self.TurboBoost.Commands;
 
-// app/javascript/elements/turbo_boost_element.js
+// app/javascript/elements/turbo_boost_element/index.js
 var TurboBoostElement = class extends HTMLElement {
   constructor(html2) {
     super();
@@ -2154,10 +2154,7 @@ var TurboBoostElement = class extends HTMLElement {
   ensureId() {
     if (this.id.trim().length)
       return;
-    this.id = `${this.tagName.replace(
-      /\./g,
-      ":"
-    )}-${this.uuidv4()}`.toLowerCase();
+    this.id = `${this.tagName}-${this.uuidv4()}`.toLowerCase();
   }
   // SEE: https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid
   uuidv4() {
@@ -2177,7 +2174,30 @@ var TurboBoostElement = class extends HTMLElement {
   }
 };
 
-// app/javascript/elements/toggle/target_focus.js
+// app/javascript/elements/toggle_elements/toggle_element.js
+var stylesheet = ``;
+var html = `
+  <style>${stylesheet}</style>
+  <turbo-boost>
+    <slot name="busy"></slot>
+    <slot></slot>
+  </turbo-boost>
+`;
+var ToggleElement = class extends TurboBoostElement {
+  constructor(html2) {
+    super(html2);
+  }
+  // indicates if an rpc call is active/busy
+  get busy() {
+    return this.getAttribute("busy") === "true";
+  }
+  // indicates if an rpc call is active/busy
+  set busy(value) {
+    this.setAttribute("busy", !!value);
+  }
+};
+
+// app/javascript/elements/toggle_elements/target_element/focus.js
 function deactivateTrixAttributes(editor) {
   const attributes = [
     "bold",
@@ -2238,8 +2258,8 @@ addEventListener(
   true
 );
 
-// app/javascript/elements/toggle/target_element.js
-var ToggleTargetElement = class extends TurboBoostElement {
+// app/javascript/elements/toggle_elements/target_element/index.js
+var ToggleTargetElement = class extends ToggleElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener(
@@ -2802,6 +2822,7 @@ addEventListener("turbo:load", autoRestart);
 addEventListener("turbo-frame:load", autoRestart);
 addEventListener(TurboBoost.Commands.events.success, autoRestart);
 addEventListener(TurboBoost.Commands.events.finish, autoRestart);
+addEventListener("turbo-boost:devtools-connect", autoRestart);
 addEventListener("turbo-boost:devtools-close", stop);
 function register(name, label) {
   if (!supervisorElement)
@@ -2834,7 +2855,7 @@ var supervisor_default = {
   }
 };
 
-// app/javascript/devtools/toggle.js
+// app/javascript/elements/toggle_elements/trigger_element/devtool.js
 var activeToggle;
 document.addEventListener(
   "turbo-boost:devtools-start",
@@ -2852,7 +2873,7 @@ function appendTooltip(title, subtitle, content, options = {}) {
     </turbo-boost-devtool-tooltip>
   `);
 }
-var ToggleDevtool = class {
+var Devtool = class {
   constructor(triggerElement) {
     this.name = "toggle";
     this.command = triggerElement.dataset.turboCommand;
@@ -3102,19 +3123,8 @@ var ToggleDevtool = class {
   }
 };
 
-// app/javascript/elements/toggle/trigger_element.js
-var stylesheet = ``;
-var html = `
-  <style>${stylesheet}</style>
-  <turbo-boost>
-    <slot name="busy"></slot>
-    <slot></slot>
-  </turbo-boost>
-`;
-var ToggleTriggerElement = class extends TurboBoostElement {
-  constructor(html2) {
-    super(html2);
-  }
+// app/javascript/elements/toggle_elements/trigger_element/index.js
+var ToggleTriggerElement = class extends ToggleElement {
   connectedCallback() {
     super.connectedCallback();
     if (this.targetElement) {
@@ -3140,15 +3150,16 @@ var ToggleTriggerElement = class extends TurboBoostElement {
   initializeDevtool() {
     const mouseenter = () => this.devtool.show();
     addEventListener("turbo-boost:devtools-start", () => {
-      this.devtool = new ToggleDevtool(this);
+      this.devtool = new Devtool(this);
       this.addEventListener("mouseenter", mouseenter);
     });
     addEventListener("turbo-boost:devtools-stop", () => {
       this.removeEventListener("mouseenter", mouseenter);
       delete this.devtool;
     });
-    if (supervisor_default.started)
-      supervisor_default.restart();
+    this.dispatchEvent(
+      new CustomEvent("turbo-boost:devtools-connect", { bubbles: true })
+    );
   }
   hideDevtool() {
     if (this.devtool)
@@ -3214,13 +3225,6 @@ var ToggleTriggerElement = class extends TurboBoostElement {
   // indicates if the target is expanded
   get collapsed() {
     return !this.expanded;
-  }
-  // indicates if an rpc call is active/busy
-  get busy() {
-    return this.getAttribute("busy") === "true";
-  }
-  set busy(value) {
-    this.setAttribute("busy", !!value);
   }
 };
 

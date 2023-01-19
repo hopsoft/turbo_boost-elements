@@ -1,22 +1,7 @@
-import TurboBoostElement from '../turbo_boost_element'
-import DevtoolSupervisor from '../../devtools/supervisor'
-import ToggleDevtool from '../../devtools/toggle'
+import ToggleElement from '../toggle_element'
+import Devtool from './devtool'
 
-const stylesheet = ``
-
-const html = `
-  <style>${stylesheet}</style>
-  <turbo-boost>
-    <slot name="busy"></slot>
-    <slot></slot>
-  </turbo-boost>
-`
-
-export default class ToggleTriggerElement extends TurboBoostElement {
-  constructor (html) {
-    super(html)
-  }
-
+export default class ToggleTriggerElement extends ToggleElement {
   connectedCallback () {
     super.connectedCallback()
 
@@ -49,7 +34,7 @@ export default class ToggleTriggerElement extends TurboBoostElement {
     const mouseenter = () => this.devtool.show()
 
     addEventListener('turbo-boost:devtools-start', () => {
-      this.devtool = new ToggleDevtool(this)
+      this.devtool = new Devtool(this)
       this.addEventListener('mouseenter', mouseenter)
     })
 
@@ -58,7 +43,9 @@ export default class ToggleTriggerElement extends TurboBoostElement {
       delete this.devtool
     })
 
-    if (DevtoolSupervisor.started) DevtoolSupervisor.restart()
+    this.dispatchEvent(
+      new CustomEvent('turbo-boost:devtools-connect', { bubbles: true })
+    )
   }
 
   hideDevtool () {
@@ -132,14 +119,5 @@ export default class ToggleTriggerElement extends TurboBoostElement {
   // indicates if the target is expanded
   get collapsed () {
     return !this.expanded
-  }
-
-  // indicates if an rpc call is active/busy
-  get busy () {
-    return this.getAttribute('busy') === 'true'
-  }
-
-  set busy (value) {
-    this.setAttribute('busy', !!value)
   }
 }

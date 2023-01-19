@@ -1,6 +1,6 @@
 import TurboBoostElement from './turbo_boost_element'
-import ToggleTargetElement from './toggle/target_element'
-import ToggleTriggerElement from './toggle/trigger_element'
+import ToggleTargetElement from './toggle_elements/target_element'
+import ToggleTriggerElement from './toggle_elements/trigger_element'
 
 // Valid custom element names: https://html.spec.whatwg.org/#valid-custom-element-name
 
