@@ -1,6 +1,6 @@
 {
   "name": "@turbo-boost/elements",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.",
   "keywords": [
     "hotwire",
@@ -18,14 +18,14 @@
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.7"
+    "@turbo-boost/commands": ">= 0.0.9"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
   },
   "devDependencies": {
-    "esbuild": "^0.16.1",
-    "eslint": "^8.19.0",
+    "esbuild": "^0.17.2",
+    "eslint": "^8.32.0",
     "prettier-standard": "^16.4.1"
   },
   "scripts": {
