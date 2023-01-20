@@ -10,16 +10,18 @@ export default class ToggleTriggerElement extends ToggleElement {
     }
 
     this.addEventListener(TurboBoost.Commands.events.start, () => {
-      this.busy = true
       this.targetElement.currentTriggerElement = this
-      this.targetElement.renderCachedHTML()
+      this.busy = true
+      this.targetElement.busy = true
+      // TODO: implement cache - this.targetElement.renderCachedHTML()
     })
 
     this.addEventListener(TurboBoost.Commands.events.success, () => {
       this.busy = false
+      this.targetElement.busy = false
       this.targetElement.focus()
       this.targetElement.collapseMatches()
-      this.targetElement.cacheHTML()
+      // TODO: imlement cache - this.targetElement.cacheHTML()
     })
 
     this.addEventListener(

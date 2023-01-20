@@ -12,11 +12,28 @@ export default class ToggleElement extends TurboBoostElement {
     super(html)
   }
 
-  // TODO: set explicit size of busy element to match the size of the default element
-  showBusyElement () {
+  // SEE: https://www.nngroup.com/articles/response-times-3-important-limits/
+  showBusyElement (delay = 250) {
+    clearTimeout(this.showBusyElementTimeout)
     if (!this.busyElement) return
-    this.busySlotElement.hidden = false
-    this.defaultSlotElement.hidden = true
+    this.showBusyElementTimeout = setTimeout(() => {
+      let style = {
+        display: 'inline-block',
+        height: `${this.offsetHeight}px`,
+        lineHeight: `${this.offsetHeight}px`,
+        margin: 0
+      }
+      Object.assign(this.busyElement.style, style)
+      this.busySlotElement.hidden = false
+      this.defaultSlotElement.hidden = true
+    }, delay)
+  }
+
+  hideBusyElement () {
+    clearTimeout(this.showBusyElementTimeout)
+    if (!this.busyElement) return
+    this.busySlotElement.hidden = true
+    this.defaultSlotElement.hidden = false
   }
 
   get busyElement () {
@@ -39,6 +56,10 @@ export default class ToggleElement extends TurboBoostElement {
   // indicates if an rpc call is active/busy
   set busy (value) {
     this.setAttribute('busy', !!value)
-    if (!!value) this.showBusyElement()
+    if (!!value) {
+      this.showBusyElement()
+    } else {
+      this.hideBusyElement()
+    }
   }
 }

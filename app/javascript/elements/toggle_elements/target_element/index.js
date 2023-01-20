@@ -17,10 +17,12 @@ export default class ToggleTargetElement extends ToggleElement {
   // TODO: get cached content working properly
   //       perhaps use a mechanic other than morph
 
+  // TODO: implement cache (similar to Turbo Drive restoration visit)
   cacheHTML () {
     // this.cachedHTML = this.innerHTML
   }
 
+  // TODO: implement cache (similar to Turbo Drive restoration visit)
   renderCachedHTML () {
     // if (!this.cachedHTML) return
     // this.innerHTML = this.cachedHTML
