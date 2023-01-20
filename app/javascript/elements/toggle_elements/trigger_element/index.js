@@ -10,17 +10,23 @@ export default class ToggleTriggerElement extends ToggleElement {
     }
 
     this.addEventListener(TurboBoost.Commands.events.start, () => {
-      this.targetElement.currentTriggerElement = this
       this.busy = true
+
+      this.targetElement.currentTriggerElement = this
       this.targetElement.busy = true
+
       // TODO: implement cache - this.targetElement.renderCachedHTML()
     })
 
-    this.addEventListener(TurboBoost.Commands.events.success, () => {
+    // fires after receiving the toggle morph Turbo Stream but before it is executed
+    this.addEventListener(TurboBoost.Commands.events.success, event => {
+      this.expanded = !this.expanded
       this.busy = false
+
       this.targetElement.busy = false
       this.targetElement.focus()
       this.targetElement.collapseMatches()
+
       // TODO: imlement cache - this.targetElement.cacheHTML()
     })
 

@@ -12,32 +12,32 @@ export default class ToggleElement extends TurboBoostElement {
     super(html)
   }
 
+  // Activity Indicator Best Practices
+  //
+  // 0.1 second is the limit for having the user feel that the system is reacting instantaneously
+  // 1.0 second is the limit for the user's flow of thought to stay uninterrupted, even though the user will notice the delay
+  // 10 seconds is the limit for keeping the user's attention focused on the task at hand
+  //
   // SEE: https://www.nngroup.com/articles/response-times-3-important-limits/
-  showBusyElement (delay = 250) {
-    clearTimeout(this.showBusyElementTimeout)
+  // SEE: https://www.smashingmagazine.com/2016/12/best-practices-for-animated-progress-indicators/
+  //
+  // QUESTION: what about server or network errors?
+  //           should we automatically hide the busy element after a timeout?
+  //           should there be a fallback message or event for something that takes too long?
+  showBusyElement (delay = 120) {
     if (!this.busyElement) return
+
+    clearTimeout(this.showBusyElementTimeout)
+
     this.showBusyElementTimeout = setTimeout(() => {
-      let style = {
-        display: 'inline-block',
-        height: `${this.offsetHeight}px`,
-        lineHeight: `${this.offsetHeight}px`,
-        margin: 0
-      }
-      Object.assign(this.busyElement.style, style)
+      this.busyStartedAt = Date.now()
       this.busySlotElement.hidden = false
       this.defaultSlotElement.hidden = true
     }, delay)
   }
 
-  hideBusyElement () {
-    clearTimeout(this.showBusyElementTimeout)
-    if (!this.busyElement) return
-    this.busySlotElement.hidden = true
-    this.defaultSlotElement.hidden = false
-  }
-
   get busyElement () {
-    return this.querySelector('[slot="busy"]')
+    return this.querySelector(':scope > [slot="busy"]')
   }
 
   get busySlotElement () {
@@ -55,11 +55,9 @@ export default class ToggleElement extends TurboBoostElement {
 
   // indicates if an rpc call is active/busy
   set busy (value) {
-    this.setAttribute('busy', !!value)
-    if (!!value) {
-      this.showBusyElement()
-    } else {
-      this.hideBusyElement()
-    }
+    value = !!value
+    if (this.busy === value) return
+    this.setAttribute('busy', value)
+    if (value) this.showBusyElement()
   }
 }

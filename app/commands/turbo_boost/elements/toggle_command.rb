@@ -4,7 +4,6 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
   prevent_controller_action
 
   def show
-    sleep 2 # TODO: remove fake latency
     validate_element!
 
     if element.remember?
@@ -17,7 +16,6 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
   end
 
   def hide
-    sleep 2 # TODO: remove fake latency
     validate_element!
     state[element.aria.controls] = false
     morph id: element.morphs, html: render(element.render_options)

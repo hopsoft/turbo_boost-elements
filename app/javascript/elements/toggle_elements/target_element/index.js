@@ -49,12 +49,10 @@ export default class ToggleTargetElement extends ToggleElement {
   }
 
   get collapseSelector () {
-    if (
-      this.currentTriggerElement &&
-      this.currentTriggerElement.collapseSelector
+    return (
+      this.currentTriggerElement.collapseSelector ||
+      this.getAttribute('collapse-selector')
     )
-      return this.currentTriggerElement.collapseSelector
-    return this.getAttribute('collapse-selector')
   }
 
   focus () {
