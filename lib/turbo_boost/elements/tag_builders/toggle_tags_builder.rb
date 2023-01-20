@@ -4,10 +4,15 @@ require_relative "base_tag_builder"
 
 class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Elements::TagBuilders::BaseTagBuilder
   def busy_tag(**kwargs, &block)
-    options = kwargs.select { |_, value| value.present? }
-    options.transform_keys!(&:dasherize)
-    view_context.tag.public_send(:"turbo-boost", options, &block)
+    kwargs[:slot] = "busy"
+    render_tag("turbo-boost", loading: :eager, **kwargs, &block)
   end
+
+  # def content_tag(loading: :eager, **kwargs, &block)
+  #   kwargs[:slot] = "content"
+  #   kwargs[:hidden] = true
+  #   render_tag("turbo-boost", loading: loading, **kwargs, &block)
+  # end
 
   def trigger_tag(
     renders:, # REQUIRED, the partial path to render
@@ -45,10 +50,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     kwargs[:focus_selector] = focus_selector
     kwargs[:remember] = !!remember
 
-    options = kwargs.select { |_, value| value.present? }
-    options.transform_keys!(&:dasherize)
-
-    tag.public_send(:"turbo-boost-toggle-trigger", **options, &block)
+    render_tag("turbo-boost-toggle-trigger", loading: :eager, **kwargs, &block)
   end
 
   def target_tag(
@@ -74,14 +76,8 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     # rendering
     kwargs[:view_stack] = view_stack.to_json if Rails.env.development?
 
-    options = kwargs.select { |_, value| value.present? }
-    options.transform_keys!(&:dasherize)
-
-    if expanded || target_expanded?(id)
-      tag.public_send(:"turbo-boost-toggle-target", **options, &block)
-    else
-      tag.public_send(:"turbo-boost-toggle-target", **options) {}
-    end
+    loading = (expanded || target_expanded?(id)) ? :eager : :lazy
+    render_tag("turbo-boost-toggle-target", loading: loading, **kwargs, &block)
   end
 
   def target_expanded?(dom_id)
