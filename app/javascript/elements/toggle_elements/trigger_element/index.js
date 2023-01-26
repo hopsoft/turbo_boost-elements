@@ -76,7 +76,6 @@ export default class ToggleTriggerElement extends ToggleElement {
     const duration = Date.now() - this.busyStartedAt
     let delay = busyDuration - duration
     if (delay < 10) delay = 10
-    console.log('invoke delay', delay)
     event.detail.invoke = { delay }
 
     // runs before the morph is executed

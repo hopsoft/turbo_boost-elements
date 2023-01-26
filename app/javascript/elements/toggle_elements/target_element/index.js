@@ -8,18 +8,36 @@ export default class ToggleTargetElement extends ToggleElement {
     this.mouseenterHandler = this.onMouseenter.bind(this)
     this.addEventListener('mouseenter', this.mouseenterHandler)
 
-    this.collapseRequestedHandler = this.onCollapseRequested.bind(this)
-    this.collapseOn.forEach(name =>
-      this.addEventListener(name, this.collapseRequestedHandler)
-    )
+    this.collapseHandler = this.collapse.bind(this)
+    this.collapseNowHandler = this.collapseNow.bind(this)
+
+    this.collapseOn.forEach(entry => {
+      const parts = entry.split('@')
+      const name = parts[0]
+
+      if (parts.length > 1) {
+        const target = parts[1].match(/^self|window$/) ? self : self[parts[1]]
+        target.addEventListener(name, this.collapseNowHandler)
+      } else {
+        this.addEventListener(name, this.collapseHandler)
+      }
+    })
   }
 
   disconnectedCallback () {
     this.removeEventListener('mouseenter', this.mouseenterHandler)
 
-    this.collapseOn.forEach(name =>
-      this.removeEventListener(name, this.collapseRequestedHandler)
-    )
+    this.collapseOn.forEach(entry => {
+      const parts = entry.split('@')
+      const name = parts[0]
+
+      if (parts.length > 1) {
+        const target = parts[1].match(/^self|window$/) ? self : self[parts[1]]
+        target.removeEventListener(name, this.collapseNowHandler)
+      } else {
+        this.removeEventListener(name, this.collapseHandler)
+      }
+    })
   }
 
   // TODO: get cached content working properly
@@ -44,12 +62,10 @@ export default class ToggleTargetElement extends ToggleElement {
     clearTimeout(this.collapseTimeout)
   }
 
-  onCollapseRequested () {
-    this.collapse()
-  }
-
   collapse (delay = 250) {
     clearTimeout(this.collapseTimeout)
+    if (typeof delay !== 'number') delay = 250
+
     if (delay > 0)
       return (this.collapseTimeout = setTimeout(() => this.collapse(0), delay))
 
@@ -60,8 +76,11 @@ export default class ToggleTargetElement extends ToggleElement {
     } catch {}
   }
 
+  collapseNow () {
+    this.collapse(0)
+  }
+
   collapseMatches () {
-    console.log('collapseMatches', this, this.currentTriggerElement)
     document.querySelectorAll(this.collapseSelector).forEach(el => {
       if (el === this) return
       if (el.collapse) el.collapse(0)
