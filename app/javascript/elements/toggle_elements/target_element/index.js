@@ -5,12 +5,20 @@ export default class ToggleTargetElement extends ToggleElement {
   connectedCallback () {
     super.connectedCallback()
 
-    this.addEventListener('mouseenter', () =>
-      clearTimeout(this.collapseTimeout)
+    this.mouseenterHandler = this.onMouseenter.bind(this)
+    this.addEventListener('mouseenter', this.mouseenterHandler)
+
+    this.collapseRequestedHandler = this.onCollapseRequested.bind(this)
+    this.collapseOn.forEach(name =>
+      this.addEventListener(name, this.collapseRequestedHandler)
     )
+  }
+
+  disconnectedCallback () {
+    this.removeEventListener('mouseenter', this.mouseenterHandler)
 
     this.collapseOn.forEach(name =>
-      this.addEventListener(name, () => this.collapse())
+      this.removeEventListener(name, this.collapseRequestedHandler)
     )
   }
 
@@ -28,20 +36,32 @@ export default class ToggleTargetElement extends ToggleElement {
     // this.innerHTML = this.cachedHTML
   }
 
+  hideDevtool () {
+    this.currentTriggerElement.hideDevtool()
+  }
+
+  onMouseenter () {
+    clearTimeout(this.collapseTimeout)
+  }
+
+  onCollapseRequested () {
+    this.collapse()
+  }
+
   collapse (delay = 250) {
-    if (delay > 0) {
-      clearTimeout(this.collapseTimeout)
+    clearTimeout(this.collapseTimeout)
+    if (delay > 0)
       return (this.collapseTimeout = setTimeout(() => this.collapse(0), delay))
-    }
 
     this.innerHTML = ''
     try {
-      this.currentTriggerElement.expanded = false
-      this.currentTriggerElement.hideDevtool()
+      this.expanded = false
+      this.hideDevtool()
     } catch {}
   }
 
   collapseMatches () {
+    console.log('collapseMatches', this, this.currentTriggerElement)
     document.querySelectorAll(this.collapseSelector).forEach(el => {
       if (el === this) return
       if (el.collapse) el.collapse(0)
@@ -80,5 +100,13 @@ export default class ToggleTargetElement extends ToggleElement {
     const value = this.getAttribute('collapse-on')
     if (!value) return []
     return JSON.parse(value)
+  }
+
+  get expanded () {
+    return this.currentTriggerElement.expanded
+  }
+
+  set expanded (value) {
+    return (this.currentTriggerElement.expanded = value)
   }
 }

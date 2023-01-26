@@ -1,41 +1,38 @@
-import ToggleElement from '../toggle_element'
+import ToggleElement, { busyDuration } from '../toggle_element'
 import Devtool from './devtool'
 
 export default class ToggleTriggerElement extends ToggleElement {
   connectedCallback () {
     super.connectedCallback()
 
-    if (this.targetElement) {
+    if (this.targetElement)
       this.targetElement.setAttribute('aria-labeledby', this.id)
-    }
 
-    this.addEventListener(TurboBoost.Commands.events.start, () => {
-      this.busy = true
+    const { start: commandStartEvent } = TurboBoost.Commands.events
+    this.commandStartHandler = this.onCommandStart.bind(this)
+    this.addEventListener(commandStartEvent, this.commandStartHandler)
 
-      this.targetElement.currentTriggerElement = this
-      this.targetElement.busy = true
-
-      // TODO: implement cache - this.targetElement.renderCachedHTML()
-    })
+    const { before: beforeInvokeEvent } = TurboBoost.Streams.invokeEvents
+    this.beforeInvokeHandler = this.onBeforeInvoke.bind(this)
+    addEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
 
     // fires after receiving the toggle morph Turbo Stream but before it is executed
-    this.addEventListener(TurboBoost.Commands.events.success, event => {
-      this.expanded = !this.expanded
-      this.busy = false
-
-      this.targetElement.busy = false
-      this.targetElement.focus()
-      this.targetElement.collapseMatches()
-
-      // TODO: imlement cache - this.targetElement.cacheHTML()
-    })
-
-    this.addEventListener(
-      TurboBoost.Commands.events.finish,
-      () => (this.busy = false)
-    )
+    // this.addEventListener(TurboBoost.Commands.events.success, event => {
+    //   // TODO: imlement cache, this.targetElement.cacheHTML()
+    // })
 
     this.initializeDevtool()
+  }
+
+  disconnectedCallback () {
+    const { start: commandStartEvent } = TurboBoost.Commands.events
+    this.removeEventListener(commandStartEvent, this.commandStartHandler)
+
+    const { before: beforeInvokeEvent } = TurboBoost.Streams.invokeEvents
+    removeEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
+
+    this.devtool.hide()
+    delete this.devtool
   }
 
   initializeDevtool () {
@@ -58,6 +55,42 @@ export default class ToggleTriggerElement extends ToggleElement {
 
   hideDevtool () {
     if (this.devtool) this.devtool.hide(true)
+  }
+
+  onCommandStart (event) {
+    this.targetElement.currentTriggerElement = this
+    this.targetElement.setAttribute('aria-labeledby', this.id)
+    this.targetElement.collapseMatches()
+    this.targetElement.busy = true
+    this.busy = true
+    // TODO: implement cache - this.targetElement.renderCachedHTML()
+  }
+
+  onBeforeInvoke (event) {
+    if (event.detail.method !== 'morph') return
+    if (event.target.id !== this.morphs) return
+
+    // ensure the busy element is shown long enough for a good user experience
+    // we accomplish this by modifying the event.detail with invoke instructions i.e. { delay }
+    // SEE: the TurboBoost Streams library for details on how this works
+    const duration = Date.now() - this.busyStartedAt
+    let delay = busyDuration - duration
+    if (delay < 10) delay = 10
+    console.log('invoke delay', delay)
+    event.detail.invoke = { delay }
+
+    // runs before the morph is executed
+    setTimeout(() => {
+      this.busy = false
+      this.targetElement.busy = false
+      this.morphToggleElements.forEach(el => (el.busy = false))
+      this.expanded = !this.expanded
+    }, delay - 10)
+
+    // runs after the morph is executed
+    setTimeout(() => {
+      if (this.expanded) this.targetElement.focus()
+    }, delay + 10)
   }
 
   // a list of views shared between the trigger and target
@@ -85,6 +118,15 @@ export default class ToggleTriggerElement extends ToggleElement {
   get morphElement () {
     if (!this.morphs) return null
     return document.getElementById(this.morphs)
+  }
+
+  // all toggle elements contained by the `morphElement`
+  get morphToggleElements () {
+    return Array.from(
+      this.morphElement.querySelectorAll(
+        'turbo-boost-toggle-trigger,turbo-boost-toggle-target'
+      )
+    )
   }
 
   // the target's dom_id
