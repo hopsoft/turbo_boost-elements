@@ -16,6 +16,7 @@ export default class ToggleTargetElement extends ToggleElement {
       const name = parts[0]
 
       if (parts.length > 1) {
+        // TODO: detect that the cursor is NOT over the devtool before collapsing
         const target = parts[1].match(/^self|window$/) ? self : self[parts[1]]
         target.addEventListener(name, this.collapseNowHandler)
       } else {
