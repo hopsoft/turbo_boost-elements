@@ -1,9 +1,9 @@
 export default class TurboBoostElement extends HTMLElement {
-  constructor () {
+  constructor (html) {
     super()
     this.devtool = 'unknown'
     this.attachShadow({ mode: 'open' })
-    this.shadowRoot.innerHTML = '<slot></slot>'
+    this.shadowRoot.innerHTML = html || '<slot></slot>'
   }
 
   connectedCallback () {

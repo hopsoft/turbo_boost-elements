@@ -84,29 +84,37 @@ export default class TooltipElement extends HTMLElement {
         display: block;
         font-size: 0.8rem;
         font-weight: lighter;
-        margin-bottom: 8px;
-        margin-top: 4px;
+        margin-bottom: 12px;
+        margin-top: 8px;
         padding-bottom: 4px;
         padding-top: 4px;
         width: 100%;
       }
 
+      slot[name="content-top"],
+      slot[name="content"],
+      slot[name="content-bottom"] {
+        display: block;
+        font-weight: normal;
+      }
+
       slot[name="content-top"] {
         color: ${this.color};
-        font-weight: normal;
+        margin-bottom: 8px;
+      }
+
+      slot[name="content"],
+      slot[name="content-bottom"] {
         opacity: 0.7;
+        padding-left: 12px;
       }
 
       slot[name="content"] {
         color: ${this.color};
-        font-weight: normal;
-        opacity: 0.7;
       }
 
       slot[name="content-bottom"] {
         color: red;
-        font-weight: normal;
-        opacity: 0.7;
       }
     `
   }
