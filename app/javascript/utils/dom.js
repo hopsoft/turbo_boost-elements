@@ -54,10 +54,11 @@ export function removeHighlight (element) {
 export function coordinates (element) {
   if (!element) return {}
   const rect = element.getBoundingClientRect()
-  return {
-    left: rect.left + window.scrollX,
-    top: rect.top + window.scrollY,
-    width: element.offsetWidth,
-    height: element.offsetHeight
-  }
+  const width = element.offsetWidth
+  const height = element.offsetHeight
+  const top = rect.top + window.scrollY
+  const left = rect.left + window.scrollX
+  const right = left + width
+  const bottom = top + height
+  return { top, left, right, bottom, width, height }
 }

@@ -52,12 +52,19 @@ export default class Devtool {
     let hideTimeout
     const debouncedHide = () => {
       clearTimeout(hideTimeout)
-      hideTimeout = setTimeout(this.hide(true), 25)
+      hideTimeout = setTimeout(this.hide({ active: false }), 25)
     }
 
     addEventListener('click', event => {
       if (event.target.closest('turbo-boost-devtool-tooltip')) return
       debouncedHide()
+    })
+
+    addEventListener('resize', () => {
+      if (this.active) {
+        this.hide({ active: false })
+        this.show()
+      }
     })
 
     addEventListener('turbo:load', debouncedHide)
@@ -70,11 +77,20 @@ export default class Devtool {
     return supervisor.enabled(this.name)
   }
 
+  get active () {
+    return activeToggle === this
+  }
+
+  set active (value) {
+    if (value) activeToggle = this
+    else activeToggle = null
+  }
+
   show () {
     if (!this.enabled) return
-    if (activeToggle === this) return
-    activeToggle = this
-    this.hide()
+    if (this.active) return
+    this.active = true
+    this.hide({ active: true })
 
     addHighlight(this.targetElement, {
       outline: '3px dashed darkcyan',
@@ -123,7 +139,7 @@ export default class Devtool {
     console.table(data)
   }
 
-  hide (clearActiveToggle) {
+  hide ({ active: active = false }) {
     document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
       .querySelectorAll('turbo-boost-devtool-tooltip')
@@ -133,7 +149,7 @@ export default class Devtool {
       if (!el.tagName.match(/turbo-boost-toggle-trigger/i)) removeHighlight(el)
     })
 
-    if (clearActiveToggle) activeToggle = null
+    this.active = active
   }
 
   createMorphTooltip () {

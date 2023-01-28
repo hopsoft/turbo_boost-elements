@@ -31,7 +31,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     const { before: beforeInvokeEvent } = TurboBoost.Streams.invokeEvents
     removeEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
 
-    this.devtool.hide()
+    this.devtool.hide({ active: false })
     delete this.devtool
   }
 
@@ -54,7 +54,7 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   hideDevtool () {
-    if (this.devtool) this.devtool.hide(true)
+    if (this.devtool) this.devtool.hide({ active: false })
   }
 
   onCommandStart (event) {

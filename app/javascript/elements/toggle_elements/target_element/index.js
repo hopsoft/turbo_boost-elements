@@ -16,7 +16,6 @@ export default class ToggleTargetElement extends ToggleElement {
       const name = parts[0]
 
       if (parts.length > 1) {
-        // TODO: detect that the cursor is NOT over the devtool before collapsing
         const target = parts[1].match(/^self|window$/) ? self : self[parts[1]]
         target.addEventListener(name, this.collapseNowHandler)
       } else {
@@ -55,10 +54,6 @@ export default class ToggleTargetElement extends ToggleElement {
     // this.innerHTML = this.cachedHTML
   }
 
-  hideDevtool () {
-    this.currentTriggerElement.hideDevtool()
-  }
-
   onMouseenter () {
     clearTimeout(this.collapseTimeout)
   }
@@ -73,11 +68,12 @@ export default class ToggleTargetElement extends ToggleElement {
     this.innerHTML = ''
     try {
       this.expanded = false
-      this.hideDevtool()
+      this.currentTriggerElement.hideDevtool()
     } catch {}
   }
 
-  collapseNow () {
+  collapseNow (event) {
+    if (event.target.closest('turbo-boost-devtool-tooltip')) return
     this.collapse(0)
   }
 
