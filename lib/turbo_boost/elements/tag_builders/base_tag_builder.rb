@@ -2,7 +2,6 @@
 
 class TurboBoost::Elements::TagBuilders::BaseTagBuilder
   attr_reader :controller_pack
-  # delegate :tag, to: :view_context
 
   def initialize(view_context)
     @view_context = view_context
