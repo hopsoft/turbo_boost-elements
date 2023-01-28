@@ -1,4 +1,4 @@
-import TurboBoostElement from '../turbo_boost_element'
+import TurboBoostElement from '../../turbo_boost_element'
 
 const html = `
   <turbo-boost>
