@@ -51,10 +51,8 @@ export default class Devtool {
         outlineOffset: '2px'
       })
 
-      if (this.active) {
-        this.hide({ active: false })
-        this.show()
-      }
+      this.hide({ active: false })
+      if (this.active) this.show()
     }
 
     this.eventListeners['turbo-boost:devtool-disable'] = event => {
