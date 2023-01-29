@@ -2,6 +2,7 @@
 import {
   appendHTML,
   addHighlight,
+  attempt,
   coordinates,
   removeHighlight
 } from '../../../utils/dom'
@@ -34,43 +35,59 @@ export default class Devtool {
     this.targetElement = triggerElement.targetElement // SEE: app/javascript/elements/toggle_target_element.js
     this.morphElement = triggerElement.morphElement
 
-    document.addEventListener('turbo-boost:devtool-enable', event => {
-      const { name } = event.detail
-      if (name === this.name) {
-        addHighlight(this.triggerElement, {
-          outline: '3px dashed blueviolet',
-          outlineOffset: '2px'
-        })
-      }
-    })
-
-    document.addEventListener('turbo-boost:devtool-disable', event => {
-      const { name } = event.detail
-      if (name === this.name) removeHighlight(this.triggerElement)
-    })
-
     let hideTimeout
     const debouncedHide = () => {
       clearTimeout(hideTimeout)
       hideTimeout = setTimeout(this.hide({ active: false }), 25)
     }
 
-    addEventListener('click', event => {
-      if (event.target.closest('turbo-boost-devtool-tooltip')) return
-      debouncedHide()
-    })
+    this.eventListeners['turbo-boost:devtool-enable'] = event => {
+      // LeaderLine.positionByWindowResize = false
+      const { name } = event.detail
+      if (name !== this.name) return
 
-    addEventListener('resize', () => {
+      addHighlight(this.triggerElement, {
+        outline: '3px dashed blueviolet',
+        outlineOffset: '2px'
+      })
+
       if (this.active) {
         this.hide({ active: false })
         this.show()
       }
-    })
+    }
 
-    addEventListener('turbo:load', debouncedHide)
-    addEventListener('turbo-frame:load', debouncedHide)
-    addEventListener(TurboBoost.Commands.events.success, debouncedHide)
-    addEventListener(TurboBoost.Commands.events.finish, debouncedHide)
+    this.eventListeners['turbo-boost:devtool-disable'] = event => {
+      const { name } = event.detail
+      if (name === this.name) removeHighlight(this.triggerElement)
+    }
+
+    this.eventListeners['click'] = event => {
+      if (event.target.closest('turbo-boost-devtool-tooltip')) return
+      debouncedHide()
+    }
+
+    this.eventListeners['turbo:load'] = debouncedHide
+    this.eventListeners['turbo-frame:load'] = debouncedHide
+    this.eventListeners[TurboBoost.Commands.events.finish] = debouncedHide
+
+    this.registerEventListeners()
+  }
+
+  registerEventListeners () {
+    Object.entries(this.eventListeners).forEach(([type, listener]) => {
+      addEventListener(type, listener)
+    })
+  }
+
+  unregisterEventListeners () {
+    Object.entries(this.eventListeners).forEach(([type, listener]) => {
+      removeEventListener(type, listener)
+    })
+  }
+
+  get eventListeners () {
+    return this._eventListeners || (this._eventListeners = {})
   }
 
   get enabled () {
@@ -88,8 +105,10 @@ export default class Devtool {
 
   show () {
     if (!this.enabled) return
+
     if (this.active) return
     this.active = true
+
     this.hide({ active: true })
 
     addHighlight(this.targetElement, {
@@ -102,9 +121,12 @@ export default class Devtool {
       outlineOffset: '3px'
     })
 
-    const morphTooltip = this.createMorphTooltip()
-    const targetTooltip = this.createTargetTooltip()
-    this.createTriggerTooltip(targetTooltip, morphTooltip)
+    this.renderingTooltip = this.createRenderingTooltip()
+    this.targetTooltip = this.createTargetTooltip()
+    this.triggerTooltip = this.createTriggerTooltip(
+      this.targetTooltip,
+      this.renderingTooltip
+    )
 
     document
       .querySelectorAll('.leader-line')
@@ -140,10 +162,15 @@ export default class Devtool {
   }
 
   hide ({ active: active = false }) {
-    document.querySelectorAll('.leader-line').forEach(el => el.remove())
     document
       .querySelectorAll('turbo-boost-devtool-tooltip')
-      .forEach(el => el.remove())
+      .forEach(tooltip => {
+        attempt(() => tooltip.line.remove())
+        attempt(() => tooltip.drag.remove())
+        attempt(() => tooltip.lineToRendering.remove())
+        attempt(() => tooltip.lineToTarget.remove())
+        attempt(() => tooltip.remove())
+      })
 
     document.querySelectorAll('[data-turbo-boost-highlight]').forEach(el => {
       if (!el.tagName.match(/turbo-boost-toggle-trigger/i)) removeHighlight(el)
@@ -152,10 +179,15 @@ export default class Devtool {
     this.active = active
   }
 
-  createMorphTooltip () {
+  createRenderingTooltip () {
+    if (!this.triggerElement.renders)
+      return console.debug(
+        `Unable to create the rendering tooltip! The trigger element must set the 'renders' attribute.`
+      )
+
     if (!this.triggerElement.morphs)
       return console.debug(
-        `Unable to create the morph tooltip! No element matches the DOM id: '${this.triggerElement.morphs}'`
+        `Unable to create the rendering tooltip! The trigger element specified the 'morphs' attrbiute but no element matches the DOM id: '${this.triggerElement.morphs}'`
       )
 
     const title = `
@@ -245,7 +277,7 @@ export default class Devtool {
     return tooltip
   }
 
-  createTriggerTooltip (targetTooltip, morphTooltip) {
+  createTriggerTooltip (targetTooltip, renderingTooltip) {
     if (!this.triggerElement) return
     const title = `
       <svg xmlns="http://www.w3.org/2000/svg" style="display:inline;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
@@ -305,16 +337,16 @@ export default class Devtool {
       }
     }
 
-    if (morphTooltip) {
-      tooltip.lineToRendering = new LeaderLine(tooltip, morphTooltip, {
+    if (renderingTooltip) {
+      tooltip.lineToRendering = new LeaderLine(tooltip, renderingTooltip, {
         ...this.leaderLineOptions,
         color: 'blueviolet',
         middleLabel: 'renders & morphs',
         size: 2.1
       })
 
-      morphTooltip.drag.onMove = () => {
-        morphTooltip.line.position()
+      renderingTooltip.drag.onMove = () => {
+        renderingTooltip.line.position()
         if (tooltip.lineToTarget) tooltip.lineToTarget.position()
         tooltip.lineToRendering.position()
       }

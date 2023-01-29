@@ -62,3 +62,9 @@ export function coordinates (element) {
   const bottom = top + height
   return { top, left, right, bottom, width, height }
 }
+
+export function attempt (callback) {
+  try {
+    callback()
+  } catch {}
+}
