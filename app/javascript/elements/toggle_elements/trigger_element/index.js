@@ -32,6 +32,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     removeEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
 
     this.devtool.hide({ active: false })
+    this.devtool.unregisterEventListeners()
     delete this.devtool
   }
 
@@ -45,6 +46,8 @@ export default class ToggleTriggerElement extends ToggleElement {
 
     addEventListener('turbo-boost:devtools-stop', () => {
       this.removeEventListener('mouseenter', mouseenter)
+      this.devtool.hide({ active: false })
+      this.devtool.unregisterEventListeners()
       delete this.devtool
     })
 
@@ -58,7 +61,6 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   onCommandStart (event) {
-    this.targetElement.currentTriggerElement = this
     this.targetElement.setAttribute('aria-labeledby', this.id)
     this.targetElement.collapseMatches()
     this.targetElement.busy = true
@@ -144,7 +146,10 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   get focusSelector () {
-    return this.getAttribute('focus-selector')
+    return (
+      this.getAttribute('focus-selector') ||
+      this.targetElement.getAttribute('focus-selector')
+    )
   }
 
   // indicates if the toggle state should be remembered across requests

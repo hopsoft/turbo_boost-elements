@@ -68,7 +68,7 @@ export default class ToggleTargetElement extends ToggleElement {
     this.innerHTML = ''
     try {
       this.expanded = false
-      this.currentTriggerElement.hideDevtool()
+      this.triggerElement.hideDevtool()
     } catch {}
   }
 
@@ -86,7 +86,7 @@ export default class ToggleTargetElement extends ToggleElement {
 
   get collapseSelector () {
     return (
-      this.currentTriggerElement.collapseSelector ||
+      this.triggerElement.collapseSelector ||
       this.getAttribute('collapse-selector')
     )
   }
@@ -99,13 +99,23 @@ export default class ToggleTargetElement extends ToggleElement {
   }
 
   get focusSelector () {
-    if (this.currentTriggerElement && this.currentTriggerElement.focusSelector)
-      return this.currentTriggerElement.focusSelector
-    return this.getAttribute('focus-selector')
+    let value = this.getAttribute('focus-selector')
+    if (this.triggerElement)
+      value = this.triggerElement.getAttribute('focus-selector') || value
+    return value
   }
 
   get focusElement () {
     return this.querySelector(this.focusSelector)
+  }
+
+  get triggerElement () {
+    return (
+      document.getElementById(this.labeledBy) ||
+      document.querySelector(
+        `turbo-boost-toggle-trigger[aria-controls="${this.id}"]`
+      )
+    )
   }
 
   get labeledBy () {
@@ -119,10 +129,10 @@ export default class ToggleTargetElement extends ToggleElement {
   }
 
   get expanded () {
-    return this.currentTriggerElement.expanded
+    return this.triggerElement.expanded
   }
 
   set expanded (value) {
-    return (this.currentTriggerElement.expanded = value)
+    return (this.triggerElement.expanded = value)
   }
 }
