@@ -22,6 +22,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     focus_selector: nil, # CSS selector for the element to focus when the target is expanded
     method: :toggle, # method to inovke (:show, :hide, :toggle)
     disabled: false, # disable the trigger
+    expanded: false, # override to force expansion
     remember: false, # remember ephemeral UI state between requests
     **kwargs, # generic support for additional element attributes like `class` etc.
     &block # a Ruby block that emits this trigger's content
@@ -36,7 +37,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     # aria
     kwargs[:aria] ||= {}
     kwargs[:aria][:controls] = controls # toggle target
-    kwargs[:aria][:expanded] = target_expanded?(controls)
+    kwargs[:aria][:expanded] = expanded || target_expanded?(controls)
     kwargs[:aria][:atomic] ||= true
     kwargs[:aria][:relevant] ||= "all"
 
@@ -57,8 +58,8 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     id, # REQUIRED, the `dom_id` for the element
     collapse_on: [], # list of events that will collapse this target
     collapse_selector: nil, # CSS selector for other matching targets to collapse when this target is expanded
-    expanded: false, # override to force expansion
     focus_selector: nil, # CSS selector for the element to focus when this target is expanded
+    expanded: false, # override to force expansion
     **kwargs, # generic support for additional element attributes like `class` etc.
     &block # a Ruby block that emits this target's content
   )
