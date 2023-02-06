@@ -28,7 +28,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     &block # a Ruby block that emits this trigger's content
   )
     kwargs = kwargs.with_indifferent_access
-    kwargs[:id] ||= "#{controls}-toggle-trigger-#{SecureRandom.hex(6)}"
+    kwargs[:id] ||= "#{controls}-toggle-trigger"
 
     # command
     kwargs[:data] ||= {}

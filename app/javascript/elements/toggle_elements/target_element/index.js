@@ -91,11 +91,8 @@ export default class ToggleTargetElement extends ToggleElement {
     )
   }
 
-  focus () {
-    clearTimeout(this.focusTimeout)
-    this.focusTimeout = setTimeout(() => {
-      if (this.focusElement) this.focusElement.focus()
-    }, 50)
+  applyFocus () {
+    if (this.focusElement) this.focusElement.focus()
   }
 
   get focusSelector () {
@@ -110,12 +107,7 @@ export default class ToggleTargetElement extends ToggleElement {
   }
 
   get triggerElement () {
-    return (
-      document.getElementById(this.labeledBy) ||
-      document.querySelector(
-        `turbo-boost-toggle-trigger[aria-controls="${this.id}"]`
-      )
-    )
+    return document.getElementById(this.labeledBy)
   }
 
   get labeledBy () {

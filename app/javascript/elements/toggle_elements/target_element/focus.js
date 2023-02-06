@@ -44,10 +44,9 @@ function focusTrixEditorElement (element) {
 }
 
 function shouldEnhanceFocus (element) {
-  return (
-    element.closest('turbo-boost-toggle-target') &&
-    element.tagName.match(/^input|textarea|trix-editor$/i)
-  )
+  if (!element.tagName.match(/^input|textarea|trix-editor$/i)) return false
+  const toggleTargetElement = element.closest('turbo-boost-toggle-target')
+  return toggleTargetElement && toggleTargetElement.focusSelector
 }
 
 function enhanceFocus (element) {
