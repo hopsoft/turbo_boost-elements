@@ -68,9 +68,13 @@ export default class ToggleTriggerElement extends ToggleElement {
     // TODO: implement cache - this.targetElement.renderCachedHTML()
   }
 
+  // runs before an invoke turbo stream is executed
   onBeforeInvoke (event) {
+    // return early if we're not the element responsible for this invoke
     if (event.detail.method !== 'morph') return
     if (event.target.id !== this.morphs) return
+    const selector = `turbo-boost-toggle-target[aria-labeledby="${this.id}"]`
+    if (!event.target.querySelector(selector)) return
 
     // ensure the busy element is shown long enough for a good user experience
     // we accomplish this by modifying the event.detail with invoke instructions i.e. { delay }
