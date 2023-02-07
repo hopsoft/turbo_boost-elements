@@ -85,13 +85,13 @@ export default class ToggleTriggerElement extends ToggleElement {
       this.busy = false
       this.targetElement.busy = false
       this.morphToggleElements.forEach(el => (el.busy = false))
-      this.expanded = !this.expanded
     }, delay - 10)
 
     // runs after the morph is executed
     setTimeout(() => {
-      if (this.expanded) this.targetElement.focus()
-    }, delay + 10)
+      this.targetElement.setAttribute('aria-labeledby', this.id)
+      this.targetElement.applyFocus()
+    }, delay + 100)
   }
 
   // a list of views shared between the trigger and target
