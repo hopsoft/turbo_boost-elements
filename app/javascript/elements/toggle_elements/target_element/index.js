@@ -1,5 +1,4 @@
 import ToggleElement from '../toggle_element'
-import './focus'
 
 export default class ToggleTargetElement extends ToggleElement {
   connectedCallback () {
@@ -91,19 +90,8 @@ export default class ToggleTargetElement extends ToggleElement {
     )
   }
 
-  applyFocus () {
-    if (this.focusElement) this.focusElement.focus()
-  }
-
   get focusSelector () {
-    let value = this.getAttribute('focus-selector')
-    if (this.triggerElement)
-      value = this.triggerElement.getAttribute('focus-selector') || value
-    return value
-  }
-
-  get focusElement () {
-    return this.querySelector(this.focusSelector)
+    return this.getAttribute('focus-selector')
   }
 
   get triggerElement () {
@@ -112,6 +100,10 @@ export default class ToggleTargetElement extends ToggleElement {
 
   get labeledBy () {
     return this.getAttribute('aria-labeledby')
+  }
+
+  set labeledBy (value) {
+    return this.setAttribute('aria-labeledby', value)
   }
 
   get collapseOn () {
