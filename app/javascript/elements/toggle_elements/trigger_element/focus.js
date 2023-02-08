@@ -1,3 +1,5 @@
+let focusTimeout
+
 function deactivateTrixAttributes (editor) {
   const attributes = [
     'bold',
@@ -43,35 +45,26 @@ function focusTrixEditorElement (element) {
   ])
 }
 
-function shouldEnhanceFocus (element) {
-  if (!element.tagName.match(/^input|textarea|trix-editor$/i)) return false
-  const toggleTargetElement = element.closest('turbo-boost-toggle-target') || {}
-  return !!toggleTargetElement.focusElement
-}
+function debouncedFocus (element) {
+  clearTimeout(focusTimeout)
 
-function enhanceFocus (element) {
-  const trixEditorElement = element.closest('trix-editor')
+  focusTimeout = setTimeout(() => {
+    if (!element) return
 
-  try {
-    if (trixEditorElement) {
-      focusTrixEditorElement(trixEditorElement)
-    } else {
-      element.selectionStart = element.selectionEnd = element.value.length
+    element.focus()
+    const trixEditorElement = element.closest('trix-editor')
+
+    try {
+      if (trixEditorElement) {
+        focusTrixEditorElement(trixEditorElement)
+      } else {
+        element.selectionStart = element.selectionEnd = element.value.length
+      }
+    } catch (_) {
+    } finally {
+      element.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
-  } catch (_) {
-  } finally {
-    setTimeout(
-      () => element.scrollIntoView({ block: 'center', behavior: 'smooth' }),
-      100
-    )
-  }
+  }, 100)
 }
 
-addEventListener(
-  'focus',
-  event => {
-    if (shouldEnhanceFocus(document.activeElement))
-      enhanceFocus(document.activeElement)
-  },
-  true
-)
+export default element => debouncedFocus(element)

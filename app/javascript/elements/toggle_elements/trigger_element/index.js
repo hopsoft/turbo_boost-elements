@@ -1,12 +1,12 @@
 import ToggleElement, { busyDuration } from '../toggle_element'
 import Devtool from './devtool'
+import focus from './focus'
+
+let currentFocusSelector
 
 export default class ToggleTriggerElement extends ToggleElement {
   connectedCallback () {
     super.connectedCallback()
-
-    if (this.targetElement)
-      this.targetElement.setAttribute('aria-labeledby', this.id)
 
     const { start: commandStartEvent } = TurboBoost.Commands.events
     this.commandStartHandler = this.onCommandStart.bind(this)
@@ -25,15 +25,19 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   disconnectedCallback () {
-    const { start: commandStartEvent } = TurboBoost.Commands.events
-    this.removeEventListener(commandStartEvent, this.commandStartHandler)
+    // delay cleanup because the trigger may have been morphed out fo the DOM,
+    // but it's needed to apply behavior like focus etc...
+    setTimeout(() => {
+      const { start: commandStartEvent } = TurboBoost.Commands.events
+      this.removeEventListener(commandStartEvent, this.commandStartHandler)
 
-    const { before: beforeInvokeEvent } = TurboBoost.Streams.invokeEvents
-    removeEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
+      const { before: beforeInvokeEvent } = TurboBoost.Streams.invokeEvents
+      removeEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
 
-    this.devtool.hide({ active: false })
-    this.devtool.unregisterEventListeners()
-    delete this.devtool
+      this.devtool.hide({ active: false })
+      this.devtool.unregisterEventListeners()
+      delete this.devtool
+    }, 1000)
   }
 
   initializeDevtool () {
@@ -61,7 +65,8 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   onCommandStart (event) {
-    this.targetElement.setAttribute('aria-labeledby', this.id)
+    currentFocusSelector = this.focusSelector
+    this.targetElement.labeledBy = this.id
     this.targetElement.collapseMatches()
     this.targetElement.busy = true
     this.busy = true
@@ -92,10 +97,10 @@ export default class ToggleTriggerElement extends ToggleElement {
     }, delay - 10)
 
     // runs after the morph is executed
-    setTimeout(() => {
-      this.targetElement.setAttribute('aria-labeledby', this.id)
-      this.targetElement.applyFocus()
-    }, delay + 100)
+    setTimeout(
+      () => focus(this.targetElement.querySelector(currentFocusSelector)),
+      delay + 100
+    )
   }
 
   // a list of views shared between the trigger and target
@@ -151,8 +156,7 @@ export default class ToggleTriggerElement extends ToggleElement {
 
   get focusSelector () {
     return (
-      this.getAttribute('focus-selector') ||
-      this.targetElement.getAttribute('focus-selector')
+      this.getAttribute('focus-selector') || this.targetElement.focusSelector
     )
   }
 
