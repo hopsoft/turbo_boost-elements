@@ -25,7 +25,7 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   disconnectedCallback () {
-    // delay cleanup because the trigger may have been morphed out fo the DOM,
+    // delay cleanup because the trigger may have been morphed out of the DOM,
     // but it's needed to apply behavior like focus etc...
     setTimeout(() => {
       const { start: commandStartEvent } = TurboBoost.Commands.events
