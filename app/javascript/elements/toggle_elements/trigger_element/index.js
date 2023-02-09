@@ -68,7 +68,6 @@ export default class ToggleTriggerElement extends ToggleElement {
     currentFocusSelector = this.focusSelector
     this.targetElement.labeledBy = this.id
     this.targetElement.collapseMatches()
-    this.targetElement.busy = true
     this.busy = true
     // TODO: implement cache - this.targetElement.renderCachedHTML()
   }
@@ -92,8 +91,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     // runs before the morph is executed
     setTimeout(() => {
       this.busy = false
-      this.targetElement.busy = false
-      this.morphToggleElements.forEach(el => (el.busy = false))
+      this.morphToggleTriggerElements.forEach(el => (el.busy = false))
     }, delay - 10)
 
     // runs after the morph is executed
@@ -131,11 +129,9 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   // all toggle elements contained by the `morphElement`
-  get morphToggleElements () {
+  get morphToggleTriggerElements () {
     return Array.from(
-      this.morphElement.querySelectorAll(
-        'turbo-boost-toggle-trigger,turbo-boost-toggle-target'
-      )
+      this.morphElement.querySelectorAll('turbo-boost-toggle-trigger')
     )
   }
 
