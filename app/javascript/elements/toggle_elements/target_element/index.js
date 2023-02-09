@@ -59,6 +59,7 @@ export default class ToggleTargetElement extends ToggleElement {
 
   collapse (delay = 250) {
     clearTimeout(this.collapseTimeout)
+    if (this.busy) return
     if (typeof delay !== 'number') delay = 250
 
     if (delay > 0)
@@ -78,7 +79,7 @@ export default class ToggleTargetElement extends ToggleElement {
 
   collapseMatches () {
     document.querySelectorAll(this.collapseSelector).forEach(el => {
-      if (el === this) return
+      if (el.id === this.id) return
       if (el.collapse) el.collapse(0)
     })
   }
@@ -94,10 +95,17 @@ export default class ToggleTargetElement extends ToggleElement {
     return this.getAttribute('focus-selector')
   }
 
+  // the active trigger
   get triggerElement () {
     return document.getElementById(this.labeledBy)
   }
 
+  // all triggers
+  get triggerElements () {
+    return document.querySelectorAll(`[aria-controls="${this.id}"]`)
+  }
+
+  // the dom id of the active trigger
   get labeledBy () {
     return this.getAttribute('aria-labeledby')
   }
@@ -113,10 +121,14 @@ export default class ToggleTargetElement extends ToggleElement {
   }
 
   get expanded () {
-    return this.triggerElement.expanded
+    return this.triggerElement ? this.triggerElement.expanded : false
   }
 
   set expanded (value) {
-    return (this.triggerElement.expanded = value)
+    this.triggerElements.forEach(el => (el.expanded = value))
+  }
+
+  get busy () {
+    return this.triggerElement && this.triggerElement.busy
   }
 }
