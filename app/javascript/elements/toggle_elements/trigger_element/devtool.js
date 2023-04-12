@@ -6,7 +6,7 @@ import {
   coordinates,
   removeHighlight
 } from '../../../utils/dom'
-import supervisor from '../../../devtools/supervisor'
+import { supervisor } from '@turbo-boost/dev-tools'
 
 let activeToggle
 
