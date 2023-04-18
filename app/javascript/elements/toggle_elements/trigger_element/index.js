@@ -1,6 +1,11 @@
+import { Devtool } from '@turbo-boost/dev-tools'
+
 import ToggleElement, { busyDuration } from '../toggle_element'
-import Devtool from './devtool'
 import focus from './focus'
+
+document.addEventListener('turbo-boost:devtools-start', () =>
+  Devtool.register('toggle', 'toggles')
+)
 
 let currentFocusSelector
 
@@ -122,12 +127,6 @@ export default class ToggleTriggerElement extends ToggleElement {
     return this.getAttribute('morphs')
   }
 
-  // the morph element
-  get morphElement () {
-    if (!this.morphs) return null
-    return document.getElementById(this.morphs)
-  }
-
   // all toggle elements contained by the `morphElement`
   get morphToggleTriggerElements () {
     return Array.from(
@@ -138,12 +137,6 @@ export default class ToggleTriggerElement extends ToggleElement {
   // the target's dom_id
   get controls () {
     return this.getAttribute('aria-controls')
-  }
-
-  // the target element
-  get targetElement () {
-    if (!this.controls) return null
-    return document.getElementById(this.controls)
   }
 
   get collapseSelector () {
@@ -177,5 +170,30 @@ export default class ToggleTriggerElement extends ToggleElement {
   // indicates if the target is expanded
   get collapsed () {
     return !this.expanded
+  }
+
+  // ------ DevToolDelegate ------
+  get name () {
+    return 'toggle'
+  }
+
+  get command () {
+    return this.dataset.turboCommand
+  }
+
+  get triggerElement () {
+    return this // SEE: app/javascript/elements/toggle_trigger_element.js
+  }
+
+  // the morph element
+  get morphElement () {
+    if (!this.morphs) return null
+    return document.getElementById(this.morphs)
+  }
+
+  // the target element
+  get targetElement () {
+    if (!this.controls) return null
+    return document.getElementById(this.controls)
   }
 }
