@@ -185,6 +185,14 @@ export default class ToggleTriggerElement extends ToggleElement {
     return this // SEE: app/javascript/elements/toggle_trigger_element.js
   }
 
+  get targetLineLabel () {
+    return 'toggles'
+  }
+
+  get renderingLineLabel () {
+    return 'renders & morphs'
+  }
+
   // the morph element
   get morphElement () {
     if (!this.morphs) return null
