@@ -1,5 +1,5 @@
 import '@turbo-boost/commands'
-import devtools from '@turbo-boost/dev-tools'
+import devtools from '@turbo-boost/devtools'
 import './elements'
 
 self.TurboBoost = self.TurboBoost || {}

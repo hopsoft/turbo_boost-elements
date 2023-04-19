@@ -1,4 +1,4 @@
-import { Devtool } from '@turbo-boost/dev-tools'
+import { Devtool } from '@turbo-boost/devtools'
 
 import ToggleElement, { busyDuration } from '../toggle_element'
 import focus from './focus'
