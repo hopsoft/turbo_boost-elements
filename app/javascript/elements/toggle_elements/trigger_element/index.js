@@ -1,6 +1,11 @@
+import { Devtool } from '@turbo-boost/devtools'
+
 import ToggleElement, { busyDuration } from '../toggle_element'
-import Devtool from './devtool'
 import focus from './focus'
+
+document.addEventListener('turbo-boost:devtools-start', () =>
+  Devtool.register('toggle', 'toggles')
+)
 
 let currentFocusSelector
 
@@ -122,12 +127,6 @@ export default class ToggleTriggerElement extends ToggleElement {
     return this.getAttribute('morphs')
   }
 
-  // the morph element
-  get morphElement () {
-    if (!this.morphs) return null
-    return document.getElementById(this.morphs)
-  }
-
   // all toggle elements contained by the `morphElement`
   get morphToggleTriggerElements () {
     return Array.from(
@@ -138,12 +137,6 @@ export default class ToggleTriggerElement extends ToggleElement {
   // the target's dom_id
   get controls () {
     return this.getAttribute('aria-controls')
-  }
-
-  // the target element
-  get targetElement () {
-    if (!this.controls) return null
-    return document.getElementById(this.controls)
   }
 
   get collapseSelector () {
@@ -177,5 +170,89 @@ export default class ToggleTriggerElement extends ToggleElement {
   // indicates if the target is expanded
   get collapsed () {
     return !this.expanded
+  }
+
+  // ------ DevToolDelegate ------
+  get name () {
+    return 'toggle'
+  }
+
+  get command () {
+    return this.dataset.turboCommand
+  }
+
+  get triggerElement () {
+    return this // SEE: app/javascript/elements/toggle_trigger_element.js
+  }
+
+  get targetLineLabel () {
+    return 'toggles'
+  }
+
+  get renderingLineLabel () {
+    return 'renders & morphs'
+  }
+
+  // the morph element
+  get morphElement () {
+    if (!this.morphs) return null
+    return document.getElementById(this.morphs)
+  }
+
+  // the target element
+  get targetElement () {
+    if (!this.controls) return null
+    return document.getElementById(this.controls)
+  }
+
+  get triggerTooltipData () {
+    let content = this.triggerElement.viewStack
+      .reverse()
+      .map((view, index) => {
+        return this.triggerElement.sharedViews.includes(view)
+          ? `<div slot="content">${index + 1}. ${view}</div>`
+          : `<div slot="content-bottom">${index + 1}. ${view}</div>`
+      }, this)
+      .join('')
+
+    return {
+      subtitle: `
+      <b>id</b>: ${this.triggerElement.id}<br>
+      <b>aria-controls</b>: ${this.triggerElement.controls}<br>
+      <b>aria-expanded</b>: ${this.triggerElement.expanded}<br>
+      <b>remember</b>: ${this.triggerElement.remember}<br>
+    `,
+      content: `
+      <div slot="content-top">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <b>View Stack</b>
+      </div>
+      ${content}
+    `
+    }
+  }
+
+  get targetTooltipData () {
+    let content = this.targetElement.viewStack
+      .reverse()
+      .map((view, index) => {
+        return this.triggerElement.sharedViews.includes(view)
+          ? `<div slot="content">${index + 1}. ${view}</div>`
+          : `<div slot="content-bottom">${index + 1}. ${view}</div>`
+      }, this)
+      .join('')
+
+    return {
+      subtitle: `<b>id</b>: ${this.targetElement.id}<br>
+      <b>aria-labeled-by</b>: ${this.targetElement.labeledBy}<br>
+`,
+      content: `
+      <div slot="content-top">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <b>View Stack</b>
+      </div>
+      ${content}
+    `
+    }
   }
 }
