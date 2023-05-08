@@ -1,4 +1,4 @@
-import { Devtool } from '@turbo-boost/devtools'
+import { Devtool, decorateElementWithDevtool } from '@turbo-boost/devtools'
 
 import ToggleElement, { busyDuration } from '../toggle_element'
 import focus from './focus'
@@ -10,6 +10,12 @@ document.addEventListener('turbo-boost:devtools-start', () =>
 let currentFocusSelector
 
 export default class ToggleTriggerElement extends ToggleElement {
+  constructor () {
+    super()
+
+    decorateElementWithDevtool(this, 'toggle', 'toggles')
+  }
+
   connectedCallback () {
     super.connectedCallback()
 
@@ -39,34 +45,8 @@ export default class ToggleTriggerElement extends ToggleElement {
       const { before: beforeInvokeEvent } = TurboBoost.Streams.invokeEvents
       removeEventListener(beforeInvokeEvent, this.beforeInvokeHandler)
 
-      this.devtool.hide({ active: false })
-      this.devtool.unregisterEventListeners()
-      delete this.devtool
+      this.removeDevtool()
     }, 1000)
-  }
-
-  initializeDevtool () {
-    const mouseenter = () => this.devtool.show()
-
-    addEventListener('turbo-boost:devtools-start', () => {
-      this.devtool = new Devtool(this)
-      this.addEventListener('mouseenter', mouseenter)
-    })
-
-    addEventListener('turbo-boost:devtools-stop', () => {
-      this.removeEventListener('mouseenter', mouseenter)
-      this.devtool.hide({ active: false })
-      this.devtool.unregisterEventListeners()
-      delete this.devtool
-    })
-
-    this.dispatchEvent(
-      new CustomEvent('turbo-boost:devtools-connect', { bubbles: true })
-    )
-  }
-
-  hideDevtool () {
-    if (this.devtool) this.devtool.hide({ active: false })
   }
 
   onCommandStart (event) {
@@ -173,20 +153,8 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   // ------ DevToolDelegate ------
-  get name () {
-    return 'toggle'
-  }
-
   get command () {
     return this.dataset.turboCommand
-  }
-
-  get triggerElement () {
-    return this // SEE: app/javascript/elements/toggle_trigger_element.js
-  }
-
-  get targetLineLabel () {
-    return 'toggles'
   }
 
   get renderingLineLabel () {

@@ -14,3 +14,4 @@
 Gemfile.lock
 *.key
 *~
+/.dir-locals.el
