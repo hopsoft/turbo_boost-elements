@@ -258,10 +258,10 @@
   dependencies:
     "@turbo-boost/streams" ">= 0.0.8"
 
-"@turbo-boost/devtools@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@turbo-boost/devtools/-/devtools-0.0.1.tgz#29534d3b6b2c52cc3ae58b31c60ddad9ad21d895"
-  integrity sha512-/Wi0v+szBMQOnFbaql5T9W46LyaD+LRUmneFsd4bRNzugwEmfyezqOWHaHDs/g+m/FknUybMolEx1AcuPdiygw==
+"@turbo-boost/devtools@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@turbo-boost/devtools/-/devtools-0.0.2.tgz#2aafeb04bcfd16c71f2b4541816728fa1622f95e"
+  integrity sha512-UEqcudHCSZo2IeGI6GlNuikNq+zblf93mGJQwByIpRmRCPtePdELsoba4OQ1nxN4aczOrWpAcf4mfuHa125CsQ==
 
 "@turbo-boost/streams@>= 0.0.8":
   version "0.0.8"
