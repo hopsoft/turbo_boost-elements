@@ -102,6 +102,7 @@ export default class ToggleTargetElement extends ToggleElement {
 
   // all triggers
   get triggerElements () {
+    // TODO we'll have to improve this to find any trigger element that contains this ID in its space separated LIST of aria-controls
     return document.querySelectorAll(`[aria-controls="${this.id}"]`)
   }
 
