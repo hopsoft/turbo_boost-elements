@@ -12,25 +12,25 @@
   ],
   "main": "app/assets/builds/@turbo-boost/elements.js",
   "files": [
-    "app/assets/builds"
+    "app/assets/builds/*"
   ],
   "repository": "https://github.com/hopsoft/turbo_boost-elements",
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.11",
+    "@turbo-boost/commands": ">= 0.0.13",
     "@turbo-boost/devtools": "^0.0.2"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
   },
   "devDependencies": {
-    "esbuild": "^0.17.2",
+    "esbuild": "^0.19.0",
     "eslint": "^8.32.0",
-    "prettier-standard": "^16.4.1"
+    "prettier": "^3.0.0"
   },
   "scripts": {
-    "build": "esbuild app/javascript/index.js --bundle --minify --sourcemap --format=esm --target=es2020,chrome58,firefox57,safari11 --analyze --outfile=app/assets/builds/@turbo-boost/elements.js",
-    "build:watch": "yarn build -- --watch"
+    "build": "bin/standardize && node bin/build.mjs",
+    "build:watch": "yarn build --watch"
   }
 }
