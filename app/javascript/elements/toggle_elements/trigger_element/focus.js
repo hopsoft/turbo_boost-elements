@@ -1,31 +1,18 @@
 let focusTimeout
 
-function deactivateTrixAttributes (editor) {
-  const attributes = [
-    'bold',
-    'bullet',
-    'code',
-    'heading1',
-    'href',
-    'italic',
-    'number',
-    'quote',
-    'strike'
-  ]
+function deactivateTrixAttributes(editor) {
+  const attributes = ['bold', 'bullet', 'code', 'heading1', 'href', 'italic', 'number', 'quote', 'strike']
   attributes.forEach(name => editor.deactivateAttribute(name))
 }
 
-function focusTrixEditorElement (element) {
+function focusTrixEditorElement(element) {
   if (element.value.length === 0) return
 
   const editor = element.editor
 
   // move cursor to the end
   let lastRange = []
-  while (
-    lastRange[0] !== editor.getSelectedRange()[0] &&
-    lastRange[1] !== editor.getSelectedRange()[1]
-  ) {
+  while (lastRange[0] !== editor.getSelectedRange()[0] && lastRange[1] !== editor.getSelectedRange()[1]) {
     lastRange = editor.getSelectedRange()
     editor.moveCursorInDirection('forward')
   }
@@ -39,13 +26,10 @@ function focusTrixEditorElement (element) {
   deactivateTrixAttributes(editor)
 
   // move cursor to end and collapse the selection
-  editor.setSelectedRange([
-    editor.getSelectedRange()[1],
-    editor.getSelectedRange()[1]
-  ])
+  editor.setSelectedRange([editor.getSelectedRange()[1], editor.getSelectedRange()[1]])
 }
 
-function debouncedFocus (element) {
+function debouncedFocus(element) {
   clearTimeout(focusTimeout)
 
   focusTimeout = setTimeout(() => {

@@ -11,13 +11,13 @@ export const busyDelay = 100 // milliseconds - time to wait before showing busy 
 export const busyDuration = 400 // milliseconds - minimum time that busy element is shown
 
 export default class ToggleElement extends TurboBoostElement {
-  constructor () {
+  constructor() {
     super(html)
   }
 
   // TODO: Should we timeout after a theoretical max wait time?
   //       The idea being that a server error occurred and the toggle failed.
-  showBusyElement () {
+  showBusyElement() {
     clearTimeout(this.showBusyElementTimeout)
     clearTimeout(this.hideBusyElementTimeout)
 
@@ -30,7 +30,7 @@ export default class ToggleElement extends TurboBoostElement {
     }, busyDelay)
   }
 
-  hideBusyElement () {
+  hideBusyElement() {
     clearTimeout(this.showBusyElementTimeout)
     clearTimeout(this.hideBusyElementTimeout)
 
@@ -46,25 +46,25 @@ export default class ToggleElement extends TurboBoostElement {
     }, delay)
   }
 
-  get busyElement () {
+  get busyElement() {
     return this.querySelector(':scope > [slot="busy"]')
   }
 
-  get busySlotElement () {
+  get busySlotElement() {
     return this.shadowRoot.querySelector('slot[name="busy"]')
   }
 
-  get defaultSlotElement () {
+  get defaultSlotElement() {
     return this.shadowRoot.querySelector('slot:not([name])')
   }
 
   // indicates if an rpc call is active/busy
-  get busy () {
+  get busy() {
     return this.getAttribute('busy') === 'true'
   }
 
   // indicates if an rpc call is active/busy
-  set busy (value) {
+  set busy(value) {
     value = !!value
     if (this.busy === value) return
     this.setAttribute('busy', value)
@@ -72,12 +72,12 @@ export default class ToggleElement extends TurboBoostElement {
     else this.hideBusyElement()
   }
 
-  get busyStartedAt () {
+  get busyStartedAt() {
     if (!this.dataset.busyStartedAt) return 0
     return Number(this.dataset.busyStartedAt)
   }
 
-  set busyStartedAt (value) {
+  set busyStartedAt(value) {
     this.dataset.busyStartedAt = value
   }
 }
