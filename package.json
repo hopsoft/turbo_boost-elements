@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@turbo-boost/commands": ">= 0.0.13",
-    "@turbo-boost/devtools": "^0.0.2"
+    "@turbo-boost/devtools": "^0.0.3"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
