@@ -18,16 +18,16 @@
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.13",
-    "@turbo-boost/devtools": "^0.0.3"
+    "@turbo-boost/commands": ">= 0.0.14",
+    "@turbo-boost/devtools": "^0.0.4"
   },
   "peerDependencies": {
     "@hotwired/turbo-rails": ">= 7.2"
   },
   "devDependencies": {
     "esbuild": "^0.19.0",
-    "eslint": "^8.32.0",
-    "prettier": "^3.0.0"
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.3"
   },
   "scripts": {
     "build": "bin/standardize && node bin/build.mjs",
