@@ -1,7 +1,7 @@
 import ToggleElement from '../toggle_element'
 
 export default class ToggleTargetElement extends ToggleElement {
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
 
     this.mouseenterHandler = this.onMouseenter.bind(this)
@@ -23,7 +23,7 @@ export default class ToggleTargetElement extends ToggleElement {
     })
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.removeEventListener('mouseenter', this.mouseenterHandler)
 
     this.collapseOn.forEach(entry => {
@@ -43,27 +43,26 @@ export default class ToggleTargetElement extends ToggleElement {
   //       perhaps use a mechanic other than morph
 
   // TODO: implement cache (similar to Turbo Drive restoration visit)
-  cacheHTML () {
+  cacheHTML() {
     // this.cachedHTML = this.innerHTML
   }
 
   // TODO: implement cache (similar to Turbo Drive restoration visit)
-  renderCachedHTML () {
+  renderCachedHTML() {
     // if (!this.cachedHTML) return
     // this.innerHTML = this.cachedHTML
   }
 
-  onMouseenter () {
+  onMouseenter() {
     clearTimeout(this.collapseTimeout)
   }
 
-  collapse (delay = 250) {
+  collapse(delay = 250) {
     clearTimeout(this.collapseTimeout)
     if (this.busy) return
     if (typeof delay !== 'number') delay = 250
 
-    if (delay > 0)
-      return (this.collapseTimeout = setTimeout(() => this.collapse(0), delay))
+    if (delay > 0) return (this.collapseTimeout = setTimeout(() => this.collapse(0), delay))
 
     this.innerHTML = ''
     try {
@@ -72,64 +71,61 @@ export default class ToggleTargetElement extends ToggleElement {
     } catch {}
   }
 
-  collapseNow (event) {
+  collapseNow(event) {
     if (event.target.closest('turbo-boost-devtool-tooltip')) return
     this.collapse(0)
   }
 
-  collapseMatches () {
+  collapseMatches() {
     document.querySelectorAll(this.collapseSelector).forEach(el => {
       if (el.id === this.id) return
       if (el.collapse) el.collapse(0)
     })
   }
 
-  get collapseSelector () {
-    return (
-      this.triggerElement.collapseSelector ||
-      this.getAttribute('collapse-selector')
-    )
+  get collapseSelector() {
+    return this.triggerElement.collapseSelector || this.getAttribute('collapse-selector')
   }
 
-  get focusSelector () {
+  get focusSelector() {
     return this.getAttribute('focus-selector')
   }
 
   // the active trigger
-  get triggerElement () {
+  get triggerElement() {
     return document.getElementById(this.labeledBy)
   }
 
-  // all triggers
-  get triggerElements () {
+  // all triggers    
+  get triggerElements() {
     // TODO we'll have to improve this to find any trigger element that contains this ID in its space separated LIST of aria-controls
     return document.querySelectorAll(`[aria-controls="${this.id}"]`)
   }
 
   // the dom id of the active trigger
-  get labeledBy () {
+  get labeledBy() {
     return this.getAttribute('aria-labeledby')
   }
 
-  set labeledBy (value) {
+  set labeledBy(value) {
     return this.setAttribute('aria-labeledby', value)
   }
 
-  get collapseOn () {
+  get collapseOn() {
     const value = this.getAttribute('collapse-on')
     if (!value) return []
     return JSON.parse(value)
   }
 
-  get expanded () {
+  get expanded() {
     return this.triggerElement ? this.triggerElement.expanded : false
   }
 
-  set expanded (value) {
+  set expanded(value) {
     this.triggerElements.forEach(el => (el.expanded = value))
   }
 
-  get busy () {
+  get busy() {
     return this.triggerElement && this.triggerElement.busy
   }
 }

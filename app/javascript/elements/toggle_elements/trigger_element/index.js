@@ -3,20 +3,18 @@ import { Devtool, decorateElementWithDevtool } from '@turbo-boost/devtools'
 import ToggleElement, { busyDuration } from '../toggle_element'
 import focus from './focus'
 
-document.addEventListener('turbo-boost:devtools-start', () =>
-  Devtool.register('toggle', 'toggles')
-)
+document.addEventListener('turbo-boost:devtools-start', () => Devtool.register('toggle', 'toggles'))
 
 let currentFocusSelector
 
 export default class ToggleTriggerElement extends ToggleElement {
-  constructor () {
+  constructor() {
     super()
 
     decorateElementWithDevtool(this, 'toggle', 'toggles')
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
 
     const { start: commandStartEvent } = TurboBoost.Commands.events
@@ -35,7 +33,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     this.initializeDevtool()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     // delay cleanup because the trigger may have been morphed out of the DOM,
     // but it's needed to apply behavior like focus etc...
     setTimeout(() => {
@@ -49,7 +47,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     }, 1000)
   }
 
-  onCommandStart (event) {
+  onCommandStart(event) {
     currentFocusSelector = this.focusSelector
     this.targetElements.forEach(element => {
       element.labeledBy = this.id
@@ -62,7 +60,7 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   // runs before an invoke turbo stream is executed
-  onBeforeInvoke (event) {
+  onBeforeInvoke(event) {
     // return early if we're not the element responsible for this invoke
     if (event.detail.method !== 'morph') return
     if (event.target.id !== this.morphs) return
@@ -84,14 +82,11 @@ export default class ToggleTriggerElement extends ToggleElement {
     }, delay - 10)
 
     // runs after the morph is executed
-    setTimeout(
-      () => focus(this.targetElement.querySelector(currentFocusSelector)),
-      delay + 100
-    )
+    setTimeout(() => focus(this.targetElement.querySelector(currentFocusSelector)), delay + 100)
   }
 
   // a list of views shared between the trigger and target
-  get sharedViews () {
+  get sharedViews() {
     if (!this.targetElement) return []
     if (!this.targetElement.viewStack) return []
     const reducer = (memo, view) => {
@@ -102,20 +97,18 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   // the partial to render
-  get renders () {
+  get renders() {
     return this.getAttribute('renders')
   }
 
   // the renderered partial's top wrapping dom_id
-  get morphs () {
+  get morphs() {
     return this.getAttribute('morphs')
   }
 
   // all toggle elements contained by the `morphElement`
-  get morphToggleTriggerElements () {
-    return Array.from(
-      this.morphElement.querySelectorAll('turbo-boost-toggle-trigger')
-    )
+  get morphToggleTriggerElements() {
+    return Array.from(this.morphElement.querySelectorAll('turbo-boost-toggle-trigger'))
   }
 
   // the target's dom_id
@@ -123,50 +116,48 @@ export default class ToggleTriggerElement extends ToggleElement {
     return this.getAttribute('aria-controls').split(' ')
   }
 
-  get collapseSelector () {
+  get collapseSelector() {
     return this.getAttribute('collapse-selector')
   }
 
-  get focusSelector () {
-    return (
-      this.getAttribute('focus-selector') || this.targetElement.focusSelector
-    )
+  get focusSelector() {
+    return this.getAttribute('focus-selector') || this.targetElement.focusSelector
   }
 
   // indicates if the toggle state should be remembered across requests
-  get remember () {
+  get remember() {
     return this.getAttribute('remember') === 'true'
   }
 
-  set remember (value) {
+  set remember(value) {
     return this.setAttribute('remember', !!value)
   }
 
   // indicates if the target is expanded
-  get expanded () {
+  get expanded() {
     return this.getAttribute('aria-expanded') === 'true'
   }
 
-  set expanded (value) {
+  set expanded(value) {
     this.setAttribute('aria-expanded', !!value)
   }
 
   // indicates if the target is expanded
-  get collapsed () {
+  get collapsed() {
     return !this.expanded
   }
 
   // ------ DevToolDelegate ------
-  get command () {
+  get command() {
     return this.dataset.turboCommand
   }
 
-  get renderingLineLabel () {
+  get renderingLineLabel() {
     return 'renders & morphs'
   }
 
   // the morph element
-  get morphElement () {
+  get morphElement() {
     if (!this.morphs) return null
     return document.getElementById(this.morphs)
   }
@@ -185,7 +176,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     )
   }
 
-  get triggerTooltipData () {
+  get triggerTooltipData() {
     let content = this.triggerElement.viewStack
       .reverse()
       .map((view, index) => {
@@ -212,7 +203,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     }
   }
 
-  get targetTooltipData () {
+  get targetTooltipData() {
     let content = this.targetElement.viewStack
       .reverse()
       .map((view, index) => {
