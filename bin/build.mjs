@@ -3,7 +3,7 @@ import fs from 'fs'
 
 const context = await esbuild.context({
   entryPoints: ['app/javascript/index.js'],
-  external: ['@hotwired/turbo-rails'],
+  external: ['@hotwired/turbo-rails', '@turbo-boost/commands'],
   bundle: true,
   format: 'esm',
   logLevel: 'debug',

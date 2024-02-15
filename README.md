@@ -4,7 +4,7 @@
   </h1>
   <p align="center">
     <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-      <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1378-47d299.svg" />
+      <img alt="Lines of Code" src="https://img.shields.io/badge/loc-574-47d299.svg" />
     </a>
     <a href="https://codeclimate.com/github/hopsoft/turbo_boost-elements/maintainability">
       <img src="https://api.codeclimate.com/v1/badges/7aac6daed3e4032e292e/maintainability" />
@@ -78,12 +78,12 @@ Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.
 
 ## Dependencies
 
-- [ruby](https://www.ruby-lang.org/) `>=2.7.3`
-- [rails](https://rubygems.org/gems/rails) `>=6.1`
-- [turbo-rails](https://rubygems.org/gems/turbo-rails) `>=1.1`
-- [@hotwired/turbo](https://yarnpkg.com/package/@hotwired/turbo) `>=7.2.0`
-- [@hotwired/turbo-rails](https://yarnpkg.com/package/@hotwired/turbo-rails) `>=7.2.0`
-- [turbo_boost-commands](https://github.com/hopsoft/turbo_boost-commands) `>=0.0.2`
+- [ruby](https://www.ruby-lang.org/) `>= 3.0`
+- [rails](https://rubygems.org/gems/rails) `>= 6.1`
+- [turbo-rails](https://rubygems.org/gems/turbo-rails) `>= 1.1`
+- [@hotwired/turbo-rails](https://www.npmjs.com/package/@hotwired/turbo-rails) `>= 7.2`
+- [turbo_boost-commands](https://rubygems.org/gems/turbo_boost-commands) `>= 0.1.1`
+- [@turbo-boost/commands](https://www.npmjs.com/package/@turbo-boost/commands) `>= 0.1.1`
 
 ## Setup
 
@@ -195,14 +195,16 @@ TurboBoost.devtools.start()
 
 ## Releasing
 
-1. Run `yarn` and `bundle` to pick up the latest
-1. Bump version number at `lib/turbo_boost/elements/version.rb`. Pre-release versions use `.preN`
+1. Run `npm install` and `bundle` to pick up the latest
+1. Update the version number consistently in the following files:
+   * `lib/turbo_boost/elements/version.rb` - pre-release versions should use `.preN`
+   * `app/javascript/version.js` - pre-release versions use `-preN`
+   * `package.json` - pre-release versions use `-preN`
 1. Run `bin/standardize`
-1. Run `rake build` and `yarn build`
+1. Run `rake build` and `npm run build`
 1. Commit and push changes to GitHub
 1. Run `rake release`
-1. Run `yarn publish --no-git-tag-version --access public`
-1. Yarn will prompt you for the new version. Pre-release versions use `-preN`
+1. Run `npm publish --access public`
 1. Commit and push changes to GitHub
 1. Create a new release on GitHub ([here](https://github.com/hopsoft/turbo_boost-elements/releases)) and generate the changelog for the stable release for it
 

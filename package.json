@@ -1,6 +1,6 @@
 {
   "name": "@turbo-boost/elements",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Pre-built easy to use reactive TurboBoost elements for Rails/Hotwire apps.",
   "keywords": [
     "hotwire",
@@ -12,25 +12,25 @@
   ],
   "main": "app/assets/builds/@turbo-boost/elements.js",
   "files": [
-    "app/assets/builds/*"
+    "app/assets/builds/@turbo-boost/*{.js,.map}"
   ],
   "repository": "https://github.com/hopsoft/turbo_boost-elements",
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.0.14",
-    "@turbo-boost/devtools": "^0.0.4"
+    "@turbo-boost/devtools": "^0.0.6"
   },
   "peerDependencies": {
-    "@hotwired/turbo-rails": ">= 7.2"
+    "@hotwired/turbo-rails": ">= 7.2",
+    "@turbo-boost/commands": ">= 0.1.2"
   },
   "devDependencies": {
-    "esbuild": "^0.19.0",
+    "esbuild": "^0.20.0",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3"
   },
   "scripts": {
-    "build": "bin/standardize && node bin/build.mjs",
-    "build:watch": "yarn build --watch"
+    "build": "node bin/build.mjs",
+    "build:watch": "node bin/build.mjs --watch"
   }
 }
