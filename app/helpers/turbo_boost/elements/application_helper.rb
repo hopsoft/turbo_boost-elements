@@ -13,7 +13,7 @@ module TurboBoost::Elements::ApplicationHelper
     prefixes = %w[toggle_]
     prefixes.each do |prefix|
       next unless name.start_with?(prefix)
-      return send("#{prefix}tag_builder").public_send(name.to_s.delete_prefix(prefix), ...)
+      return send(:"#{prefix}tag_builder").public_send(name.to_s.delete_prefix(prefix), ...)
     end
     super
   end
@@ -22,7 +22,7 @@ module TurboBoost::Elements::ApplicationHelper
     prefixes = %w[toggle_]
     prefixes.each do |prefix|
       next unless name.start_with?(prefix)
-      return send("#{prefix}tag_builder").respond_to_missing?(name.to_s.delete_prefix(prefix), ...)
+      return send(:"#{prefix}tag_builder").respond_to_missing?(name.to_s.delete_prefix(prefix), ...)
     end
     super
   end

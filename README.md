@@ -195,14 +195,16 @@ TurboBoost.devtools.start()
 
 ## Releasing
 
-1. Run `yarn` and `bundle` to pick up the latest
-1. Bump version number at `lib/turbo_boost/elements/version.rb`. Pre-release versions use `.preN`
+1. Run `npm install` and `bundle` to pick up the latest
+1. Update the version number consistently in the following files:
+   * `lib/turbo_boost/elements/version.rb` - pre-release versions should use `.preN`
+   * `app/javascript/version.js` - pre-release versions use `-preN`
+   * `package.json` - pre-release versions use `-preN`
 1. Run `bin/standardize`
-1. Run `rake build` and `yarn build`
+1. Run `rake build` and `npm run build`
 1. Commit and push changes to GitHub
 1. Run `rake release`
-1. Run `yarn publish --no-git-tag-version --access public`
-1. Yarn will prompt you for the new version. Pre-release versions use `-preN`
+1. Run `npm publish --access public`
 1. Commit and push changes to GitHub
 1. Create a new release on GitHub ([here](https://github.com/hopsoft/turbo_boost-elements/releases)) and generate the changelog for the stable release for it
 
