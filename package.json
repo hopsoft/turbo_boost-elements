@@ -18,11 +18,11 @@
   "author": "Nate Hopkins (hopsoft) <natehop@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@turbo-boost/commands": ">= 0.1.1",
     "@turbo-boost/devtools": "^0.0.4"
   },
   "peerDependencies": {
-    "@hotwired/turbo-rails": ">= 7.2"
+    "@hotwired/turbo-rails": ">= 7.2",
+    "@turbo-boost/commands": ">= 0.1.1"
   },
   "devDependencies": {
     "esbuild": "^0.19.0",
