@@ -25,8 +25,8 @@
     "@turbo-boost/commands": ">= 0.2.0"
   },
   "devDependencies": {
-    "esbuild": "^0.20.0",
-    "eslint": "^8.48.0",
+    "esbuild": "^0.21.3",
+    "eslint": "^9.3.0",
     "prettier": "^3.0.3"
   },
   "scripts": {
