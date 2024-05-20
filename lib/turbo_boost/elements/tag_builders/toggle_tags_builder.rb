@@ -82,7 +82,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
   end
 
   def target_expanded?(dom_id)
-    !!controller_pack.state[dom_id]
+    !!controller_pack.state.current[dom_id]
   end
 
   def target_collapsed?(dom_id)
