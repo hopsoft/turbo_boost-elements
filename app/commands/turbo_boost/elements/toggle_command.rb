@@ -7,9 +7,13 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
     validate_element!
 
     if element.remember?
-      state[element.aria.controls] = true
+      element.aria.controls.split(" ").each do |controls|
+        state[controls] = true
+      end
     else
-      state.now[element.aria.controls] = true
+      element.aria.controls.split(" ").each do |controls|
+        state.now[controls] = true
+      end
     end
 
     morph id: element.morphs, html: render(element.render_options)
@@ -17,7 +21,11 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
 
   def hide
     validate_element!
-    state[element.aria.controls] = false
+
+    element.aria.controls.split(" ").each do |controls|
+      state[controls] = false
+    end
+
     morph id: element.morphs, html: render(element.render_options)
   end
 

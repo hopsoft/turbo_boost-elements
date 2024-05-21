@@ -49,8 +49,12 @@ export default class ToggleTriggerElement extends ToggleElement {
 
   onCommandStart(event) {
     currentFocusSelector = this.focusSelector
-    this.targetElement.labeledBy = this.id
-    this.targetElement.collapseMatches()
+    this.targetElements.forEach(element => {
+      element.labeledBy = this.id
+    })
+    this.targetElements.forEach(element => {
+      element.collapseMatches()
+    })
     this.busy = true
     // TODO: implement cache - this.targetElement.renderCachedHTML()
   }
@@ -108,8 +112,8 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   // the target's dom_id
-  get controls() {
-    return this.getAttribute('aria-controls')
+  get controls () {
+    return this.getAttribute('aria-controls').split(' ')
   }
 
   get collapseSelector() {
@@ -159,9 +163,17 @@ export default class ToggleTriggerElement extends ToggleElement {
   }
 
   // the target element
-  get targetElement() {
-    if (!this.controls) return null
-    return document.getElementById(this.controls)
+  get targetElement () {
+    if (this.targetElements.length == 0) return null
+    return this.targetElements[0]
+  }
+
+  // all targets
+  get targetElements () {
+    if (!this.controls) return []
+    return document.querySelectorAll(
+      `${this.controls.map(controls => `#${controls}`).join(', ')}`
+    )
   }
 
   get triggerTooltipData() {
@@ -177,7 +189,7 @@ export default class ToggleTriggerElement extends ToggleElement {
     return {
       subtitle: `
       <b>id</b>: ${this.triggerElement.id}<br>
-      <b>aria-controls</b>: ${this.triggerElement.controls}<br>
+      <b>aria-controls</b>: ${this.triggerElement.controls.join(', ')}<br>
       <b>aria-expanded</b>: ${this.triggerElement.expanded}<br>
       <b>remember</b>: ${this.triggerElement.remember}<br>
     `,

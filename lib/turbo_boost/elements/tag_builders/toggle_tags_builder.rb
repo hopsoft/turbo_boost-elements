@@ -28,7 +28,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
     &block # a Ruby block that emits this trigger's content
   )
     kwargs = kwargs.with_indifferent_access
-    kwargs[:id] ||= "#{controls}-toggle-trigger"
+    kwargs[:id] ||= "#{Array(controls).join(" ").parameterize}-toggle-trigger"
 
     # command
     kwargs[:data] ||= {}
@@ -82,7 +82,7 @@ class TurboBoost::Elements::TagBuilders::ToggleTagsBuilder < TurboBoost::Element
   end
 
   def target_expanded?(dom_id)
-    !!controller_pack.state[dom_id]
+    Array(dom_id).any? { |dom_id| !!controller_pack.state[dom_id] }
   end
 
   def target_collapsed?(dom_id)
