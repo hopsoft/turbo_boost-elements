@@ -17,7 +17,13 @@ class TurboBoost::Elements::ToggleCommand < TurboBoost::Elements::ApplicationCom
 
   def hide
     validate_element!
-    state[element.aria.controls] = false
+
+    if element.remember?
+      state[element.aria.controls] = false
+    else
+      state.now[element.aria.controls] = false
+    end
+
     morph id: element.morphs, html: render(element.render_options)
   end
 
